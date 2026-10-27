@@ -1,0 +1,18 @@
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# Fresh build directory
+_fresh/
+# Generated static site (see scripts/ssg.ts)
+dist/
+
+# npm + other dependencies
+node_modules/
+vendor/
+
+# Editor / OS noise
+.DS_Store
