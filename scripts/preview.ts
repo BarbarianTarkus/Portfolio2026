@@ -7,11 +7,15 @@
  *     deno task preview   # serve dist/ at http://127.0.0.1:8787/Portfolio/
  *
  * `BASE_PATH` defaults to "/Portfolio"; use the same value as the export.
+ * File serving (MIME types, directory indexes, traversal protection) is handled
+ * by `@std/http/file-server`; this module only adds the deployment prefix and
+ * the branded 404 page.
  *
  * @module
  */
 
-import { extname, join } from "@std/path";
+import { join } from "@std/path";
+import { serveDir } from "@std/http/file-server";
 import { DEFAULT_BASE_PATH, normalizeBasePath } from "../config.ts";
 
 const ROOT = join(import.meta.dirname!, "..");
@@ -21,53 +25,41 @@ const basePath = normalizeBasePath(
 );
 const port = Number(Deno.env.get("PORT") ?? 8787);
 
-const MIME_TYPES: Record<string, string> = {
-  ".html": "text/html; charset=utf-8",
-  ".css": "text/css; charset=utf-8",
-  ".js": "text/javascript; charset=utf-8",
-  ".mjs": "text/javascript; charset=utf-8",
-  ".json": "application/json; charset=utf-8",
-  ".map": "application/json; charset=utf-8",
-  ".svg": "image/svg+xml",
-  ".png": "image/png",
-  ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg",
-  ".webp": "image/webp",
-  ".ico": "image/x-icon",
-  ".txt": "text/plain; charset=utf-8",
-  ".woff": "font/woff",
-  ".woff2": "font/woff2",
-  ".xml": "application/xml",
-};
-
-async function fileExists(path: string): Promise<boolean> {
-  try {
-    return (await Deno.stat(path)).isFile;
-  } catch {
-    return false;
+async function notFoundResponse(): Promise<Response> {
+  const body = await Deno.readFile(join(DIST, "404.html")).catch(() => null);
+  if (body === null) {
+    return new Response("404 — run `deno task ssg` first", { status: 404 });
   }
-}
-
-async function serveFile(path: string, status = 200): Promise<Response> {
-  const body = await Deno.readFile(path);
   return new Response(body, {
-    status,
-    headers: {
-      "content-type": MIME_TYPES[extname(path)] ?? "application/octet-stream",
-      "cache-control": "no-cache",
-    },
+    status: 404,
+    headers: { "content-type": "text/html; charset=utf-8" },
   });
 }
 
-async function htmlNotFound(): Promise<Response> {
-  const notFound = join(DIST, "404.html");
-  if (await fileExists(notFound)) return await serveFile(notFound, 404);
-  return new Response("404 — run `deno task ssg` first", { status: 404 });
+/** Requests outside the deployment prefix are not part of the site. */
+function isUnderBasePath(pathname: string): boolean {
+  return pathname === basePath || pathname.startsWith(`${basePath}/`);
 }
 
-if (!(await fileExists(join(DIST, "index.html")))) {
-  console.error("dist/ is empty. Run `deno task ssg` first.");
-  Deno.exit(1);
+async function handleRequest(request: Request): Promise<Response> {
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+
+  if (!isUnderBasePath(pathname)) {
+    return pathname === "/"
+      ? Response.redirect(`${url.origin}${basePath}/`, 302)
+      : await notFoundResponse();
+  }
+
+  const response = await serveDir(request, {
+    fsRoot: DIST,
+    // `serveDir` expects the url root without a leading slash.
+    urlRoot: basePath.slice(1),
+    showIndex: true,
+    quiet: true,
+  });
+
+  return response.status === 404 ? await notFoundResponse() : response;
 }
 
 const displayBase = basePath === "" ? "" : basePath;
@@ -82,37 +74,5 @@ Deno.serve(
       );
     },
   },
-  async (request) => {
-    const url = new URL(request.url);
-    let pathname: string;
-
-    try {
-      pathname = decodeURIComponent(url.pathname);
-    } catch {
-      return await htmlNotFound();
-    }
-
-    // Requests outside the deployment prefix see the site root.
-    if (
-      basePath !== "" && pathname !== basePath &&
-      !pathname.startsWith(`${basePath}/`)
-    ) {
-      if (pathname === "/") {
-        return Response.redirect(`${url.origin}${basePath}/`, 302);
-      }
-      return await htmlNotFound();
-    }
-
-    let relative = pathname.slice(basePath.length);
-    if (relative === "" || relative.endsWith("/")) relative += "index.html";
-
-    const file = join(DIST, relative);
-    if (await fileExists(file)) return await serveFile(file);
-
-    // Allow extension-less URLs such as /Portfolio/about.
-    const withIndex = join(DIST, relative, "index.html");
-    if (await fileExists(withIndex)) return await serveFile(withIndex);
-
-    return await htmlNotFound();
-  },
+  handleRequest,
 );

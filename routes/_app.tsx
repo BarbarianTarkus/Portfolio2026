@@ -11,9 +11,7 @@ import { Footer } from "../components/Footer.tsx";
  */
 export default define.page(function App({ Component, config, url }) {
   const basePath = config.basePath;
-  const currentPath = url.pathname.startsWith(basePath)
-    ? url.pathname.slice(basePath.length) || "/"
-    : url.pathname;
+  const currentPath = url.pathname.slice(basePath.length) || "/";
 
   return (
     <html lang="en">

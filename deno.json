@@ -21,10 +21,12 @@
   "exclude": [
     "**/_fresh/*",
     "dist/",
-    "node_modules/"
+    "node_modules/",
+    ".scannerwork/"
   ],
   "imports": {
     "@/": "./",
+    "@std/http": "jsr:@std/http@^1.0.0",
     "@std/path": "jsr:@std/path@^1.1.6",
     "fresh": "jsr:@fresh/core@^2.3.3",
     "preact": "npm:preact@^10.29.1",

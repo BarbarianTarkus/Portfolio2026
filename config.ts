@@ -11,13 +11,15 @@
 /** Where the site is served from when BASE_PATH is not set (production). */
 export const DEFAULT_BASE_PATH = "/Portfolio";
 
-/** Normalize a base path to either "" (root) or "/some/prefix" (no trailing slash). */
+/**
+ * Normalize a base path to either "" (root) or "/some/prefix".
+ *
+ * Splitting on "/" also collapses leading, trailing and repeated slashes, so
+ * the implementation stays branch-free and easy to reason about.
+ */
 export function normalizeBasePath(raw: string | null | undefined): string {
-  if (!raw) return "";
-  let path = raw.trim();
-  if (path === "" || path === "/") return "";
-  if (!path.startsWith("/")) path = `/${path}`;
-  return path.replace(/\/+$/, "");
+  const segments = (raw ?? "").trim().split("/").filter(Boolean);
+  return segments.length === 0 ? "" : `/${segments.join("/")}`;
 }
 
 /** Effective base path for the current process (empty string means site root). */

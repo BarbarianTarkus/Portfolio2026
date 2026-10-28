@@ -18,8 +18,11 @@ islands/         Components that need client-side JS (only the header/menu)
 components/      Static Preact components (footer, icons)
 data/site.ts     Shared identity, links, navigation and project list
 static/          Static assets copied as-is (styles, favicon, robots.txt)
-scripts/ssg.ts   Static site generator: builds, renders and verifies dist/
+scripts/ssg.ts   Static site generator entry point (build, render, verify)
+scripts/lib/     Filesystem, route, rendering and output-verification helpers
 scripts/preview.ts  Local preview server that mimics GitHub Pages
+scripts/sonar-scan.sh  Local SonarQube analysis (reads .env)
+docs/redesign.md Light-touch redesign plan and design-token rationale
 config.ts        BASE_PATH handling shared by app, Vite and SSG
 ```
 
@@ -118,6 +121,30 @@ Page-specific prose (the About copy, the Contact intro) lives in the matching
 file under [`routes/`](routes/). Colours, typography and layout are defined with
 CSS custom properties at the top of
 [`static/styles/main.css`](static/styles/main.css).
+
+## Design notes
+
+The visual identity (palette, type, layout) is intentionally unchanged. A
+light-touch redesign pass unified every heading accent on `var(--text-accent)`
+(the home and About pages previously used two different accents), added an
+accent underline for the active nav item, strengthened the focus ring and gave
+icon controls 44 px touch targets. Details, rationale and the optional phase-2
+backlog are in [`docs/redesign.md`](docs/redesign.md).
+
+## Code quality (SonarQube)
+
+The repository is analysed on <https://sonarqube.verduguez.com> as project
+`Portfolio`, configured by
+[`sonar-project.properties`](sonar-project.properties). Analysis runs locally
+with the git-ignored `.env` (contains `SONAR_HOST_URL` and `SONARQUBE_API_KEY`):
+
+```bash
+./scripts/sonar-scan.sh
+```
+
+The scan currently reports zero open issues, zero code smells, zero security
+hotspots and A ratings for reliability, security and maintainability (cyclomatic
+complexity 107, cognitive complexity 46).
 
 ## Checks
 

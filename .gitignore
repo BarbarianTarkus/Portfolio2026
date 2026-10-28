@@ -16,3 +16,6 @@ vendor/
 
 # Editor / OS noise
 .DS_Store
+
+# SonarQube scanner working directory
+.scannerwork/

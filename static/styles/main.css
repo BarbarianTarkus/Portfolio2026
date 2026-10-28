@@ -14,18 +14,25 @@
 
 :root {
   /* Palette — legacy values, preserved exactly. */
-  --text-accent: #f1c81b; /* accent yellow (little headings, links, focus) */
-  --accent: #324eb2; /* blue (focus outlines, list markers) */
+  --text-accent: #f1c81b; /* single accent: headings, links, active nav */
+  --accent: #324eb2; /* secondary blue (list markers, legacy links) */
   --background: #0e1217; /* deep navy page background */
   --lightAccent: #1f1e1e; /* raised surface: cards */
   --lighterAccent: #eb2319; /* red accent */
   --dark: #e5e7eb; /* light grey (link underlines) */
-  --darker: #fb9b18; /* orange (site title, h2-h6, close icon) */
+  --darker: #fb9b18; /* brand orange: logo mark only */
   --slate: #8892b0; /* body copy */
   --lightest-slate: #ccd6f6; /* high-emphasis copy */
 
   --white: #fff;
   --black: #152030;
+
+  /* Semantic roles -------------------------------------------------------
+     All heading accents resolve to one token so the home and About pages
+     cannot drift apart again. Page titles (h1) keep the high-emphasis
+     --lightest-slate colour to preserve the visual hierarchy. */
+  --heading-accent: var(--text-accent);
+  --focus-ring: var(--text-accent);
 
   /* Semantic aliases used by the legacy theme. */
   --ink: var(--slate);
@@ -95,9 +102,9 @@ img {
   height: auto;
 }
 
-/* Legacy focus treatment: a blue outline offset from the element. */
+/* Visible keyboard focus ring; --focus-ring (#f1c81b) keeps >3:1 on the page. */
 *:focus {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
 
@@ -115,7 +122,7 @@ main:focus {
   font-family: var(--accentFont);
   font-weight: bold;
   line-height: 1.1;
-  color: var(--darker);
+  color: var(--heading-accent);
 }
 
 h1 {
@@ -253,8 +260,28 @@ header a {
   text-decoration: none;
 }
 
-header a.active {
+/* Active page: Fresh adds aria-current="page" to the matching nav link. */
+header .main-nav a[aria-current="page"] {
   font-weight: bold;
+  color: var(--lightest-slate);
+  text-decoration: underline;
+  text-decoration-color: var(--text-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.35em;
+}
+
+/* Keep the numbered prefix yellow even when the parent link is the active one. */
+header .main-nav a[aria-current="page"] .nav-index {
+  color: var(--text-accent);
+}
+
+header nav ul a {
+  transition: color var(--transition);
+}
+
+header nav ul a:hover,
+header nav ul a:focus-visible {
+  color: var(--text-accent);
 }
 
 header nav ul {
@@ -286,7 +313,11 @@ header .site-title {
 }
 
 header .menu-button {
-  width: 2rem;
+  display: grid;
+  place-items: center;
+  /* 44px minimum touch target (icon stays 1.5rem). */
+  min-width: 44px;
+  min-height: 44px;
   margin: 0;
   padding: 0;
   border: 0;
@@ -474,7 +505,7 @@ header .main-nav .menu-button {
   height: 3rem;
   padding: 0.5em;
   opacity: 0;
-  background: var(--darker);
+  background: var(--text-accent);
   color: var(--background);
   font-family: var(--primaryFont);
   text-decoration: none;
@@ -504,7 +535,7 @@ footer nav ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0 1.5rem;
+  gap: 0 0.5rem;
   margin: 0;
   padding: 0;
   list-style-type: none;
@@ -515,13 +546,21 @@ footer li {
 }
 
 footer a {
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   color: inherit;
+  font-size: 1rem;
   text-decoration: none;
+  transition: color var(--transition);
 }
 
-footer a:hover {
-  text-decoration: underline;
+footer a:hover,
+footer a:focus-visible {
+  color: var(--text-accent);
+  text-decoration: none;
 }
 
 footer svg {
@@ -656,7 +695,7 @@ footer p {
   font-size: 1.5rem;
   font-weight: bold;
   line-height: 1.1;
-  color: var(--darker);
+  color: var(--heading-accent);
 }
 
 @media (min-width: 48rem) {
@@ -714,7 +753,7 @@ footer p {
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.2;
-  color: var(--darker);
+  color: var(--heading-accent);
 }
 
 .project-card h3 a {
@@ -724,7 +763,10 @@ footer p {
 
 .project-card h3 a:hover,
 .project-card h3 a:focus {
-  color: var(--text-accent);
+  color: var(--lightest-slate);
+  text-decoration: underline;
+  text-decoration-color: var(--text-accent);
+  text-underline-offset: 0.2em;
 }
 
 .project-card p {
@@ -844,7 +886,7 @@ footer p {
   font-size: 1.25rem;
   font-weight: 700;
   line-height: 1.2;
-  color: var(--darker);
+  color: var(--heading-accent);
 }
 
 .contact-card svg {

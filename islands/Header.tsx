@@ -1,29 +1,25 @@
 import { useEffect } from "preact/hooks";
-import { useSignal } from "@preact/signals";
+import { type Signal, useSignal } from "@preact/signals";
 import { site } from "../data/site.ts";
 import { CloseIcon, MenuIcon } from "../components/Icons.tsx";
 
 interface HeaderProps {
   /** Deployment prefix, e.g. "/Portfolio" ("" when served from the root). */
   basePath: string;
-  /** Current path *without* the basePath, e.g. "/about". */
+  /** Current path without the base path, e.g. "/about" (used for active nav). */
   currentPath: string;
 }
 
-function isActive(currentPath: string, route: string): boolean {
-  if (route === "/") return currentPath === "/";
-  return currentPath === route || currentPath.startsWith(`${route}/`);
+interface MenuToggleProps {
+  open: boolean;
+  onToggle: () => void;
 }
 
 /**
- * Header island: the only part of the page that needs client-side JavaScript.
- * It owns the mobile menu state, Escape handling and scroll locking; the rest
- * of the site is plain server-rendered HTML.
+ * Keep the mobile menu keyboard-accessible: Escape closes it and the open
+ * state locks page scroll behind the fullscreen overlay.
  */
-export default function Header({ basePath, currentPath }: HeaderProps) {
-  const open = useSignal(false);
-  const href = (route: string) => `${basePath}${route}`;
-
+function useMenuEffects(open: Signal<boolean>): void {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") open.value = false;
@@ -32,12 +28,43 @@ export default function Header({ basePath, currentPath }: HeaderProps) {
     return () => globalThis.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  // Reflect the open state on <body> so the page behind the overlay cannot
-  // scroll while the mobile menu is visible.
   useEffect(() => {
     document.body.classList.toggle("menu-open", open.value);
     return () => document.body.classList.remove("menu-open");
   });
+}
+
+function MenuToggle({ open, onToggle }: MenuToggleProps) {
+  const pressed = open ? "true" : "false";
+  return (
+    <button
+      type="button"
+      class="menu-button"
+      aria-pressed={pressed}
+      aria-expanded={pressed}
+      aria-controls="main-nav"
+      onClick={onToggle}
+    >
+      <span class="sr-only">Toggle navigation menu</span>
+      <MenuIcon />
+    </button>
+  );
+}
+
+/**
+ * Header island: the only part of the page that needs client-side JavaScript.
+ * It owns the mobile menu state, Escape handling and scroll locking; the rest
+ * of the site is plain server-rendered HTML.
+ *
+ * Active-link state is not computed here: Fresh annotates matching anchors with
+ * `aria-current`, which the stylesheet uses for the active nav indicator.
+ */
+export default function Header({ basePath, currentPath }: HeaderProps) {
+  const open = useSignal(false);
+  const href = (route: string) => `${basePath}${route}`;
+  const closeMenu = () => (open.value = false);
+
+  useMenuEffects(open);
 
   return (
     <header>
@@ -51,33 +78,25 @@ export default function Header({ basePath, currentPath }: HeaderProps) {
         {site.shortTitle}
       </a>
 
-      <button
-        type="button"
-        class="menu-button"
-        aria-pressed={open.value ? "true" : "false"}
-        aria-expanded={open.value ? "true" : "false"}
-        aria-controls="main-nav"
-        onClick={() => (open.value = !open.value)}
-      >
-        <span class="sr-only">Toggle navigation menu</span>
-        <MenuIcon />
-      </button>
+      <MenuToggle
+        open={open.value}
+        onToggle={() => (open.value = !open.value)}
+      />
 
       <nav
         id="main-nav"
         class={`main-nav${open.value ? " open" : ""}`}
         aria-label="Main"
       >
-        <ul>
+        <ul onClick={closeMenu}>
           {site.nav.map((item, index) => {
-            const active = isActive(currentPath, item.route);
+            const active = currentPath === item.route ||
+              currentPath.startsWith(`${item.route}/`);
             return (
               <li key={item.route}>
                 <a
                   href={href(item.route)}
-                  class={active ? "active" : undefined}
                   aria-current={active ? "page" : undefined}
-                  onClick={() => (open.value = false)}
                 >
                   <b class="nav-index">
                     {String(index + 1).padStart(2, "0")}.{" "}
@@ -93,7 +112,7 @@ export default function Header({ basePath, currentPath }: HeaderProps) {
           type="button"
           class="menu-button close-menu"
           aria-label="Close navigation menu"
-          onClick={() => (open.value = false)}
+          onClick={closeMenu}
         >
           <CloseIcon />
         </button>
