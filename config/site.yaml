@@ -9,3 +9,7 @@ url: "https://barbariantarkus.github.io/Portfolio"
 author:
   name: "Ricardo Verduguez Claros"
 home: home
+plugins:
+  # Replaces Dune's stock page editor (Markdown body + blueprint fields) with a
+  # raw page-source editor suited to this site's frontmatter-only content model.
+  - src: plugins/content-editor/mod.tsx

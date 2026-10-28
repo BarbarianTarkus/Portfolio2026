@@ -18,8 +18,10 @@ from client-side Svelte to server-rendered Preact.
 main.ts          Fresh app + Dune bootstrap: headless CMS mount, /admin
 dev.ts           Dev server: Fresh Builder + Dune content-index watcher
 routes/          Fresh file-system routes (pages + _app shell + _404)
-islands/         Client-side JS: the header/menu island, plus one thin bridge
-                 file per Dune admin island (re-exports only)
+islands/         Client-side JS: the header/menu island, one thin bridge file
+                 per Dune admin island (islands/dune-admin/) and the custom admin
+                 content editor (islands/admin/)
+plugins/         Dune plugins: content-editor (raw page editor + live preview)
 components/      Static Preact components (footer, icons, page pieces)
 content/         Dune pages: one folder per page, copy in default.md frontmatter
 lib/content.ts   Typed loaders over Dune's content API (the only CMS client)
@@ -94,9 +96,12 @@ holds the structured text the route renders. Start the dev server and open
 <http://localhost:5173/admin>. On the first run Dune creates an `admin` account
 and writes its generated password to `data/initial-password.txt` (both `data/`
 and `.dune/` are git-ignored). Log in, change the password, delete that file,
-then edit pages in the admin. Saving writes straight into
-`content/*/default.md`, so the result is a normal content diff that is committed
-with the rest of the site.
+then edit pages in the admin. Dune's stock page editor is replaced by a
+portfolio-specific one: it edits the page's raw source (YAML frontmatter plus
+body), clearly labels the file and route it is editing, and previews the real
+public page next to it (open by default). Saving (Ctrl/Cmd+S) writes straight
+into `content/*/default.md` and rebuilds the site, so the result is a normal
+content diff that is committed with the rest of the site.
 
 The GitHub Pages deployment is static only: `/admin` and the content API do not
 exist there. The admin runs locally, or on a Deno server deployment of the same

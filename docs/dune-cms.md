@@ -141,12 +141,42 @@ The admin is a Dune plugin, so there is no separate build step or cloud project.
    `data/initial-password.txt` — the password is never printed to the logs.
 3. Log in as `admin` with that password, change it in the admin's user settings,
    then delete `data/initial-password.txt`.
-4. Edit the page copy in the admin. Saving writes the page's
-   `content/*/default.md` file in place, so changes appear as a normal git diff
-   in [`content/`](../content).
-5. [`dev.ts`](../dev.ts) watches `content/` and rebuilds Dune's content index in
-   place (`DuneEngine.rebuild()`), so the public page reflects the edit without
+4. Open **Pages → <page>**. This site ships a custom Dune content editor
+   (`plugins/content-editor/` + `islands/admin/ContentEditor.tsx`) that replaces
+   Dune's stock page editor:
+   - the left pane says exactly what is being edited (source file + route);
+   - the middle pane is the page's raw source (YAML frontmatter + body);
+   - the right pane is a live preview of the real public page, open by default.
+
+   **Save** (Ctrl/Cmd+S) validates the YAML frontmatter, writes the page's
+   `content/*/default.md` file in place and rebuilds the content index; the
+   preview refreshes after the save. Because the file is the unit of editing,
+   changes appear as a normal git diff in [`content/`](../content) and comments
+   and key order are preserved.
+5. [`dev.ts`](../dev.ts) also watches `content/` and rebuilds the content index
+   in place (`DuneEngine.rebuild()`), so external edits show up without
    restarting the server.
+
+### Why a custom page editor
+
+Dune's built-in editor focuses on the Markdown body and on _blueprint_-declared
+frontmatter fields. Blueprints only support flat scalar/list fields, while the
+portfolio's copy is nested YAML (jobs, project fiches, section headings, site
+labels), so the built-in editor could only show it read-only as "unmanaged
+frontmatter" and its preview rendered the empty Markdown body.
+
+The plugin sets `adminServices().contentEditor`, Dune's supported extension
+point for replacing the page editor, and adds two guardian-protected admin API
+routes (`withGuards` from `@dune/plugin-admin/admin/guards`):
+
+| Route                                    | Purpose                                    |
+| ---------------------------------------- | ------------------------------------------ |
+| GET `/admin/api/portfolio-editor/source` | Read a page's raw source                   |
+| POST `/admin/api/portfolio-editor/save`  | Validate frontmatter, write file, re-index |
+
+The editor preview uses `/admin/api/preview`; `main.ts` answers it by rendering
+the page's real public route in-process, because Dune's stock preview only
+renders the Markdown body (which is empty here).
 
 No CMS credentials belong in `.env` or CI: the admin is local and the deployment
 is static. Deleting `data/` resets local users, permissions and the admin
@@ -202,5 +232,11 @@ When updating Dune:
    `islands/dune-admin/` is excluded from `deno check` (Deno does not type-check
    `https://` imports); the bridges are one-line re-exports, so keep them
    formatted by hand.
-4. Start `deno task dev`, open `/admin` and exercise the admin (page tree,
-   editor, media library, config) before committing.
+4. Review the custom content editor: it implements core's `ContentEditorPlugin`
+   interface and calls the admin's page API, so a breaking change there needs a
+   matching update in `plugins/content-editor/mod.tsx` and
+   `islands/admin/ContentEditor.tsx`. The island is admin-only and pruned from
+   the static export together with `islands/dune-admin/` (see
+   `scripts/build.ts`).
+5. Start `deno task dev`, open `/admin`, and exercise the page editor (edit,
+   save, live preview) plus the media library and config before committing.

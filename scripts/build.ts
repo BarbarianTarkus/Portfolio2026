@@ -28,6 +28,6 @@ await removeDir(join(root, "_fresh"));
 const builder = new Builder({
   root,
   // Skip the admin island bridges for a static export (see module docs).
-  ignore: staticExport ? [/islands[\/\\]dune-admin[\/\\]/] : [],
+  ignore: staticExport ? [/islands[\/\\](dune-admin|admin)[\/\\]/] : [],
 });
 await builder.build({ snapshot: "disk" });

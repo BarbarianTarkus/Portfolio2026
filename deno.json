@@ -60,7 +60,9 @@
     "@db/sqlite": "jsr:@db/sqlite@^0.12",
     "postgres": "npm:postgres@^3.4",
     "ioredis": "npm:ioredis@^5",
-    "polizy": "npm:polizy@^0.6.0"
+    "polizy": "npm:polizy@^0.6.0",
+    "@dune/core/hooks": "jsr:@dune/core@0.34.14/hooks",
+    "@dune/plugin-admin/admin/guards": "jsr:@dune/plugin-admin@3.1.2/admin/guards"
   },
   "compilerOptions": {
     "lib": [
