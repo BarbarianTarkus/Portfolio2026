@@ -1,31 +1,57 @@
 import { Head } from "fresh/runtime";
-import { experience, site } from "../data/site.ts";
+import { InlineText } from "../components/InlineText.tsx";
+import type { ExperienceContent, SiteContent } from "../lib/content.ts";
+import { loadExperiencePage } from "../lib/content.ts";
+import { TinaIsland } from "../lib/tina/island.tsx";
+import { tinaField } from "../lib/tina/metadata.ts";
 import { define } from "../utils.ts";
 
 /**
  * The CV page. This is the site's primary destination: full work history with
- * every bullet, then education. `/about` keeps the biography and the homelab.
+ * every bullet, then education. /about keeps the biography and the homelab.
  */
-const pageDescription =
-  "Experiencia laboral de Ricardo Verduguez: desarrollo full-stack en 3iPunt, backend PHP en 4DMOVIN y soporte TIC en la UPC, con formación en Ingeniería Informática.";
+export const handler = define.handlers({
+  GET(ctx) {
+    const { site, page } = loadExperiencePage(ctx);
+    return ctx.render(
+      <TinaIsland name="experience" basePath={ctx.config.basePath}>
+        <ExperiencePage
+          site={site}
+          page={page}
+          basePath={ctx.config.basePath}
+        />
+      </TinaIsland>,
+    );
+  },
+});
 
-export default define.page(function Experience(ctx) {
-  const basePath = ctx.config.basePath;
+interface ExperiencePageProps {
+  site: SiteContent;
+  page: ExperienceContent;
+  basePath: string;
+}
+
+export function ExperiencePage({ site, page, basePath }: ExperiencePageProps) {
+  const metaTitle = page.meta.title + " — " + site.author;
 
   return (
     <>
       <Head>
-        <title>Experiencia — {site.author}</title>
-        <meta name="description" content={pageDescription} />
-        <meta property="og:title" content={`Experiencia — ${site.author}`} />
-        <meta property="og:description" content={pageDescription} />
+        <title>{metaTitle}</title>
+        <meta
+          name="description"
+          content={page.meta.description}
+          data-tina-field={tinaField(page.meta, "description")}
+        />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={page.meta.description} />
       </Head>
 
-      <h1 class="page-title">Experiencia</h1>
-      <p class="page-lede">
-        Tres etapas, en orden inverso al calendario: desarrollo full-stack en
-        producción, backend sobre un ERP en PHP y, antes, soporte TIC en la
-        universidad. Es donde he aprendido lo que sé.
+      <h1 class="page-title" data-tina-field={tinaField(page, "title")}>
+        {page.title}
+      </h1>
+      <p class="page-lede" data-tina-field={tinaField(page, "lede")}>
+        {page.lede}
       </p>
 
       <p class="page-meta">
@@ -34,65 +60,117 @@ export default define.page(function Experience(ctx) {
           href={site.linkedin}
           target="_blank"
           rel="me noopener noreferrer"
+          data-tina-field={tinaField(page, "linkedinLabel")}
         >
-          LinkedIn <span aria-hidden="true">→</span>
+          {page.linkedinLabel} <span aria-hidden="true">→</span>
         </a>
       </p>
 
       <div class="section-head">
-        <span class="section-num">01</span>
-        <h2 class="section-title">Experiencia laboral</h2>
+        <span class="section-num">{page.jobsSection.num}</span>
+        <h2
+          class="section-title"
+          data-tina-field={tinaField(page.jobsSection, "title")}
+        >
+          {page.jobsSection.title}
+        </h2>
       </div>
 
       <ol class="job-list">
-        {experience.map((job) => (
-          <li class="job" key={`${job.company}-${job.period}`}>
-            <p class="job-period">{job.period}</p>
+        {page.jobs.map((job) => (
+          <li
+            class="job"
+            key={job.company + "-" + job.period}
+            data-tina-field={tinaField(job)}
+          >
+            <p
+              class="job-period"
+              data-tina-field={tinaField(job, "period")}
+            >
+              {job.period}
+            </p>
             <div>
-              <h3 class="job-role">{job.role}</h3>
+              <h3
+                class="job-role"
+                data-tina-field={tinaField(job, "role")}
+              >
+                {job.role}
+              </h3>
               <p class="job-company">
-                {job.company} · {job.place}
+                <span data-tina-field={tinaField(job, "company")}>
+                  {job.company}
+                </span>
+                {" · "}
+                <span data-tina-field={tinaField(job, "place")}>
+                  {job.place}
+                </span>
               </p>
               <ul class="job-points">
-                {job.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
+                {job.bullets.map((bullet, index) => (
+                  <li
+                    key={bullet}
+                    data-tina-field={tinaField(job, "bullets", index)}
+                  >
+                    {bullet}
+                  </li>
+                ))}
               </ul>
-              <p class="job-stack">{job.stack.join(" · ")}</p>
+              <p class="job-stack" data-tina-field={tinaField(job, "stack")}>
+                {job.stack.join(" · ")}
+              </p>
             </div>
           </li>
         ))}
       </ol>
 
       <div class="section-head">
-        <span class="section-num">02</span>
-        <h2 class="section-title">Formación</h2>
+        <span class="section-num">{page.educationSection.num}</span>
+        <h2
+          class="section-title"
+          data-tina-field={tinaField(page.educationSection, "title")}
+        >
+          {page.educationSection.title}
+        </h2>
       </div>
 
       <ol class="job-list">
         <li class="job">
-          <p class="job-period">2017 — 2026</p>
+          <p
+            class="job-period"
+            data-tina-field={tinaField(page.education, "period")}
+          >
+            {page.education.period}
+          </p>
           <div>
-            <h3 class="job-role">Grado en Ingeniería Informática</h3>
-            <p class="job-company">
-              Universitat Politècnica de Catalunya (UPC) · EPSEVG, Vilanova i la
-              Geltrú
+            <h3
+              class="job-role"
+              data-tina-field={tinaField(page.education, "role")}
+            >
+              {page.education.role}
+            </h3>
+            <p
+              class="job-company"
+              data-tina-field={tinaField(page.education, "company")}
+            >
+              {page.education.company}
             </p>
           </div>
         </li>
       </ol>
 
       <div class="section-head">
-        <span class="section-num">03</span>
-        <h2 class="section-title">Lo que hay detrás</h2>
+        <span class="section-num">{page.outroSection.num}</span>
+        <h2
+          class="section-title"
+          data-tina-field={tinaField(page.outroSection, "title")}
+        >
+          {page.outroSection.title}
+        </h2>
       </div>
 
-      <p class="prose">
-        El detalle técnico de lo que he construido —problema, decisiones y lo
-        que se rompió— está en{" "}
-        <a href={`${basePath}/projects`}>
-          la página de proyectos
-        </a>. El homelab que mantengo en paralelo está en{" "}
-        <a href={`${basePath}/about#homelab`}>sobre mí</a>.
+      <p class="prose" data-tina-field={tinaField(page, "outro")}>
+        <InlineText text={page.outro} basePath={basePath} />
       </p>
     </>
   );
-});
+}

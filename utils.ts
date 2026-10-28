@@ -1,10 +1,15 @@
 import { createDefine } from "fresh";
+import type { TinaState } from "./lib/tina/forms.ts";
 
 /**
  * Shared types for `ctx.state` and the typed `define` helpers used by routes,
- * layouts and middlewares. This portfolio is fully static, so there is no state
- * to share between handlers; keep this type empty until something needs it.
+ * layouts and middlewares.
+ *
+ * `tina` is request-scoped data for the content layer: the loaded site globals
+ * plus every TinaCMS form rendered on the page (see lib/tina/forms.ts).
  */
-export type State = Record<string, never>;
+export type State = {
+  tina?: TinaState;
+};
 
 export const define = createDefine<State>();

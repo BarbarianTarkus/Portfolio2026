@@ -1,10 +1,15 @@
 import { useEffect, useRef } from "preact/hooks";
 import type { RefObject } from "preact";
 import { type Signal, useSignal } from "@preact/signals";
-import { site } from "../data/site.ts";
 import { CloseIcon, MenuIcon } from "../components/Icons.tsx";
+import type { SiteContent } from "../lib/content.ts";
+import { tinaField } from "../lib/tina/metadata.ts";
+
+type Labels = SiteContent["labels"];
 
 interface HeaderProps {
+  /** Site globals (identity, nav labels, menu copy). */
+  site: SiteContent;
   /** Deployment prefix, e.g. "/Portfolio" ("" when served from the root). */
   basePath: string;
   /** Current request path, used only to mark the logo when it is the page. */
@@ -15,6 +20,7 @@ interface MenuToggleProps {
   open: boolean;
   onToggle: () => void;
   buttonRef: RefObject<HTMLButtonElement>;
+  labels: Labels;
 }
 
 /**
@@ -95,16 +101,18 @@ function useMenuFocus(
   }, [open.value]);
 }
 
-function MenuToggle({ open, onToggle, buttonRef }: MenuToggleProps) {
+function MenuToggle({ open, onToggle, buttonRef, labels }: MenuToggleProps) {
   return (
     <button
       type="button"
       class="menu-button"
       aria-expanded={open ? "true" : "false"}
       aria-controls="main-nav"
-      aria-label={open
-        ? "Cerrar el menú de navegación"
-        : "Abrir el menú de navegación"}
+      aria-label={open ? labels.closeMenu : labels.openMenu}
+      data-tina-field={tinaField(
+        labels,
+        open ? "closeMenu" : "openMenu",
+      )}
       ref={buttonRef}
       onClick={onToggle}
     >
@@ -119,13 +127,13 @@ function MenuToggle({ open, onToggle, buttonRef }: MenuToggleProps) {
  * locking; the rest of the site is plain server-rendered HTML.
  *
  * Active-link state is not computed here: Fresh annotates matching anchors with
- * `aria-current`, which the stylesheet uses for the active nav indicator.
+ * aria-current, which the stylesheet uses for the active nav indicator.
  */
-export default function Header({ basePath, path }: HeaderProps) {
+export default function Header({ site, basePath, path }: HeaderProps) {
   const open = useSignal(false);
   // The active state is owned here on purpose: Fresh annotates the matching
-  // anchor during SSR, but hydration re-renders this island from `site.nav`
-  // and the attribute would be lost. `data-current` is what the client router
+  // anchor during SSR, but hydration re-renders this island from site.nav
+  // and the attribute would be lost. data-current is what the client router
   // reads to keep intercepting links, so both are rendered together.
   const normalise = (value: string) => value.replace(/\/+$/, "") || "/";
   const route = normalise(
@@ -135,24 +143,30 @@ export default function Header({ basePath, path }: HeaderProps) {
   const isHome = route === "/";
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const href = (route: string) => `${basePath}${route}`;
+  const href = (target: string) => basePath + target;
   const closeMenu = () => (open.value = false);
+  const labels = site.labels;
 
   useMenuEffects(open);
   useMenuFocus(open, toggleRef, closeRef);
 
   return (
     <header>
-      <a class="skip-to-content-link" href="#main">
-        Saltar al contenido principal
+      <a
+        class="skip-to-content-link"
+        href="#main"
+        data-tina-field={tinaField(labels, "skipToContent")}
+      >
+        {labels.skipToContent}
       </a>
 
       <div class="header-inner shell">
         <a
           class="site-title"
           href={href("/")}
-          aria-label={`${site.author} — inicio`}
+          aria-label={site.author + " — " + labels.homeLink}
           aria-current={isHome ? "page" : "false"}
+          data-tina-field={tinaField(site, "shortTitle")}
         >
           {site.shortTitle}
         </a>
@@ -161,12 +175,14 @@ export default function Header({ basePath, path }: HeaderProps) {
           open={open.value}
           onToggle={() => (open.value = !open.value)}
           buttonRef={toggleRef}
+          labels={labels}
         />
 
         <nav
           id="main-nav"
-          class={`main-nav${open.value ? " open" : ""}`}
-          aria-label="Navegación principal"
+          class={"main-nav" + (open.value ? " open" : "")}
+          aria-label={labels.mainNav}
+          data-tina-field={tinaField(labels, "mainNav")}
         >
           <ul onClick={closeMenu}>
             {site.nav.map((item, index) => (
@@ -175,6 +191,7 @@ export default function Header({ basePath, path }: HeaderProps) {
                   href={href(item.route)}
                   aria-current={isActive(item.route) ? "page" : undefined}
                   data-current={isActive(item.route) ? "true" : undefined}
+                  data-tina-field={tinaField(item, "title")}
                 >
                   <b class="nav-index">
                     {String(index + 1).padStart(2, "0")}.{" "}
@@ -188,7 +205,8 @@ export default function Header({ basePath, path }: HeaderProps) {
           <button
             type="button"
             class="menu-button close-menu"
-            aria-label="Cerrar el menú de navegación"
+            aria-label={labels.closeMenu}
+            data-tina-field={tinaField(labels, "closeMenu")}
             ref={closeRef}
             onClick={closeMenu}
           >

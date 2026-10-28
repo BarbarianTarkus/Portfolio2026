@@ -1,31 +1,46 @@
-import { site } from "../data/site.ts";
 import { GitHubIcon, LinkedInIcon } from "./Icons.tsx";
+import type { SiteContent } from "../lib/content.ts";
+import { tinaField } from "../lib/tina/metadata.ts";
 
 /**
  * Site footer: one call to action and the colophon. Fully static, so it is a
- * plain component rather than an island. The CV is deliberately not hosted
- * here: it is the /experience page or LinkedIn.
+ * plain component rather than an island. Every text node is annotated with a
+ * Tina field marker so editors can click it in the admin preview.
  */
-export function Footer() {
+export function Footer({ site }: { site: SiteContent }) {
   return (
     <footer class="site-footer">
       <div class="shell">
         <div class="footer-cta">
           <div>
-            <p class="eyebrow">Contacto</p>
-            <a class="footer-mail" href={`mailto:${site.email}`}>
+            <p
+              class="eyebrow"
+              data-tina-field={tinaField(site.labels, "contactEyebrow")}
+            >
+              {site.labels.contactEyebrow}
+            </p>
+            <a
+              class="footer-mail"
+              href={"mailto:" + site.email}
+              data-tina-field={tinaField(site, "email")}
+            >
               {site.email}
             </a>
           </div>
 
-          <nav class="footer-social" aria-label="Redes">
+          <nav
+            class="footer-social"
+            aria-label={site.labels.socialNav}
+            data-tina-field={tinaField(site.labels, "socialNav")}
+          >
             <ul>
               <li>
                 <a
                   href={site.github}
                   target="_blank"
                   rel="me noopener noreferrer"
-                  aria-label="Perfil de GitHub"
+                  aria-label={site.labels.githubProfile}
+                  data-tina-field={tinaField(site.labels, "githubProfile")}
                 >
                   <GitHubIcon />
                 </a>
@@ -35,7 +50,8 @@ export function Footer() {
                   href={site.linkedin}
                   target="_blank"
                   rel="me noopener noreferrer"
-                  aria-label="Perfil de LinkedIn"
+                  aria-label={site.labels.linkedinProfile}
+                  data-tina-field={tinaField(site.labels, "linkedinProfile")}
                 >
                   <LinkedInIcon />
                 </a>
@@ -45,8 +61,16 @@ export function Footer() {
         </div>
 
         <p class="colophon">
-          <span>{site.fullName} · {site.role}</span>
-          <span>Badalona, Barcelona</span>
+          <span>
+            <span data-tina-field={tinaField(site, "fullName")}>
+              {site.fullName}
+            </span>
+            {" · "}
+            <span data-tina-field={tinaField(site, "role")}>{site.role}</span>
+          </span>
+          <span data-tina-field={tinaField(site.labels, "location")}>
+            {site.labels.location}
+          </span>
         </p>
       </div>
     </footer>

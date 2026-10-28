@@ -1489,3 +1489,15 @@ html:not(.js) .menu-button {
     margin-top: 2rem;
   }
 }
+
+/* ==========================================================================
+   TinaCMS live-preview island wrappers
+   --------------------------------------------------------------------------
+   Page regions are wrapped so the editor can re-render them on every edit.
+   display: contents keeps the wrapper out of the layout: children behave as
+   if they were direct children of .shell, so the public site is unchanged.
+   ========================================================================== */
+
+.tina-island {
+  display: contents;
+}

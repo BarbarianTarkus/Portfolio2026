@@ -1,0 +1,9 @@
+{
+  "name": "portfolio-tina-tooling",
+  "private": true,
+  "type": "module",
+  "description": "Isolated Node tooling for the TinaCMS admin build (not used by the Deno site runtime).",
+  "devDependencies": {
+    "@tinacms/cli": "4.0.4"
+  }
+}

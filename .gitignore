@@ -10,6 +10,12 @@ _fresh/
 # Generated static site (see scripts/ssg.ts)
 dist/
 
+# TinaCMS generated output (see scripts/ssg.ts / deno task tina:build)
+tina/__generated__/
+tina/tina-lock.json
+static/admin/
+tools/tina/install.log
+
 # npm + other dependencies
 node_modules/
 vendor/

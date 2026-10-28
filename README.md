@@ -16,7 +16,9 @@ from client-side Svelte to server-rendered Preact.
 routes/          Fresh file-system routes (pages + _app shell + _404)
 islands/         Components that need client-side JS (only the header/menu)
 components/      Static Preact components (footer, icons)
-data/site.ts     Shared identity, links, navigation and project fiches
+content/         Editable site copy (JSON, modelled by tina/config.ts)
+lib/content.ts   Typed loaders that pass content to routes
+tina/config.ts   TinaCMS schema for content/*.json
 static/          Static assets copied as-is (styles, favicon, robots.txt)
 scripts/ssg.ts   Static site generator entry point (build, render, verify)
 scripts/lib/     Filesystem, route, rendering and output-verification helpers
@@ -42,8 +44,8 @@ config.ts        BASE_PATH handling shared by app, Vite and SSG
 ## Requirements
 
 - [Deno](https://docs.deno.com/runtime/getting_started/installation) 2.x
-
-No Node.js is required: Fresh's Vite plugin runs on Deno.
+- [Node.js](https://nodejs.org) 24+ — only for the TinaCMS admin build in
+  `tools/tina/`; the site itself runs on Deno.
 
 ## Setup
 
@@ -114,23 +116,88 @@ normalized to root by `config.ts`).
 
 ## Customizing content
 
-Shared site metadata lives in [`data/site.ts`](data/site.ts):
+Editable site copy lives in [`content/*.json`](content/) — one file per page
+plus `content/site.json` for shared metadata and `content/projects.json` for the
+project fiches. The schema for every field is
+[`tina/config.ts`](tina/config.ts); [`lib/content.ts`](lib/content.ts) loads the
+JSON and passes it to the routes as typed props.
 
-- `site` — name, role, intro, highlights, social links, navigation items and
-  (optionally) an email address. Leave `email` empty to hide the email card.
-  There is deliberately no CV file in the repository: it is shared through
+- `content/site.json` — name, role, intro, highlights, social links, navigation
+  items and (optionally) an email address. Leave `email` empty to hide the email
+  card. There is deliberately no CV file in the repository: it is shared through
   LinkedIn instead.
-- `projects` — one fiche per project: `name`, `summary`, `tags`, `period`, an
-  optional verified `work` line (e.g. "12 PRs mergeados"), `links`, then the
-  narrative fields `problem`, `decisions`, `broke` and `next`. Every fiche is
-  rendered by `routes/projects.tsx`; omit `broke`/`next` rather than inventing
-  an incident.
+- `content/projects.json` — one fiche per project: `name`, `summary`, `tags`,
+  `period`, an optional verified `work` line (e.g. "12 PRs mergeados"), `links`,
+  then the narrative fields `problem`, `decisions`, `broke` and `next`. Every
+  fiche is rendered by [`routes/projects.tsx`](routes/projects.tsx); omit
+  `broke`/`next` rather than inventing an incident.
 
-The site copy is written in Spanish (`<html lang="es">`); there is no English
-translation yet. Page-specific prose (About/Contact copy) lives in the matching
-file under [`routes/`](routes/). Colours, typography and layout are defined with
-CSS custom properties at the top of
-[`static/styles/main.css`](static/styles/main.css).
+Edit the JSON by hand or through the [TinaCMS admin](#content-tinacms). After a
+schema change, run `deno task tina:build` to regenerate `tina/__generated__/`
+and the query strings in `lib/tina/documents.generated.ts`. The site copy is
+written in Spanish (`<html lang="es">`); there is no English translation yet.
+Colours, typography and layout are defined with CSS custom properties at the top
+of [`static/styles/main.css`](static/styles/main.css).
+
+## Content (TinaCMS)
+
+Page copy lives in [`content/*.json`](content/) and is modelled by
+[`tina/config.ts`](tina/config.ts). The editing UI (TinaCMS admin) is built by
+the Tina CLI from isolated Node tooling in [`tools/tina/`](tools/tina/); its
+generated output (`static/admin/`, `tina/__generated__/`) is git-ignored and is
+rebuilt by the static export.
+
+Local setup, once Deno dependencies are installed and Node.js 24+ is available:
+
+```bash
+deno task tina:install   # npm install inside tools/tina (isolated)
+deno task tina:dev       # Tina dev server + `deno task dev` together
+```
+
+`deno task tina:dev` serves the site and the admin together: open
+<http://localhost:5173/admin/index.html> (the admin app itself is served by Tina
+on port 4001 and loaded by the site's own dev server). In local mode Tina writes
+edits straight to `content/*.json`.
+
+Clicking **Enter Edit Mode** puts the site in the admin's preview iframe. Every
+page registers its content documents as Tina forms and every text node carries a
+`data-tina-field` marker, so clicking a paragraph focuses the matching field and
+typing in the form re-renders the page live. The preview is rendered by the
+Fresh server through `/tina-island/<name>` while `tina:dev` (or a Deno server
+deployment) is serving the site; see `lib/tina/` for the server side and
+`static/tina-bridge.js` / `static/tina-live-fallback.js` for the browser side.
+
+`deno task tina:build` rebuilds the static admin and regenerates
+`tina/__generated__/` plus the query strings in
+`lib/tina/documents.generated.ts`, without starting a server.
+
+In production `deno task ssg` runs `tina:build` first and exports the admin to
+`dist/admin/` (served from the deployment sub-path, e.g.
+<https://barbariantarkus.github.io/Portfolio/admin/>). Editing uses Tina Cloud
+with the `PUBLIC_TINA_CLIENT_ID` and `TINA_TOKEN` credentials that CI passes
+from repository secrets, and changes are committed through GitHub.
+
+GitHub Pages only serves static files, so the island endpoints do not exist
+there. The static export is marked with `data-tina-static` and
+`static/tina-live-fallback.js` re-renders the edited text in the browser from
+the same form overlay, which keeps live preview working without a server. Server
+deployments keep using the faster server-rendered islands.
+
+### Tina Cloud project prerequisite
+
+Tina Cloud binds a client id to one connected Git repository and its schema. The
+credentials must belong to a project connected to **this** repository; reusing
+another site's `.env` makes the admin edit the wrong content. Verify before
+deploying:
+
+```bash
+deno task tina:check-cloud
+```
+
+It queries the Content API and fails unless the `site`, `home`, `about`,
+`contact`, `experience` and `projects` collections exist. If it fails, create a
+project on <https://app.tina.io> for this repository and update both `.env` and
+the `PUBLIC_TINA_CLIENT_ID` / `TINA_TOKEN` GitHub secrets.
 
 ## Design notes
 

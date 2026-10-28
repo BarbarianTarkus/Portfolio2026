@@ -1,77 +1,116 @@
 import { Head } from "fresh/runtime";
-import { site } from "../data/site.ts";
+import type { ContactContent, SiteContent } from "../lib/content.ts";
+import { loadContactPage } from "../lib/content.ts";
+import { TinaIsland } from "../lib/tina/island.tsx";
+import { tinaField } from "../lib/tina/metadata.ts";
 import { define } from "../utils.ts";
 
 /**
  * Contact as three rows. Each row is one link; the arrow is decorative and the
  * handle is the link text, so screen readers announce the destination once.
  */
-const pageDescription =
-  "Contacto de Ricardo Verduguez: correo electrónico, GitHub y LinkedIn.";
+export const handler = define.handlers({
+  GET(ctx) {
+    const { site, page } = loadContactPage(ctx);
+    return ctx.render(
+      <TinaIsland name="contact" basePath={ctx.config.basePath}>
+        <ContactPage site={site} page={page} />
+      </TinaIsland>,
+    );
+  },
+});
 
-export default define.page(function Contact() {
+interface ContactPageProps {
+  site: SiteContent;
+  page: ContactContent;
+}
+
+interface ContactRowProps {
+  row: ContactContent["email"];
+  label: string;
+  value: string;
+  href: string;
+  external: boolean;
+  me?: boolean;
+}
+
+function ContactRow(
+  { row, label, value, href, external, me }: ContactRowProps,
+) {
+  return (
+    <li>
+      <a
+        class="contact-row"
+        href={href}
+        target={external ? "_blank" : undefined}
+        rel={external
+          ? (me ? "me noopener noreferrer" : "noopener noreferrer")
+          : undefined}
+        data-tina-field={tinaField(row, "hint")}
+      >
+        <span class="contact-label" data-tina-field={tinaField(row, "label")}>
+          {label}
+        </span>
+        <span class="contact-value">{value}</span>
+        <span class="contact-hint" data-tina-field={tinaField(row, "hint")}>
+          {row.hint}
+        </span>
+        <span class="contact-arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+  );
+}
+
+export function ContactPage({ site, page }: ContactPageProps) {
+  const metaTitle = page.meta.title + " — " + site.author;
+
   return (
     <>
       <Head>
-        <title>Contacto — {site.author}</title>
-        <meta name="description" content={pageDescription} />
-        <meta property="og:title" content={`Contacto — ${site.author}`} />
-        <meta property="og:description" content={pageDescription} />
+        <title>{metaTitle}</title>
+        <meta
+          name="description"
+          content={page.meta.description}
+          data-tina-field={tinaField(page.meta, "description")}
+        />
+        <meta property="og:title" content={metaTitle} />
+        <meta property="og:description" content={page.meta.description} />
       </Head>
 
-      <h1 class="page-title">Contacto</h1>
-      <p class="page-lede">
-        Estoy abierto a roles junior de desarrollo, sistemas o seguridad, y a
-        proyectos donde las dos cosas se crucen. La forma más rápida de
-        contactarme es esta:
+      <h1 class="page-title" data-tina-field={tinaField(page, "title")}>
+        {page.title}
+      </h1>
+      <p class="page-lede" data-tina-field={tinaField(page, "lede")}>
+        {page.lede}
       </p>
 
       <ul class="contact-rows">
         {site.email !== "" && (
-          <li>
-            <a class="contact-row" href={`mailto:${site.email}`}>
-              <span class="contact-label">Correo</span>
-              <span class="contact-value">{site.email}</span>
-              <span class="contact-hint">
-                Para cualquier cosa que no encaje en un issue de GitHub.
-              </span>
-              <span class="contact-arrow" aria-hidden="true">→</span>
-            </a>
-          </li>
+          <ContactRow
+            row={page.email}
+            label={page.email.label}
+            value={site.email}
+            href={"mailto:" + site.email}
+            external={false}
+          />
         )}
-
-        <li>
-          <a
-            class="contact-row"
-            href={site.github}
-            target="_blank"
-            rel="me noopener noreferrer"
-          >
-            <span class="contact-label">GitHub</span>
-            <span class="contact-value">{site.githubHandle}</span>
-            <span class="contact-hint">
-              Código, experimentos y contribuciones en abierto.
-            </span>
-            <span class="contact-arrow" aria-hidden="true">→</span>
-          </a>
-        </li>
-
-        <li>
-          <a
-            class="contact-row"
-            href={site.linkedin}
-            target="_blank"
-            rel="me noopener noreferrer"
-          >
-            <span class="contact-label">LinkedIn</span>
-            <span class="contact-value">{site.linkedinHandle}</span>
-            <span class="contact-hint">
-              Experiencia, estudios y novedades profesionales.
-            </span>
-            <span class="contact-arrow" aria-hidden="true">→</span>
-          </a>
-        </li>
+        <ContactRow
+          row={page.github}
+          label={page.github.label}
+          value={site.githubHandle}
+          href={site.github}
+          external
+          me
+        />
+        <ContactRow
+          row={page.linkedin}
+          label={page.linkedin.label}
+          value={site.linkedinHandle}
+          href={site.linkedin}
+          external
+          me
+        />
       </ul>
     </>
   );
-});
+}

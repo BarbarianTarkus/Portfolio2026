@@ -1,44 +1,69 @@
 import { Head } from "fresh/runtime";
-import { site } from "../data/site.ts";
+import type { SiteContent } from "../lib/content.ts";
+import { tinaField } from "../lib/tina/metadata.ts";
 
 interface NotFoundPageProps {
   basePath: string;
+  site: SiteContent;
 }
 
 /**
- * Rendered by `routes/_404.tsx`. Fresh's `_404` convention does not force a 404
+ * Rendered by routes/_404.tsx. Fresh's _404 convention does not force a 404
  * status code, so the route's GET handler renders this component and returns a
  * 404 response explicitly.
  */
-const pageDescription =
-  "La página que buscas no existe en el portfolio de Ricardo Verduguez.";
-
-export function NotFoundPage({ basePath }: NotFoundPageProps) {
+export function NotFoundPage({ basePath, site }: NotFoundPageProps) {
+  const notFound = site.notFound;
   return (
     <>
       <Head>
-        <title>Página no encontrada — {site.author}</title>
-        <meta name="description" content={pageDescription} />
+        <title>
+          {notFound.metaTitle + " — " + site.author}
+        </title>
+        <meta
+          name="description"
+          content={notFound.metaDescription}
+          data-tina-field={tinaField(notFound, "metaDescription")}
+        />
         <meta
           property="og:title"
-          content={`Página no encontrada — ${site.author}`}
+          content={notFound.metaTitle + " — " + site.author}
         />
-        <meta property="og:description" content={pageDescription} />
+        <meta
+          property="og:description"
+          content={notFound.metaDescription}
+          data-tina-field={tinaField(notFound, "metaDescription")}
+        />
       </Head>
 
       <div class="error-page">
-        <p class="error-code" aria-hidden="true">404</p>
-        <h1 class="page-title">Esta página no existe.</h1>
-        <p class="page-lede">
-          El enlace puede estar roto o la página haberse movido. Vuelve al
-          inicio y empieza de nuevo.
+        <p
+          class="error-code"
+          aria-hidden="true"
+          data-tina-field={tinaField(notFound, "code")}
+        >
+          {notFound.code}
+        </p>
+        <h1
+          class="page-title"
+          data-tina-field={tinaField(notFound, "heading")}
+        >
+          {notFound.heading}
+        </h1>
+        <p class="page-lede" data-tina-field={tinaField(notFound, "lede")}>
+          {notFound.lede}
         </p>
         {
           /* Explicit "false" stops Fresh from marking this home link as the
             current/ancestor page while rendering the 404 response. */
         }
-        <a class="button" href={`${basePath}/`} aria-current="false">
-          Volver al inicio
+        <a
+          class="button"
+          href={basePath + "/"}
+          aria-current="false"
+          data-tina-field={tinaField(notFound, "button")}
+        >
+          {notFound.button}
         </a>
       </div>
     </>

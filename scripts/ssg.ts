@@ -4,10 +4,12 @@
  * Fresh renders every request on the server, so turning it into a static site
  * is a matter of:
  *
- *   1. building the app with Vite (`deno task build`),
- *   2. rendering each route through the production server handler,
- *   3. writing the resulting HTML plus the hashed assets into `dist/`,
- *   4. sanity-checking that every asset/link referenced by the HTML exists.
+ *   1. building the TinaCMS admin with the Tina CLI (`deno task tina:build`),
+ *   2. building the app with Vite (`deno task build`),
+ *   3. rendering each route through the production server handler,
+ *   4. writing the resulting HTML plus the hashed assets into `dist/`,
+ *   5. rewriting the admin's absolute asset URLs and sanity-checking that
+ *      every asset/link referenced by the HTML exists.
  *
  * The output in `dist/` is what GitHub Pages serves. Run it with:
  *
@@ -32,6 +34,7 @@ import {
 } from "./lib/files.ts";
 import { discoverRoutes } from "./lib/routes.ts";
 import { renderNotFound, renderRoute, startServer } from "./lib/render.ts";
+import { assertTinaAdmin, rewriteAdminIndex } from "./lib/tina-admin.ts";
 import { verifyOutput } from "./lib/verify.ts";
 
 const ROOT = join(import.meta.dirname!, "..");
@@ -77,8 +80,14 @@ async function main(): Promise<void> {
   console.log(`   base path: ${basePath}/`);
   console.log(`   output:    ${DIST}`);
 
-  // The build must see the same base path as the renderer below.
+  // The build must see the same base path as the renderer below. TINA_STATIC
+  // tells the shell that the export will be hosted without a request-time
+  // server, so the browser must re-render editable regions itself.
   Deno.env.set("BASE_PATH", basePath);
+  Deno.env.set("TINA_STATIC", "1");
+
+  heading("Building the TinaCMS admin");
+  await runTask("tina:build");
 
   heading("Building the app");
   await runTask("build");
@@ -105,6 +114,12 @@ async function main(): Promise<void> {
     // files/directories whose names start with an underscore.
     await Deno.writeTextFile(join(DIST, ".nojekyll"), "");
     log(".nojekyll written");
+
+    heading("Preparing the TinaCMS admin");
+    const rewritten = await rewriteAdminIndex(DIST);
+    log(`rewrote ${rewritten} admin asset URL(s) to ./assets/`);
+    await assertTinaAdmin(DIST);
+    log("admin/index.html and tina-bridge.js verified");
 
     heading("Verifying output");
     const checked = await verifyOutput(DIST, basePath);

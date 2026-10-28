@@ -31,16 +31,38 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
       - name: Install dependencies
         run: deno install --frozen
 
+      - name: Install TinaCMS build tooling
+        run: cd tools/tina && npm ci --no-audit --no-fund
+
       - name: Run checks
         run: deno task check
+
+      # Warn (without blocking the deploy) when the Tina Cloud credentials do
+      # not belong to this repository's schema.
+      - name: Validate Tina Cloud project
+        continue-on-error: true
+        env:
+          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+          HEAD: master
+        run: deno task tina:check-cloud
 
       - name: Build static site
         # BASE_PATH can be overridden; it defaults to /Portfolio in the SSG script.
         env:
           BASE_PATH: ${{ vars.BASE_PATH || '/Portfolio' }}
+          # Tina Cloud credentials for the generated admin and content queries.
+          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+          HEAD: master
         run: deno task ssg
 
       - name: Upload Pages artifact

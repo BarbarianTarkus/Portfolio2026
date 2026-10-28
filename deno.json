@@ -7,8 +7,13 @@
     "build": "vite build",
     "ssg": "deno run -A scripts/ssg.ts",
     "preview": "deno run -A scripts/preview.ts",
-    "start": "deno serve -A _fresh/server.js",
-    "update": "deno run -A -r jsr:@fresh/update ."
+    "start": "deno serve --port 8001 -A _fresh/server.js",
+    "update": "deno run -A -r jsr:@fresh/update .",
+    "tina:build": "node tools/tina/node_modules/@tinacms/cli/bin/tinacms build --skip-cloud-checks --noTelemetry && node tools/tina/generate-tina-documents.mjs",
+    "tina:dev": "node tools/tina/node_modules/@tinacms/cli/bin/tinacms dev -c \"deno task dev\" --noTelemetry",
+    "tina:documents": "node tools/tina/generate-tina-documents.mjs",
+    "tina:check-cloud": "node tools/tina/check-cloud.mjs",
+    "tina:install": "cd tools/tina && npm install --no-audit --no-fund --cache /home/gouda/.npm-tina-cache --logs-dir /home/gouda/.npm-tina-logs"
   },
   "lint": {
     "rules": {
@@ -22,7 +27,13 @@
     "**/_fresh/*",
     "dist/",
     "node_modules/",
-    ".scannerwork/"
+    ".scannerwork/",
+    "tina/__generated__/",
+    "tina/tina-lock.json",
+    "lib/tina/documents.generated.ts",
+    "static/admin/",
+    "static/tina-bridge.js",
+    "tools/tina/"
   ],
   "imports": {
     "@/": "./",
@@ -30,6 +41,7 @@
     "@std/path": "jsr:@std/path@^1.1.6",
     "fresh": "jsr:@fresh/core@^2.3.3",
     "preact": "npm:preact@^10.29.1",
+    "preact-render-to-string": "npm:preact-render-to-string@^6.8.1",
     "@preact/signals": "npm:@preact/signals@^2.9.0",
     "@fresh/plugin-vite": "jsr:@fresh/plugin-vite@^1.1.2",
     "vite": "npm:vite@^7.1.3",

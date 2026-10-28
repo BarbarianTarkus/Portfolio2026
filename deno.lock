@@ -5,6 +5,7 @@
     "jsr:@deno/loader@0.4": "0.4.0",
     "jsr:@deno/loader@~0.3.10": "0.3.14",
     "jsr:@fresh/build-id@1": "1.0.1",
+    "jsr:@fresh/core@*": "2.3.3",
     "jsr:@fresh/core@2": "2.3.3",
     "jsr:@fresh/core@^2.3.3": "2.3.3",
     "jsr:@fresh/plugin-vite@^1.1.2": "1.1.2",
@@ -49,6 +50,7 @@
     "npm:esbuild@0.25.7": "0.25.7",
     "npm:esbuild@~0.25.5": "0.25.12",
     "npm:preact-render-to-string@^6.6.3": "6.8.1_preact@10.29.8",
+    "npm:preact-render-to-string@^6.8.1": "6.8.1_preact@10.29.8",
     "npm:preact@^10.28.2": "10.29.8_preact-render-to-string@6.8.1",
     "npm:preact@^10.29.1": "10.29.8_preact-render-to-string@6.8.1",
     "npm:rollup@^4.55.1": "4.65.1",
@@ -96,7 +98,7 @@
         "npm:@preact/signals@^2.5.1",
         "npm:esbuild-wasm",
         "npm:esbuild@0.25.7",
-        "npm:preact-render-to-string",
+        "npm:preact-render-to-string@^6.6.3",
         "npm:preact@^10.28.2",
         "npm:preact@^10.29.1"
       ]
@@ -1307,6 +1309,7 @@
       "jsr:@std/path@^1.1.6",
       "npm:@preact/signals@^2.9.0",
       "npm:@types/babel__core@^7.20.5",
+      "npm:preact-render-to-string@^6.8.1",
       "npm:preact@^10.29.1",
       "npm:vite@^7.1.3"
     ]
