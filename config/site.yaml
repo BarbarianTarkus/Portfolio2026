@@ -1,0 +1,11 @@
+# Dune site configuration (https://jsr.io/@dune/core).
+#
+# The values here feed Dune's content index, admin panel and generated
+# metadata. Public page copy lives in content/*/default.md instead; this file
+# only carries site-wide identity plus Dune's own routing defaults.
+title: "Ricardo Verduguez — Desarrollador full-stack"
+description: "Desarrollador full-stack con base en sistemas: aplicaciones web en producción e infraestructura propia con NAS, VPN, Gitea y SonarQube."
+url: "https://barbariantarkus.github.io/Portfolio"
+author:
+  name: "Ricardo Verduguez Claros"
+home: home

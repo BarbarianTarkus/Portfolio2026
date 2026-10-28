@@ -1,9 +1,11 @@
 # Ricardo Verduguez — portfolio
 
 A static portfolio site built with **[Deno](https://deno.com)** and
-**[Fresh 2](https://fresh.deno.dev)**. Every page is rendered on the server by
-Fresh and then exported to plain HTML, CSS and (a tiny amount of) JavaScript, so
-it can be hosted for free on GitHub Pages.
+**[Fresh 2](https://fresh.deno.dev)**, with the site copy edited through
+**[Dune](https://getdune.org)** — the flat-file CMS for Deno and Fresh — mounted
+headless inside the app. Every page is rendered on the server by Fresh and then
+exported to plain HTML, CSS and (a tiny amount of) JavaScript, so it can be
+hosted for free on GitHub Pages.
 
 This repository replaces the previous SvelteKit version of the portfolio. The
 visual identity (dark navy background, yellow accent, Fira Code / Roboto
@@ -13,48 +15,64 @@ from client-side Svelte to server-rendered Preact.
 ## How it works
 
 ```
+main.ts          Fresh app + Dune bootstrap: headless CMS mount, /admin
+dev.ts           Dev server: Fresh Builder + Dune content-index watcher
 routes/          Fresh file-system routes (pages + _app shell + _404)
-islands/         Components that need client-side JS (only the header/menu)
-components/      Static Preact components (footer, icons)
-content/         Editable site copy (JSON, modelled by tina/config.ts)
-lib/content.ts   Typed loaders that pass content to routes
-tina/config.ts   TinaCMS schema for content/*.json
+islands/         Client-side JS: the header/menu island, plus one thin bridge
+                 file per Dune admin island (re-exports only)
+components/      Static Preact components (footer, icons, page pieces)
+content/         Dune pages: one folder per page, copy in default.md frontmatter
+lib/content.ts   Typed loaders over Dune's content API (the only CMS client)
+lib/content-types.ts  TypeScript shapes for each page's frontmatter
+config/          Dune configuration (site.yaml, system.yaml)
 static/          Static assets copied as-is (styles, favicon, robots.txt)
-scripts/ssg.ts   Static site generator entry point (build, render, verify)
-scripts/lib/     Filesystem, route, rendering and output-verification helpers
-scripts/preview.ts  Local preview server that mimics GitHub Pages
+scripts/build.ts Production build → _fresh/ (server.js + static/)
+scripts/ssg.ts   Static export: build, render, verify links → dist/
+scripts/preview.ts  Local server that mimics GitHub Pages
 scripts/sonar-scan.sh  Local SonarQube analysis (reads .env)
+config.ts        BASE_PATH handling shared by app, SSG and preview
+docs/dune-cms.md Dune integration: mount, content model, admin, upgrades
 docs/redesign.md Light-touch redesign plan and design-token rationale
 docs/content-pass-2026-10-28.md  Content pass: scope, provenance, pending items
 docs/ui-ux-pass-2026-10-28.md    Interaction, accessibility and hierarchy fixes
-config.ts        BASE_PATH handling shared by app, Vite and SSG
+data/            Dune runtime state (git-ignored): users, permissions, password
+.dune/           Dune admin state (git-ignored): sessions, CSRF secret, audit log
 ```
 
-- **Server rendering:** `routes/_app.tsx` renders the document shell and wraps
-  every page with the header (an island) and the footer.
-- **Partial hydration:** only `islands/Header.tsx` ships JavaScript (mobile menu
-  state, Escape key, focus trap/inert handling and scroll lock). Everything else
-  is static HTML.
-- **Static export:** `deno task ssg` runs the Vite build, renders each route
-  through the production server handler, copies hashed assets into `dist/`,
-  writes `404.html` and `.nojekyll`, and finally verifies that every URL
-  referenced by the HTML — including the island module imports — exists on disk
-  (CSS `url()` references are not inspected; the stylesheet has none today).
+- **Server rendering:** [`routes/_app.tsx`](routes/_app.tsx) renders the
+  document shell and wraps every page with the header (an island) and the
+  footer.
+- **Partial hydration:** only [`islands/Header.tsx`](islands/Header.tsx) ships
+  JavaScript to public pages (mobile menu state, Escape key, focus trap/inert
+  handling and scroll lock). The files in
+  [`islands/dune-admin/`](islands/dune-admin/) are Dune admin island bridges:
+  thin re-exports bundled into the `/admin` entry and never loaded on the public
+  site.
+- **Headless CMS:** [`main.ts`](main.ts) calls Dune's `bootstrap()` and
+  `mountPlugins()`, exposes the content API on `ctx.state.contentApi` and mounts
+  the admin at `/admin`. The public pages still come from [`routes/`](routes/);
+  [`lib/content.ts`](lib/content.ts) is the only module that reads content. See
+  [`docs/dune-cms.md`](docs/dune-cms.md).
+- **Static export:** `deno task ssg` builds the app with Fresh's Builder,
+  renders each route through the production server handler, copies the bundled
+  assets into `dist/`, writes `404.html` and `.nojekyll`, and finally verifies
+  that every URL referenced by the HTML — including the island module imports —
+  exists on disk (CSS `url()` references are not inspected; the stylesheet has
+  none today).
 
 ## Requirements
 
-- [Deno](https://docs.deno.com/runtime/getting_started/installation) 2.x
-- [Node.js](https://nodejs.org) 24+ — only for the TinaCMS admin build in
-  `tools/tina/`; the site itself runs on Deno.
+- [Deno](https://docs.deno.com/runtime/getting_started/installation) 2.x.
+- Nothing else. There is no Node.js toolchain, no database and no external
+  service: Fresh 2 bundles with its own Builder and Dune is a JSR package.
 
 ## Setup
-
-Install the project's dependencies once (Fresh uses Vite, which is an npm
-package, so `node_modules/` has to be populated):
 
 ```bash
 deno install
 ```
+
+This populates the locked dependencies Fresh bundles in `node_modules/`.
 
 ## Development
 
@@ -62,9 +80,28 @@ deno install
 deno task dev
 ```
 
-The dev server runs at <http://localhost:5173/> (with live reload and hot module
-replacement). No `BASE_PATH` is needed in development: the site is served from
-the domain root.
+The dev server runs at <http://localhost:5173/> with live reload (set `PORT` to
+use another port). Editing a route or island rebuilds the browser bundle;
+editing a content page rebuilds Dune's content index in place, so changes show
+up without restarting the process. No `BASE_PATH` is needed in development: the
+site is served from the domain root.
+
+## Editing content
+
+The copy is stored as [Dune](https://getdune.org) pages: one folder per page
+under [`content/`](content/), each with a `default.md` whose YAML frontmatter
+holds the structured text the route renders. Start the dev server and open
+<http://localhost:5173/admin>. On the first run Dune creates an `admin` account
+and writes its generated password to `data/initial-password.txt` (both `data/`
+and `.dune/` are git-ignored). Log in, change the password, delete that file,
+then edit pages in the admin. Saving writes straight into
+`content/*/default.md`, so the result is a normal content diff that is committed
+with the rest of the site.
+
+The GitHub Pages deployment is static only: `/admin` and the content API do not
+exist there. The admin runs locally, or on a Deno server deployment of the same
+app. The content model, route mapping and upgrade notes are documented in
+[`docs/dune-cms.md`](docs/dune-cms.md).
 
 ## Build the static site
 
@@ -87,23 +124,24 @@ The generator fails if any generated `href`/`src`/island import points at a
 missing file or forgets the base path, so a green run means the deployment links
 are sound.
 
-You can also run the Fresh server itself against the production build:
+`deno task start` builds the Fresh server into `_fresh/` and serves it at
+<http://localhost:8001/> — including `/admin`. It runs `deno task build` first,
+so a static export never leaves a pruned server bundle behind:
 
 ```bash
-deno task build
-deno task start    # http://localhost:8000/
-# BASE_PATH=/Portfolio deno task start  — serve under the GitHub Pages sub-path
+deno task start
 ```
 
-`deno task start` always binds port 8000. To use another port, call the server
+`deno task start` always binds port 8001. To use another port, call the server
 directly: `deno serve -A --port 8803 _fresh/server.js` (extra arguments passed
 to a Deno task land after the script path, where `deno serve` ignores them).
 
 ## Deployment
 
-`.github/workflows/deploy.yml` runs the checks, builds `dist/` with Deno and
+`.github/workflows/deploy.yml` runs the checks, exports `dist/` with Deno and
 publishes it with GitHub Pages' official actions whenever `master` is pushed.
-`.github/workflows/ci.yml` runs the same checks on pull requests.
+`.github/workflows/ci.yml` runs the same checks on pull requests. Both workflows
+only set up Deno: no CMS secrets or cloud project need configuring.
 
 One-time repository setup: **Settings → Pages → Build and deployment → Source:
 GitHub Actions**. The site is then available at
@@ -114,90 +152,34 @@ into `dist/`) and set the `BASE_PATH` repository variable to `/` so the site is
 built for the domain root (GitHub Actions variables cannot be empty, and `/` is
 normalized to root by `config.ts`).
 
+The deployed site is static, so content changes require a rebuild: edit and
+commit `content/`, and the push republishes the export. Editing through the
+admin against a Deno server deployment does not update GitHub Pages on its own;
+its content changes still have to be committed and pushed.
+
 ## Customizing content
 
-Editable site copy lives in [`content/*.json`](content/) — one file per page
-plus `content/site.json` for shared metadata and `content/projects.json` for the
-project fiches. The schema for every field is
-[`tina/config.ts`](tina/config.ts); [`lib/content.ts`](lib/content.ts) loads the
-JSON and passes it to the routes as typed props.
+Each page in [`content/`](content/) is a Dune folder with a `default.md` file.
+The numeric prefix controls order and is stripped from the route:
 
-- `content/site.json` — name, role, intro, highlights, social links, navigation
-  items and (optionally) an email address. Leave `email` empty to hide the email
-  card. There is deliberately no CV file in the repository: it is shared through
-  LinkedIn instead.
-- `content/projects.json` — one fiche per project: `name`, `summary`, `tags`,
-  `period`, an optional verified `work` line (e.g. "12 PRs mergeados"), `links`,
-  then the narrative fields `problem`, `decisions`, `broke` and `next`. Every
-  fiche is rendered by [`routes/projects.tsx`](routes/projects.tsx); omit
-  `broke`/`next` rather than inventing an incident.
+- `content/01.home/default.md` — home page (`/`): hero, CTAs, section headings,
+  focus blocks, stack chips, project note.
+- `content/02.about/default.md` — About page (`/about`).
+- `content/03.contact/default.md` — Contact page (`/contact`).
+- `content/04.experience/default.md` — Experience page (`/experience`).
+- `content/05.projects/default.md` — Projects page (`/projects`): one fiche per
+  project, with `problem`, `decisions` and optional verified `broke`/`next`
+  lines.
+- `content/06.site/default.md` — site globals shared by every page: identity,
+  navigation, social links, footer labels, 404 copy and UI strings.
 
-Edit the JSON by hand or through the [TinaCMS admin](#content-tinacms). After a
-schema change, run `deno task tina:build` to regenerate `tina/__generated__/`
-and the query strings in `lib/tina/documents.generated.ts`. The site copy is
-written in Spanish (`<html lang="es">`); there is no English translation yet.
-Colours, typography and layout are defined with CSS custom properties at the top
-of [`static/styles/main.css`](static/styles/main.css).
-
-## Content (TinaCMS)
-
-Page copy lives in [`content/*.json`](content/) and is modelled by
-[`tina/config.ts`](tina/config.ts). The editing UI (TinaCMS admin) is built by
-the Tina CLI from isolated Node tooling in [`tools/tina/`](tools/tina/); its
-generated output (`static/admin/`, `tina/__generated__/`) is git-ignored and is
-rebuilt by the static export.
-
-Local setup, once Deno dependencies are installed and Node.js 24+ is available:
-
-```bash
-deno task tina:install   # npm install inside tools/tina (isolated)
-deno task tina:dev       # Tina dev server + `deno task dev` together
-```
-
-`deno task tina:dev` serves the site and the admin together: open
-<http://localhost:5173/admin/index.html> (the admin app itself is served by Tina
-on port 4001 and loaded by the site's own dev server). In local mode Tina writes
-edits straight to `content/*.json`.
-
-Clicking **Enter Edit Mode** puts the site in the admin's preview iframe. Every
-page registers its content documents as Tina forms and every text node carries a
-`data-tina-field` marker, so clicking a paragraph focuses the matching field and
-typing in the form re-renders the page live. The preview is rendered by the
-Fresh server through `/tina-island/<name>` while `tina:dev` (or a Deno server
-deployment) is serving the site; see `lib/tina/` for the server side and
-`static/tina-bridge.js` / `static/tina-live-fallback.js` for the browser side.
-
-`deno task tina:build` rebuilds the static admin and regenerates
-`tina/__generated__/` plus the query strings in
-`lib/tina/documents.generated.ts`, without starting a server.
-
-In production `deno task ssg` runs `tina:build` first and exports the admin to
-`dist/admin/` (served from the deployment sub-path, e.g.
-<https://barbariantarkus.github.io/Portfolio/admin/>). Editing uses Tina Cloud
-with the `PUBLIC_TINA_CLIENT_ID` and `TINA_TOKEN` credentials that CI passes
-from repository secrets, and changes are committed through GitHub.
-
-GitHub Pages only serves static files, so the island endpoints do not exist
-there. The static export is marked with `data-tina-static` and
-`static/tina-live-fallback.js` re-renders the edited text in the browser from
-the same form overlay, which keeps live preview working without a server. Server
-deployments keep using the faster server-rendered islands.
-
-### Tina Cloud project prerequisite
-
-Tina Cloud binds a client id to one connected Git repository and its schema. The
-credentials must belong to a project connected to **this** repository; reusing
-another site's `.env` makes the admin edit the wrong content. Verify before
-deploying:
-
-```bash
-deno task tina:check-cloud
-```
-
-It queries the Content API and fails unless the `site`, `home`, `about`,
-`contact`, `experience` and `projects` collections exist. If it fails, create a
-project on <https://app.tina.io> for this repository and update both `.env` and
-the `PUBLIC_TINA_CLIENT_ID` / `TINA_TOKEN` GitHub secrets.
+The frontmatter is typed in [`lib/content-types.ts`](lib/content-types.ts) and
+loaded by [`lib/content.ts`](lib/content.ts), which passes it to the routes;
+routes only see plain data. Edit the frontmatter by hand or through the
+[admin](#editing-content). The site copy is written in Spanish
+(`<html lang="es">`); there is no English translation yet. Colours, typography
+and layout are defined with CSS custom properties at the top of
+[`static/styles/main.css`](static/styles/main.css).
 
 ## Design notes
 
@@ -231,14 +213,19 @@ with the git-ignored `.env` (contains `SONAR_HOST_URL` and `SONARQUBE_API_KEY`):
 ./scripts/sonar-scan.sh
 ```
 
-The scan currently reports zero open issues, zero code smells, zero security
-hotspots and A ratings for reliability, security and maintainability. Cyclomatic
-complexity is 99 (cognitive complexity 41); the 2026-10-28 pass that brought it
-down from 117 is documented in
-[`docs/complexity-pass-2026-10-28.md`](docs/complexity-pass-2026-10-28.md).
+The last full scan, taken just before the Dune migration, reported zero open
+issues, zero code smells, zero security hotspots and A ratings for reliability,
+security and maintainability, with cyclomatic complexity 99 (cognitive
+complexity 41). The 2026-10-28 pass that brought it down from 117 is documented
+in [`docs/complexity-pass-2026-10-28.md`](docs/complexity-pass-2026-10-28.md);
+re-run the scan after the CMS migration to refresh those numbers. The Sonar
+configuration already points at the Dune source tree and excludes the
+git-ignored `data/` and `.dune/` runtime directories.
 
 ## Checks
 
 ```bash
 deno task check   # deno fmt --check + deno lint + deno check
 ```
+
+The same command runs in CI and before every deployment, and only needs Deno.

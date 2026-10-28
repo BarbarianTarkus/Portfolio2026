@@ -1,11 +1,9 @@
 import { GitHubIcon, LinkedInIcon } from "./Icons.tsx";
 import type { SiteContent } from "../lib/content.ts";
-import { tinaField } from "../lib/tina/metadata.ts";
 
 /**
  * Site footer: one call to action and the colophon. Fully static, so it is a
- * plain component rather than an island. Every text node is annotated with a
- * Tina field marker so editors can click it in the admin preview.
+ * plain component rather than an island.
  */
 export function Footer({ site }: { site: SiteContent }) {
   return (
@@ -13,16 +11,12 @@ export function Footer({ site }: { site: SiteContent }) {
       <div class="shell">
         <div class="footer-cta">
           <div>
-            <p
-              class="eyebrow"
-              data-tina-field={tinaField(site.labels, "contactEyebrow")}
-            >
+            <p class="eyebrow">
               {site.labels.contactEyebrow}
             </p>
             <a
               class="footer-mail"
               href={"mailto:" + site.email}
-              data-tina-field={tinaField(site, "email")}
             >
               {site.email}
             </a>
@@ -31,7 +25,6 @@ export function Footer({ site }: { site: SiteContent }) {
           <nav
             class="footer-social"
             aria-label={site.labels.socialNav}
-            data-tina-field={tinaField(site.labels, "socialNav")}
           >
             <ul>
               <li>
@@ -40,7 +33,6 @@ export function Footer({ site }: { site: SiteContent }) {
                   target="_blank"
                   rel="me noopener noreferrer"
                   aria-label={site.labels.githubProfile}
-                  data-tina-field={tinaField(site.labels, "githubProfile")}
                 >
                   <GitHubIcon />
                 </a>
@@ -51,7 +43,6 @@ export function Footer({ site }: { site: SiteContent }) {
                   target="_blank"
                   rel="me noopener noreferrer"
                   aria-label={site.labels.linkedinProfile}
-                  data-tina-field={tinaField(site.labels, "linkedinProfile")}
                 >
                   <LinkedInIcon />
                 </a>
@@ -62,13 +53,13 @@ export function Footer({ site }: { site: SiteContent }) {
 
         <p class="colophon">
           <span>
-            <span data-tina-field={tinaField(site, "fullName")}>
+            <span>
               {site.fullName}
             </span>
             {" · "}
-            <span data-tina-field={tinaField(site, "role")}>{site.role}</span>
+            <span>{site.role}</span>
           </span>
-          <span data-tina-field={tinaField(site.labels, "location")}>
+          <span>
             {site.labels.location}
           </span>
         </p>

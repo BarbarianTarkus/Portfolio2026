@@ -1,6 +1,5 @@
 import { Head } from "fresh/runtime";
 import type { SiteContent } from "../lib/content.ts";
-import { tinaField } from "../lib/tina/metadata.ts";
 
 interface NotFoundPageProps {
   basePath: string;
@@ -23,7 +22,6 @@ export function NotFoundPage({ basePath, site }: NotFoundPageProps) {
         <meta
           name="description"
           content={notFound.metaDescription}
-          data-tina-field={tinaField(notFound, "metaDescription")}
         />
         <meta
           property="og:title"
@@ -32,7 +30,6 @@ export function NotFoundPage({ basePath, site }: NotFoundPageProps) {
         <meta
           property="og:description"
           content={notFound.metaDescription}
-          data-tina-field={tinaField(notFound, "metaDescription")}
         />
       </Head>
 
@@ -40,17 +37,13 @@ export function NotFoundPage({ basePath, site }: NotFoundPageProps) {
         <p
           class="error-code"
           aria-hidden="true"
-          data-tina-field={tinaField(notFound, "code")}
         >
           {notFound.code}
         </p>
-        <h1
-          class="page-title"
-          data-tina-field={tinaField(notFound, "heading")}
-        >
+        <h1 class="page-title">
           {notFound.heading}
         </h1>
-        <p class="page-lede" data-tina-field={tinaField(notFound, "lede")}>
+        <p class="page-lede">
           {notFound.lede}
         </p>
         {
@@ -61,7 +54,6 @@ export function NotFoundPage({ basePath, site }: NotFoundPageProps) {
           class="button"
           href={basePath + "/"}
           aria-current="false"
-          data-tina-field={tinaField(notFound, "button")}
         >
           {notFound.button}
         </a>

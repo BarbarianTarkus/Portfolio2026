@@ -9,9 +9,9 @@ interface InlineTextProps {
 
 /**
  * Minimal inline rich-text renderer: plain strings with optional
- * `[label](/route)` links. It keeps the content editable as a single field in
- * Tina without pulling a Markdown renderer (and its sanitizer) into the bundle.
- * Internal destinations are prefixed with the deployment base path.
+ * `[label](/route)` links. It keeps the content as a single field without
+ * pulling a Markdown renderer (and its sanitizer) into the bundle.
+ * Internal links are prefixed with the deployment base path.
  */
 export function InlineText({ text, basePath }: InlineTextProps) {
   const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g);

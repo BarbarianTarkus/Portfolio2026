@@ -1,6 +1,5 @@
 import type { ComponentChildren } from "preact";
 import type { ProjectsContent } from "../lib/content.ts";
-import { tinaField } from "../lib/tina/metadata.ts";
 
 type Project = ProjectsContent["projects"][number];
 type KindLabels = ProjectsContent["kindLabels"];
@@ -9,8 +8,6 @@ type FicheLabels = ProjectsContent["ficheLabels"];
 interface FicheBlockProps {
   /** Heading rendered as the block's h3. */
   title: string;
-  /** Tina field marker for the heading. */
-  headingField?: string;
   children: ComponentChildren;
 }
 
@@ -18,10 +15,10 @@ interface FicheBlockProps {
  * One titled section of a project fiche. The narrative sections and the
  * decisions list share this wrapper, so the block markup is written once.
  */
-function FicheBlock({ title, headingField, children }: FicheBlockProps) {
+function FicheBlock({ title, children }: FicheBlockProps) {
   return (
     <div class="fiche-block">
-      <h3 data-tina-field={headingField}>{title}</h3>
+      <h3>{title}</h3>
       {children}
     </div>
   );
@@ -56,22 +53,19 @@ export function ProjectFiche(
   blocks.push(
     <FicheBlock
       title={ficheLabels.problem}
-      headingField={tinaField(ficheLabels, "problem")}
     >
-      <p data-tina-field={tinaField(project, "problem")}>{project.problem}</p>
+      <p>{project.problem}</p>
     </FicheBlock>,
   );
 
   blocks.push(
     <FicheBlock
       title={ficheLabels.decisions}
-      headingField={tinaField(ficheLabels, "decisions")}
     >
       <ul class="fiche-list">
-        {project.decisions.map((decision, index) => (
+        {project.decisions.map((decision) => (
           <li
             key={decision}
-            data-tina-field={tinaField(project, "decisions", index)}
           >
             {decision}
           </li>
@@ -83,10 +77,10 @@ export function ProjectFiche(
   if (project.broke !== undefined) {
     blocks.push(
       <blockquote class="fiche-quote">
-        <h3 data-tina-field={tinaField(ficheLabels, "broke")}>
+        <h3>
           {ficheLabels.broke}
         </h3>
-        <p data-tina-field={tinaField(project, "broke")}>{project.broke}</p>
+        <p>{project.broke}</p>
       </blockquote>,
     );
   }
@@ -95,9 +89,8 @@ export function ProjectFiche(
     blocks.push(
       <FicheBlock
         title={ficheLabels.next}
-        headingField={tinaField(ficheLabels, "next")}
       >
-        <p data-tina-field={tinaField(project, "next")}>{project.next}</p>
+        <p>{project.next}</p>
       </FicheBlock>,
     );
   }
@@ -109,43 +102,35 @@ export function ProjectFiche(
       key={project.slug}
       aria-labelledby={project.slug + "-title"}
     >
-      <p
-        class="fiche-kind"
-        data-tina-field={tinaField(kindLabels, project.kind as string)}
-      >
+      <p class="fiche-kind">
         {kindLabel}
       </p>
       <h2
         class="fiche-title"
         id={project.slug + "-title"}
-        data-tina-field={tinaField(project, "name")}
       >
         {project.name}
       </h2>
       <p class="fiche-meta">
-        <span data-tina-field={tinaField(project, "period")}>
+        <span>
           {project.period}
         </span>
         {project.work !== undefined && (
-          <span data-tina-field={tinaField(project, "work")}>
+          <span>
             {project.work}
           </span>
         )}
       </p>
 
-      <p
-        class="fiche-summary"
-        data-tina-field={tinaField(project, "summary")}
-      >
+      <p class="fiche-summary">
         {project.summary}
       </p>
 
       <ul class="tag-list">
-        {project.tags.map((tag, index) => (
+        {project.tags.map((tag) => (
           <li
             class="tag"
             key={tag}
-            data-tina-field={tinaField(project, "tags", index)}
           >
             {tag}
           </li>
@@ -161,7 +146,6 @@ export function ProjectFiche(
             target="_blank"
             rel="noopener noreferrer"
             key={link.href}
-            data-tina-field={tinaField(link, "label")}
           >
             {link.label} <span aria-hidden="true">→</span>
           </a>

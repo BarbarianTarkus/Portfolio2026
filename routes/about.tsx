@@ -2,8 +2,6 @@ import { Head } from "fresh/runtime";
 import { InlineText } from "../components/InlineText.tsx";
 import type { AboutContent, SiteContent } from "../lib/content.ts";
 import { loadAboutPage } from "../lib/content.ts";
-import { TinaIsland } from "../lib/tina/island.tsx";
-import { tinaField } from "../lib/tina/metadata.ts";
 import { define } from "../utils.ts";
 
 /**
@@ -12,12 +10,10 @@ import { define } from "../utils.ts";
  * reader lands here.
  */
 export const handler = define.handlers({
-  GET(ctx) {
-    const { site, page } = loadAboutPage(ctx);
+  async GET(ctx) {
+    const { site, page } = await loadAboutPage(ctx);
     return ctx.render(
-      <TinaIsland name="about" basePath={ctx.config.basePath}>
-        <AboutPage site={site} page={page} basePath={ctx.config.basePath} />
-      </TinaIsland>,
+      <AboutPage site={site} page={page} basePath={ctx.config.basePath} />,
     );
   },
 });
@@ -38,16 +34,15 @@ export function AboutPage({ site, page, basePath }: AboutPageProps) {
         <meta
           name="description"
           content={page.meta.description}
-          data-tina-field={tinaField(page.meta, "description")}
         />
         <meta property="og:title" content={metaTitle} />
         <meta property="og:description" content={page.meta.description} />
       </Head>
 
-      <h1 class="page-title" data-tina-field={tinaField(page, "title")}>
+      <h1 class="page-title">
         {page.title}
       </h1>
-      <p class="page-lede" data-tina-field={tinaField(page, "lede")}>
+      <p class="page-lede">
         {page.lede}
       </p>
 
@@ -55,7 +50,6 @@ export function AboutPage({ site, page, basePath }: AboutPageProps) {
         {page.paragraphs.map((paragraph, index) => (
           <p
             key={index}
-            data-tina-field={tinaField(page, "paragraphs", index)}
           >
             {paragraph}
           </p>
@@ -67,25 +61,20 @@ export function AboutPage({ site, page, basePath }: AboutPageProps) {
         <h2
           class="section-title"
           id="homelab"
-          data-tina-field={tinaField(page.homelabSection, "title")}
         >
           {page.homelabSection.title}
         </h2>
       </div>
 
-      <p
-        class="section-note"
-        data-tina-field={tinaField(page, "homelabNote")}
-      >
+      <p class="section-note">
         {page.homelabNote}
       </p>
 
       <ul class="tag-list">
-        {site.homelabStack.map((item, index) => (
+        {site.homelabStack.map((item) => (
           <li
             class="tag"
             key={item}
-            data-tina-field={tinaField(site, "homelabStack", index)}
           >
             {item}
           </li>
@@ -94,15 +83,12 @@ export function AboutPage({ site, page, basePath }: AboutPageProps) {
 
       <div class="section-head">
         <span class="section-num">{page.followSection.num}</span>
-        <h2
-          class="section-title"
-          data-tina-field={tinaField(page.followSection, "title")}
-        >
+        <h2 class="section-title">
           {page.followSection.title}
         </h2>
       </div>
 
-      <p class="prose" data-tina-field={tinaField(page, "follow")}>
+      <p class="prose">
         <InlineText text={page.follow} basePath={basePath} />
       </p>
     </>

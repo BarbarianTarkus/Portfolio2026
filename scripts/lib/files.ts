@@ -52,9 +52,11 @@ export async function copyDirectory(
   return copied;
 }
 
-/** Vite's internal manifest/cache directory must not leak into `dist/`. */
+/** Fresh's internal build metadata must not leak into `dist/`. */
 export function isBuildArtifact(relativePath: string): boolean {
-  return relativePath.split(SEPARATOR).includes(".vite");
+  const segments = relativePath.split(SEPARATOR);
+  const name = segments[segments.length - 1];
+  return name === "metafile.json" || name.endsWith(".map");
 }
 
 export async function directorySize(dir: string): Promise<number> {

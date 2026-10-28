@@ -1,6 +1,6 @@
 /**
- * Deployment configuration shared by the Fresh server, the Vite build and the
- * static-site generator (scripts/ssg.ts).
+ * Deployment configuration shared by the Fresh server and the static-site
+ * generator (scripts/ssg.ts).
  *
  * The site is published as a GitHub Pages *project* site, which lives under a
  * sub-path (https://<user>.github.io/Portfolio/). `basePath` teaches both the
@@ -24,12 +24,6 @@ export function normalizeBasePath(raw: string | null | undefined): string {
 
 /** Effective base path for the current process (empty string means site root). */
 export const BASE_PATH = normalizeBasePath(Deno.env.get("BASE_PATH"));
-
-/**
- * Vite wants a leading and trailing slash ("/" or "/Portfolio/"). Because the
- * root case normalizes to "", appending "/" already yields "/".
- */
-export const VITE_BASE = `${BASE_PATH}/`;
 
 /**
  * Whether a URL path is the deployment root or lives below it.

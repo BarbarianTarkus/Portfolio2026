@@ -1,21 +1,17 @@
 import { Head } from "fresh/runtime";
 import type { ContactContent, SiteContent } from "../lib/content.ts";
 import { loadContactPage } from "../lib/content.ts";
-import { TinaIsland } from "../lib/tina/island.tsx";
-import { tinaField } from "../lib/tina/metadata.ts";
 import { define } from "../utils.ts";
 
 /**
  * Contact as three rows. Each row is one link; the arrow is decorative and the
- * handle is the link text, so screen readers announce the destination once.
+ * handle is the link text, so screen readers announce the target once.
  */
 export const handler = define.handlers({
-  GET(ctx) {
-    const { site, page } = loadContactPage(ctx);
+  async GET(ctx) {
+    const { site, page } = await loadContactPage(ctx);
     return ctx.render(
-      <TinaIsland name="contact" basePath={ctx.config.basePath}>
-        <ContactPage site={site} page={page} />
-      </TinaIsland>,
+      <ContactPage site={site} page={page} />,
     );
   },
 });
@@ -46,13 +42,12 @@ function ContactRow(
         rel={external
           ? (me ? "me noopener noreferrer" : "noopener noreferrer")
           : undefined}
-        data-tina-field={tinaField(row, "hint")}
       >
-        <span class="contact-label" data-tina-field={tinaField(row, "label")}>
+        <span class="contact-label">
           {label}
         </span>
         <span class="contact-value">{value}</span>
-        <span class="contact-hint" data-tina-field={tinaField(row, "hint")}>
+        <span class="contact-hint">
           {row.hint}
         </span>
         <span class="contact-arrow" aria-hidden="true">→</span>
@@ -71,16 +66,15 @@ export function ContactPage({ site, page }: ContactPageProps) {
         <meta
           name="description"
           content={page.meta.description}
-          data-tina-field={tinaField(page.meta, "description")}
         />
         <meta property="og:title" content={metaTitle} />
         <meta property="og:description" content={page.meta.description} />
       </Head>
 
-      <h1 class="page-title" data-tina-field={tinaField(page, "title")}>
+      <h1 class="page-title">
         {page.title}
       </h1>
-      <p class="page-lede" data-tina-field={tinaField(page, "lede")}>
+      <p class="page-lede">
         {page.lede}
       </p>
 

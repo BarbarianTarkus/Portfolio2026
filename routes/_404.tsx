@@ -11,12 +11,10 @@ import { define } from "../utils.ts";
  * 404.html, which is the file GitHub Pages serves for unknown URLs.
  */
 export const handler = define.handlers({
-  GET(ctx) {
+  async GET(ctx) {
+    const site = await loadSite(ctx);
     return ctx.render(
-      <NotFoundPage
-        basePath={ctx.config.basePath}
-        site={loadSite(ctx)}
-      />,
+      <NotFoundPage basePath={ctx.config.basePath} site={site} />,
       { status: 404 },
     );
   },

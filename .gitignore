@@ -10,13 +10,13 @@ _fresh/
 # Generated static site (see scripts/ssg.ts)
 dist/
 
-# TinaCMS generated output (see scripts/ssg.ts / deno task tina:build)
-tina/__generated__/
-tina/tina-lock.json
-static/admin/
-tools/tina/install.log
+# Dune runtime state: users, permissions and the first-run
+# data/initial-password.txt file. Never commit this.
+data/
+# Dune admin runtime state: sessions, CSRF secret and audit log
+.dune/
 
-# npm + other dependencies
+# Installed dependencies
 node_modules/
 vendor/
 

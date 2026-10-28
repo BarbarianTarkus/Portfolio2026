@@ -2,8 +2,6 @@ import { Head } from "fresh/runtime";
 import { ProjectFiche } from "../components/ProjectFiche.tsx";
 import type { ProjectsContent, SiteContent } from "../lib/content.ts";
 import { loadProjectsPage } from "../lib/content.ts";
-import { TinaIsland } from "../lib/tina/island.tsx";
-import { tinaField } from "../lib/tina/metadata.ts";
 import { define } from "../utils.ts";
 
 /**
@@ -13,12 +11,10 @@ import { define } from "../utils.ts";
  * components/ProjectFiche.tsx.
  */
 export const handler = define.handlers({
-  GET(ctx) {
-    const { site, page } = loadProjectsPage(ctx);
+  async GET(ctx) {
+    const { site, page } = await loadProjectsPage(ctx);
     return ctx.render(
-      <TinaIsland name="projects" basePath={ctx.config.basePath}>
-        <ProjectsPage site={site} page={page} />
-      </TinaIsland>,
+      <ProjectsPage site={site} page={page} />,
     );
   },
 });
@@ -39,59 +35,42 @@ export function ProjectsPage({ site, page }: ProjectsPageProps) {
         <meta
           name="description"
           content={page.meta.description}
-          data-tina-field={tinaField(page.meta, "description")}
         />
         <meta property="og:title" content={metaTitle} />
         <meta property="og:description" content={page.meta.description} />
       </Head>
 
-      <h1 class="page-title" data-tina-field={tinaField(page, "title")}>
+      <h1 class="page-title">
         {page.title}
       </h1>
-      <p class="page-lede" data-tina-field={tinaField(page, "lede")}>
+      <p class="page-lede">
         {page.lede}
       </p>
 
       <ol class="work-index">
         {page.projects.map((project) => (
-          <li key={project.slug} data-tina-field={tinaField(project)}>
+          <li key={project.slug}>
             <a
               class="work-row"
               href={"#" + project.slug}
               aria-label={project.name + " — " +
                 kindLabels[project.kind as keyof typeof kindLabels]}
-              data-tina-field={tinaField(project, "name")}
             >
-              <span
-                class="work-year"
-                data-tina-field={tinaField(project, "year")}
-              >
+              <span class="work-year">
                 {project.year}
               </span>
               <span>
                 <span class="work-title">
                   <span class="work-name">{project.name}</span>
-                  <span
-                    class="kind"
-                    data-tina-field={tinaField(
-                      kindLabels,
-                      project.kind as string,
-                    )}
-                  >
+                  <span class="kind">
                     {kindLabels[project.kind as keyof typeof kindLabels]}
                   </span>
                 </span>
-                <span
-                  class="work-summary"
-                  data-tina-field={tinaField(project, "summary")}
-                >
+                <span class="work-summary">
                   {project.summary}
                 </span>
               </span>
-              <span
-                class="work-stack"
-                data-tina-field={tinaField(project, "tags")}
-              >
+              <span class="work-stack">
                 {project.tags.join(" · ")}
               </span>
               <span class="work-arrow" aria-hidden="true">→</span>
@@ -104,12 +83,8 @@ export function ProjectsPage({ site, page }: ProjectsPageProps) {
         <nav
           class="fiche-rail"
           aria-label={page.indexAriaLabel}
-          data-tina-field={tinaField(page, "indexAriaLabel")}
         >
-          <p
-            class="eyebrow"
-            data-tina-field={tinaField(page, "fichesEyebrow")}
-          >
+          <p class="eyebrow">
             {page.fichesEyebrow}
           </p>
           <ol>
@@ -117,7 +92,6 @@ export function ProjectsPage({ site, page }: ProjectsPageProps) {
               <li key={project.slug}>
                 <a
                   href={"#" + project.slug}
-                  data-tina-field={tinaField(project, "name")}
                 >
                   {String(index + 1).padStart(2, "0")} · {project.name}
                 </a>

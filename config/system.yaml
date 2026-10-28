@@ -1,0 +1,7 @@
+# Dune runtime configuration.
+#
+# The public site renders through the Fresh routes in ./routes; Dune provides
+# the content index behind lib/content.ts and the /admin editing UI.
+content:
+  dir: content
+debug: false

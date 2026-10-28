@@ -3,7 +3,6 @@ import type { RefObject } from "preact";
 import { type Signal, useSignal } from "@preact/signals";
 import { CloseIcon, MenuIcon } from "../components/Icons.tsx";
 import type { SiteContent } from "../lib/content.ts";
-import { tinaField } from "../lib/tina/metadata.ts";
 
 type Labels = SiteContent["labels"];
 
@@ -109,10 +108,6 @@ function MenuToggle({ open, onToggle, buttonRef, labels }: MenuToggleProps) {
       aria-expanded={open ? "true" : "false"}
       aria-controls="main-nav"
       aria-label={open ? labels.closeMenu : labels.openMenu}
-      data-tina-field={tinaField(
-        labels,
-        open ? "closeMenu" : "openMenu",
-      )}
       ref={buttonRef}
       onClick={onToggle}
     >
@@ -155,7 +150,6 @@ export default function Header({ site, basePath, path }: HeaderProps) {
       <a
         class="skip-to-content-link"
         href="#main"
-        data-tina-field={tinaField(labels, "skipToContent")}
       >
         {labels.skipToContent}
       </a>
@@ -166,7 +160,6 @@ export default function Header({ site, basePath, path }: HeaderProps) {
           href={href("/")}
           aria-label={site.author + " — " + labels.homeLink}
           aria-current={isHome ? "page" : "false"}
-          data-tina-field={tinaField(site, "shortTitle")}
         >
           {site.shortTitle}
         </a>
@@ -182,7 +175,6 @@ export default function Header({ site, basePath, path }: HeaderProps) {
           id="main-nav"
           class={"main-nav" + (open.value ? " open" : "")}
           aria-label={labels.mainNav}
-          data-tina-field={tinaField(labels, "mainNav")}
         >
           <ul onClick={closeMenu}>
             {site.nav.map((item, index) => (
@@ -191,7 +183,6 @@ export default function Header({ site, basePath, path }: HeaderProps) {
                   href={href(item.route)}
                   aria-current={isActive(item.route) ? "page" : undefined}
                   data-current={isActive(item.route) ? "true" : undefined}
-                  data-tina-field={tinaField(item, "title")}
                 >
                   <b class="nav-index">
                     {String(index + 1).padStart(2, "0")}.{" "}
@@ -206,7 +197,6 @@ export default function Header({ site, basePath, path }: HeaderProps) {
             type="button"
             class="menu-button close-menu"
             aria-label={labels.closeMenu}
-            data-tina-field={tinaField(labels, "closeMenu")}
             ref={closeRef}
             onClick={closeMenu}
           >

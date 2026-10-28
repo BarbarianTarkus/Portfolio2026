@@ -1,17 +1,52 @@
 import { App, staticFiles } from "fresh";
+import { bootstrap } from "@dune/core/bootstrap";
+import { mountPlugins } from "@dune/core/plugins";
+import type { BootstrapResult } from "@dune/core/bootstrap";
 import { normalizeBasePath } from "./config.ts";
+import type { State } from "./utils.ts";
 
 /**
- * The Fresh application.
+ * Build the Fresh application and boot Dune in headless mode.
  *
- * `basePath` is read at *runtime* so the very same build can be served from the
- * domain root or from a sub-path such as GitHub Pages' `/Portfolio/`.
+ * Dune (https://jsr.io/@dune/core) is mounted as the CMS behind the site:
+ * it indexes content/, exposes the content API used by lib/content.ts and
+ * serves the /admin editing panel. Public pages, layout and design still come
+ * from the Fresh routes in ./routes.
  */
-export const app = new App({
-  basePath: normalizeBasePath(Deno.env.get("BASE_PATH")),
-});
+export async function createApp(): Promise<{
+  app: App<State>;
+  dune: BootstrapResult;
+}> {
+  const app = new App<State>({
+    basePath: normalizeBasePath(Deno.env.get("BASE_PATH")),
+  });
 
-app.use(staticFiles());
+  const dune = await bootstrap(import.meta.dirname!, {
+    // Dev mode relaxes cookie security (the local server is plain HTTP) and
+    // enables Dune's development diagnostics.
+    dev: Deno.env.get("DUNE_DEV") === "1",
+  });
 
-// File-system based routes (everything in ./routes).
-app.fsRoutes();
+  app.use(staticFiles());
+
+  // The static export only needs content rendering: skipping plugin mounting
+  // avoids creating admin users/sessions directories in CI. The dev and
+  // production servers mount everything.
+  if (Deno.env.get("DUNE_STATIC") !== "1") {
+    await mountPlugins(app, dune);
+  }
+
+  // Route handlers reach the Dune content API through ctx.state.
+  app.use((ctx) => {
+    ctx.state.contentApi = dune.contentApi;
+    return ctx.next();
+  });
+
+  // File-system based routes (everything in ./routes).
+  app.fsRoutes();
+
+  return { app, dune };
+}
+
+/** The application instance imported by the Fresh build and dev server. */
+export const { app, dune } = await createApp();

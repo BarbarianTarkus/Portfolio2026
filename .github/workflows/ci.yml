@@ -20,36 +20,11 @@ jobs:
         with:
           deno-version: v2.x
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
       - name: Install dependencies
         run: deno install --frozen
-
-      - name: Install TinaCMS build tooling
-        run: cd tools/tina && npm ci --no-audit --no-fund
 
       - name: Type-check, lint and format check
         run: deno task check
 
-      # Warn (without blocking the build) when the Tina Cloud credentials do not
-      # belong to this repository's schema; the admin would otherwise edit
-      # another project's content in production.
-      - name: Validate Tina Cloud project
-        continue-on-error: true
-        env:
-          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
-          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
-          HEAD: master
-        run: deno task tina:check-cloud
-
       - name: Build static site
-        env:
-          # Tina Cloud credentials for the generated admin and content queries.
-          # Absent on forks/PRs from forks, where the build still succeeds.
-          PUBLIC_TINA_CLIENT_ID: ${{ secrets.PUBLIC_TINA_CLIENT_ID }}
-          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
-          HEAD: master
         run: deno task ssg

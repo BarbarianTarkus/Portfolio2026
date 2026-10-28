@@ -4,12 +4,10 @@
  * Fresh renders every request on the server, so turning it into a static site
  * is a matter of:
  *
- *   1. building the TinaCMS admin with the Tina CLI (`deno task tina:build`),
- *   2. building the app with Vite (`deno task build`),
- *   3. rendering each route through the production server handler,
- *   4. writing the resulting HTML plus the hashed assets into `dist/`,
- *   5. rewriting the admin's absolute asset URLs and sanity-checking that
- *      every asset/link referenced by the HTML exists.
+ *   1. building the app and its islands with Fresh's Builder (`deno task build`),
+ *   2. rendering each route through the production server handler,
+ *   3. writing the resulting HTML plus the bundled assets into `dist/`,
+ *   4. sanity-checking that every asset/link referenced by the HTML exists.
  *
  * The output in `dist/` is what GitHub Pages serves. Run it with:
  *
@@ -34,13 +32,13 @@ import {
 } from "./lib/files.ts";
 import { discoverRoutes } from "./lib/routes.ts";
 import { renderNotFound, renderRoute, startServer } from "./lib/render.ts";
-import { assertTinaAdmin, rewriteAdminIndex } from "./lib/tina-admin.ts";
 import { verifyOutput } from "./lib/verify.ts";
 
 const ROOT = join(import.meta.dirname!, "..");
 const DIST = join(ROOT, "dist");
 const ROUTES_DIR = join(ROOT, "routes");
-const CLIENT_DIR = join(ROOT, "_fresh", "client");
+const STATIC_DIR = join(ROOT, "static");
+const BUNDLED_ASSETS_DIR = join(ROOT, "_fresh", "static");
 
 /** Route path that cannot exist, used to render the 404 page. */
 const NOT_FOUND_PROBE = "/__fresh_ssg_404_probe__";
@@ -80,14 +78,10 @@ async function main(): Promise<void> {
   console.log(`   base path: ${basePath}/`);
   console.log(`   output:    ${DIST}`);
 
-  // The build must see the same base path as the renderer below. TINA_STATIC
-  // tells the shell that the export will be hosted without a request-time
-  // server, so the browser must re-render editable regions itself.
+  // The build must see the same base path as the renderer below.
   Deno.env.set("BASE_PATH", basePath);
-  Deno.env.set("TINA_STATIC", "1");
-
-  heading("Building the TinaCMS admin");
-  await runTask("tina:build");
+  // The renderer is a static export: it does not need Dune's admin panel.
+  Deno.env.set("DUNE_STATIC", "1");
 
   heading("Building the app");
   await runTask("build");
@@ -106,20 +100,23 @@ async function main(): Promise<void> {
     await renderNotFound(server.origin, basePath, DIST, NOT_FOUND_PROBE);
     log(`/404         → dist/404.html`);
 
-    heading("Copying client assets");
-    const copied = await copyDirectory(CLIENT_DIR, DIST, isBuildArtifact);
-    log(`${copied} files copied from _fresh/client`);
+    heading("Copying static and bundled assets");
+    // Fresh serves unprocessed static files straight from ./static and writes
+    // the bundled islands + processed CSS into ./_fresh/static. Both trees make
+    // up the deployed asset set, so copy ./static first and let the processed
+    // bundles overwrite their source counterparts.
+    const staticFiles = await copyDirectory(STATIC_DIR, DIST, isBuildArtifact);
+    const bundleFiles = await copyDirectory(
+      BUNDLED_ASSETS_DIR,
+      DIST,
+      isBuildArtifact,
+    );
+    log(`${staticFiles} static files + ${bundleFiles} bundled assets copied`);
 
     // GitHub Pages runs Jekyll unless this marker exists, and Jekyll would drop
     // files/directories whose names start with an underscore.
     await Deno.writeTextFile(join(DIST, ".nojekyll"), "");
     log(".nojekyll written");
-
-    heading("Preparing the TinaCMS admin");
-    const rewritten = await rewriteAdminIndex(DIST);
-    log(`rewrote ${rewritten} admin asset URL(s) to ./assets/`);
-    await assertTinaAdmin(DIST);
-    log("admin/index.html and tina-bridge.js verified");
 
     heading("Verifying output");
     const checked = await verifyOutput(DIST, basePath);

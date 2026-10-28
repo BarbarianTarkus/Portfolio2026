@@ -6,8 +6,6 @@ import type {
   SiteContent,
 } from "../lib/content.ts";
 import { loadHomePage } from "../lib/content.ts";
-import { TinaIsland } from "../lib/tina/island.tsx";
-import { tinaField } from "../lib/tina/metadata.ts";
 import { define } from "../utils.ts";
 
 /**
@@ -16,18 +14,16 @@ import { define } from "../utils.ts";
  * site argues from employment, not from side projects.
  */
 export const handler = define.handlers({
-  GET(ctx) {
-    const { site, page, experience, projects } = loadHomePage(ctx);
+  async GET(ctx) {
+    const { site, page, experience, projects } = await loadHomePage(ctx);
     return ctx.render(
-      <TinaIsland name="home" basePath={ctx.config.basePath}>
-        <HomePage
-          site={site}
-          page={page}
-          experience={experience}
-          projects={projects}
-          basePath={ctx.config.basePath}
-        />
-      </TinaIsland>,
+      <HomePage
+        site={site}
+        page={page}
+        experience={experience}
+        projects={projects}
+        basePath={ctx.config.basePath}
+      />,
     );
   },
 });
@@ -52,23 +48,22 @@ export function HomePage(
         <meta
           name="description"
           content={site.description}
-          data-tina-field={tinaField(site, "description")}
         />
         <meta property="og:title" content={site.title} />
         <meta property="og:description" content={site.description} />
       </Head>
 
       <section class="hero">
-        <p class="eyebrow" data-tina-field={tinaField(page, "eyebrow")}>
+        <p class="eyebrow">
           {page.eyebrow}
         </p>
-        <h1 class="hero-name" data-tina-field={tinaField(site, "author")}>
+        <h1 class="hero-name">
           {site.author}.
         </h1>
-        <p class="hero-role" data-tina-field={tinaField(site, "role")}>
+        <p class="hero-role">
           {site.role}
         </p>
-        <p class="hero-intro" data-tina-field={tinaField(site, "intro")}>
+        <p class="hero-intro">
           {site.intro}
         </p>
 
@@ -76,14 +71,12 @@ export function HomePage(
           <a
             class="button"
             href={basePath + page.primaryAction.route}
-            data-tina-field={tinaField(page.primaryAction, "label")}
           >
             {page.primaryAction.label}
           </a>
           <a
             class="button button-ghost"
             href={basePath + page.secondaryAction.route}
-            data-tina-field={tinaField(page.secondaryAction, "label")}
           >
             {page.secondaryAction.label}
           </a>
@@ -92,17 +85,11 @@ export function HomePage(
 
       <ul class="evidence">
         {site.evidence.map((item) => (
-          <li key={item.label} data-tina-field={tinaField(item)}>
-            <span
-              class="evidence-value"
-              data-tina-field={tinaField(item, "value")}
-            >
+          <li key={item.label}>
+            <span class="evidence-value">
               {item.value}
             </span>
-            <span
-              class="evidence-label"
-              data-tina-field={tinaField(item, "label")}
-            >
+            <span class="evidence-label">
               {item.label}
             </span>
           </li>
@@ -113,16 +100,12 @@ export function HomePage(
         <span class="section-num">
           {page.experienceSection.num}
         </span>
-        <h2
-          class="section-title"
-          data-tina-field={tinaField(page.experienceSection, "title")}
-        >
+        <h2 class="section-title">
           {page.experienceSection.title}
         </h2>
         <a
           class="section-link"
           href={basePath + page.experienceSection.linkRoute}
-          data-tina-field={tinaField(page.experienceSection, "linkLabel")}
         >
           {page.experienceSection.linkLabel}
         </a>
@@ -133,41 +116,33 @@ export function HomePage(
           <li
             class="job"
             key={job.company + "-" + job.period}
-            data-tina-field={tinaField(job)}
           >
-            <p
-              class="job-period"
-              data-tina-field={tinaField(job, "period")}
-            >
+            <p class="job-period">
               {job.period}
             </p>
             <div>
-              <h3
-                class="job-role"
-                data-tina-field={tinaField(job, "role")}
-              >
+              <h3 class="job-role">
                 {job.role}
               </h3>
               <p class="job-company">
-                <span data-tina-field={tinaField(job, "company")}>
+                <span>
                   {job.company}
                 </span>
                 {" · "}
-                <span data-tina-field={tinaField(job, "place")}>
+                <span>
                   {job.place}
                 </span>
               </p>
               <ul class="job-points">
-                {job.bullets.slice(0, 2).map((bullet, index) => (
+                {job.bullets.slice(0, 2).map((bullet) => (
                   <li
                     key={bullet}
-                    data-tina-field={tinaField(job, "bullets", index)}
                   >
                     {bullet}
                   </li>
                 ))}
               </ul>
-              <p class="job-stack" data-tina-field={tinaField(job, "stack")}>
+              <p class="job-stack">
                 {job.stack.join(" · ")}
               </p>
             </div>
@@ -177,68 +152,45 @@ export function HomePage(
 
       <div class="section-head">
         <span class="section-num">{page.projectsSection.num}</span>
-        <h2
-          class="section-title"
-          data-tina-field={tinaField(page.projectsSection, "title")}
-        >
+        <h2 class="section-title">
           {page.projectsSection.title}
         </h2>
         <a
           class="section-link"
           href={basePath + page.projectsSection.linkRoute}
-          data-tina-field={tinaField(page.projectsSection, "linkLabel")}
         >
           {page.projectsSection.linkLabel}
         </a>
       </div>
 
-      <p
-        class="section-note"
-        data-tina-field={tinaField(page.projectsSection, "note")}
-      >
+      <p class="section-note">
         {page.projectsSection.note}
       </p>
 
       <ol class="work-index">
         {projects.projects.map((project) => (
-          <li key={project.slug} data-tina-field={tinaField(project)}>
+          <li key={project.slug}>
             <a
               class="work-row"
               href={basePath + "/projects#" + project.slug}
               aria-label={project.name + " — " +
                 kindLabels[project.kind as keyof typeof kindLabels]}
-              data-tina-field={tinaField(project, "name")}
             >
-              <span
-                class="work-year"
-                data-tina-field={tinaField(project, "year")}
-              >
+              <span class="work-year">
                 {project.year}
               </span>
               <span>
                 <span class="work-title">
                   <span class="work-name">{project.name}</span>
-                  <span
-                    class="kind"
-                    data-tina-field={tinaField(
-                      kindLabels,
-                      project.kind as string,
-                    )}
-                  >
+                  <span class="kind">
                     {kindLabels[project.kind as keyof typeof kindLabels]}
                   </span>
                 </span>
-                <span
-                  class="work-summary"
-                  data-tina-field={tinaField(project, "summary")}
-                >
+                <span class="work-summary">
                   {project.summary}
                 </span>
               </span>
-              <span
-                class="work-stack"
-                data-tina-field={tinaField(project, "tags")}
-              >
+              <span class="work-stack">
                 {project.tags.join(" · ")}
               </span>
               <span class="work-arrow" aria-hidden="true">→</span>
@@ -249,16 +201,12 @@ export function HomePage(
 
       <div class="section-head">
         <span class="section-num">{page.stackSection.num}</span>
-        <h2
-          class="section-title"
-          data-tina-field={tinaField(page.stackSection, "title")}
-        >
+        <h2 class="section-title">
           {page.stackSection.title}
         </h2>
         <a
           class="section-link"
           href={basePath + page.stackSection.linkRoute}
-          data-tina-field={tinaField(page.stackSection, "linkLabel")}
         >
           {page.stackSection.linkLabel}
         </a>
@@ -268,21 +216,20 @@ export function HomePage(
         <div>
           {page.focus.map((item) => (
             <div class="stack-block" key={item.title}>
-              <h3 data-tina-field={tinaField(item, "title")}>{item.title}</h3>
-              <p data-tina-field={tinaField(item, "body")}>{item.body}</p>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
             </div>
           ))}
         </div>
         <div>
           <div class="stack-block">
-            <h3 data-tina-field={tinaField(page.stackSection, "stackLabel")}>
+            <h3>
               {page.stackSection.stackLabel}
             </h3>
             <ul class="chip-list">
-              {page.stack.map((item, index) => (
+              {page.stack.map((item) => (
                 <li
                   key={item}
-                  data-tina-field={tinaField(page, "stack", index)}
                 >
                   {item}
                 </li>
@@ -290,19 +237,13 @@ export function HomePage(
             </ul>
           </div>
           <div class="stack-block">
-            <h3
-              data-tina-field={tinaField(
-                page.stackSection,
-                "infrastructureLabel",
-              )}
-            >
+            <h3>
               {page.stackSection.infrastructureLabel}
             </h3>
             <ul class="chip-list">
-              {site.homelabStack.map((item, index) => (
+              {site.homelabStack.map((item) => (
                 <li
                   key={item}
-                  data-tina-field={tinaField(site, "homelabStack", index)}
                 >
                   {item}
                 </li>

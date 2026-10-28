@@ -1,31 +1,25 @@
-import { loadSite } from "../lib/content.ts";
 import { define } from "../utils.ts";
 import Header from "../islands/Header.tsx";
 import { Footer } from "../components/Footer.tsx";
-import { TinaIsland } from "../lib/tina/island.tsx";
 
 /**
  * Application shell: <html>, <head> and the persistent header/footer.
  *
- * In addition to the normal layout, the shell serialises every TinaCMS form
- * collected while the route handler loaded its content into hidden
- * data-tina-form payloads. The bridge script is loaded only inside the TinaCMS
- * admin iframe; it announces those forms to the editor, which is what makes
- * click-to-edit and live preview work. Outside the iframe the payloads are
- * inert and the bridge is never fetched.
+ * Every route loads the Dune-managed site globals into `state.site` while it
+ * loads its own content, so the shell only has to read them synchronously here.
+ * A missing site means a route forgot to call loadSite.
  */
 export default define.page(function App({ Component, config, url, state }) {
   const basePath = config.basePath;
-  // A static export is hosted without a request-time island renderer, so the
-  // client-side fallback has to do the live re-render. Server deployments leave
-  // the attribute off and keep the faster server-rendered preview.
-  const isStaticExport = Deno.env.get("TINA_STATIC") === "1";
-  const tina = state.tina;
-  const site = tina?.site ?? loadSite(null);
-  const forms = tina?.forms ?? [];
+  const site = state.site;
+  if (site === undefined) {
+    throw new Error(
+      "state.site is missing: every route must load the site content before rendering",
+    );
+  }
 
   return (
-    <html lang="es" data-tina-static={isStaticExport ? "1" : undefined}>
+    <html lang="es">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -61,14 +55,6 @@ export default define.page(function App({ Component, config, url, state }) {
         <link rel="stylesheet" href={basePath + "/styles/main.css"} />
       </head>
       <body>
-        {forms.map((form) => (
-          <div
-            key={form.id}
-            data-tina-form={JSON.stringify(form)}
-            data-tina-primary={form.priority === "primary" ? "true" : undefined}
-            hidden
-          />
-        ))}
         <div class="layout">
           <Header site={site} basePath={basePath} path={url.pathname} />
           <main id="main" tabindex={-1}>
@@ -76,11 +62,8 @@ export default define.page(function App({ Component, config, url, state }) {
               <Component />
             </div>
           </main>
-          <TinaIsland name="footer" basePath={basePath}>
-            <Footer site={site} />
-          </TinaIsland>
+          <Footer site={site} />
         </div>
-        <script type="module" src={basePath + "/tina-bootstrap.js"} />
       </body>
     </html>
   );
