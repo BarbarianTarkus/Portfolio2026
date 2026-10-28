@@ -18,14 +18,10 @@
   --accent: #324eb2; /* secondary blue (list markers, legacy links) */
   --background: #0e1217; /* deep navy page background */
   --lightAccent: #1f1e1e; /* raised surface: cards */
-  --lighterAccent: #eb2319; /* red accent */
   --dark: #e5e7eb; /* light grey (link underlines) */
   --darker: #fb9b18; /* brand orange: logo mark only */
   --slate: #8892b0; /* body copy */
   --lightest-slate: #ccd6f6; /* high-emphasis copy */
-
-  --white: #fff;
-  --black: #152030;
 
   /* Semantic roles -------------------------------------------------------
      All heading accents resolve to one token so the home and About pages
@@ -48,7 +44,6 @@
   --page-width: 54rem;
   --header-padding-x: 10rem;
   --radius: 0.5rem;
-  --radius-sm: 0.125rem;
 
   /* Motion */
   --transition: 0.2s ease-in-out;
@@ -710,106 +705,6 @@ footer p {
 
 .about-copy p {
   margin: 0 0 1.25rem;
-}
-
-/* --------------------------------------------------------------------------
-   Projects
-   -------------------------------------------------------------------------- */
-
-.project-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-  margin-top: 2rem;
-}
-
-@media (min-width: 48rem) {
-  .project-grid {
-    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  }
-}
-
-.project-card {
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem;
-  border-left: 3px solid transparent;
-  border-radius: var(--radius);
-  background: var(--lightAccent);
-  transition:
-    border-color var(--transition),
-    transform var(--transition);
-}
-
-.project-card:hover,
-.project-card:focus-within {
-  border-left-color: var(--text-accent);
-  transform: translateY(-2px);
-}
-
-.project-card h3 {
-  margin: 0 0 0.75rem;
-  font-family: var(--primaryFont);
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--heading-accent);
-}
-
-.project-card h3 a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.project-card h3 a:hover,
-.project-card h3 a:focus {
-  color: var(--lightest-slate);
-  text-decoration: underline;
-  text-decoration-color: var(--text-accent);
-  text-underline-offset: 0.2em;
-}
-
-.project-card p {
-  margin: 0 0 1rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--slate);
-}
-
-/* The "View on GitHub" row is a <p> in the markup, so target it through the
-   higher-specificity card selector to keep it glued to the bottom edge. */
-.project-card .project-links {
-  margin: auto 0 0;
-}
-
-.project-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin: auto 0 0;
-  padding: 1rem 0 0;
-  list-style-type: none;
-}
-
-.project-links li {
-  margin: 0;
-}
-
-.project-card .project-links a,
-.project-links a {
-  font-family: var(--codeFont);
-  font-size: 0.85rem;
-  color: var(--text-accent);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--transition);
-}
-
-.project-card .project-links a:hover,
-.project-card .project-links a:focus,
-.project-links a:hover,
-.project-links a:focus {
-  border-bottom-color: currentColor;
 }
 
 /* --------------------------------------------------------------------------
