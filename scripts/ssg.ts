@@ -13,7 +13,7 @@
  *
  *     deno task ssg
  *
- * `BASE_PATH` selects the deployment prefix (default: "/Portfolio", matching
+ * `BASE_PATH` selects the deployment prefix (default: "/Portfolio2026", matching
  * this repository's GitHub Pages URL). Set `BASE_PATH=""` for a root domain.
  *
  * The implementation is split into small helpers under `scripts/lib/` so this

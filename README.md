@@ -107,12 +107,12 @@ app. The content model, route mapping and upgrade notes are documented in
 
 ```bash
 deno task ssg      # → dist/
-deno task preview  # → http://127.0.0.1:8787/Portfolio/
+deno task preview  # → http://127.0.0.1:8787/Portfolio2026/
 ```
 
 `deno task ssg` always writes a deployable site. By default it targets the
-GitHub Pages sub-path `/Portfolio`; override it with the `BASE_PATH` environment
-variable:
+GitHub Pages sub-path `/Portfolio2026`; override it with the `BASE_PATH`
+environment variable:
 
 ```bash
 BASE_PATH="" deno task ssg          # serve from a root domain
@@ -145,7 +145,7 @@ only set up Deno: no CMS secrets or cloud project need configuring.
 
 One-time repository setup: **Settings → Pages → Build and deployment → Source:
 GitHub Actions**. The site is then available at
-<https://barbariantarkus.github.io/Portfolio/>.
+<https://barbariantarkus.github.io/Portfolio2026/>.
 
 To use a custom domain instead, add a `CNAME` file to `static/` (it is copied
 into `dist/`) and set the `BASE_PATH` repository variable to `/` so the site is

@@ -38,9 +38,9 @@ jobs:
         run: deno task check
 
       - name: Build static site
-        # BASE_PATH can be overridden; it defaults to /Portfolio in the SSG script.
+        # BASE_PATH can be overridden; it defaults to /Portfolio2026 in the SSG script.
         env:
-          BASE_PATH: ${{ vars.BASE_PATH || '/Portfolio' }}
+          BASE_PATH: ${{ vars.BASE_PATH || '/Portfolio2026' }}
         run: deno task ssg
 
       - name: Upload Pages artifact

@@ -4,9 +4,9 @@
  * 404 page).
  *
  *     deno task ssg       # build dist/
- *     deno task preview   # serve dist/ at http://127.0.0.1:8787/Portfolio/
+ *     deno task preview   # serve dist/ at http://127.0.0.1:8787/Portfolio2026/
  *
- * `BASE_PATH` defaults to "/Portfolio"; use the same value as the export.
+ * `BASE_PATH` defaults to "/Portfolio2026"; use the same value as the export.
  * File serving (MIME types, directory indexes, traversal protection) is handled
  * by `@std/http/file-server`; this module only adds the deployment prefix and
  * the branded 404 page.

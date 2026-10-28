@@ -9,7 +9,7 @@ type Labels = SiteContent["labels"];
 interface HeaderProps {
   /** Site globals (identity, nav labels, menu copy). */
   site: SiteContent;
-  /** Deployment prefix, e.g. "/Portfolio" ("" when served from the root). */
+  /** Deployment prefix, e.g. "/Portfolio2026" ("" when served from the root). */
   basePath: string;
   /** Current request path, used only to mark the logo when it is the page. */
   path: string;
