@@ -11,29 +11,17 @@
 
 import { extname, relative, SEPARATOR } from "@std/path";
 import { join as posixJoin } from "@std/path/posix";
+import { isUnderBasePath } from "../../config.ts";
 import { walkFiles } from "./files.ts";
 
 // Attributes (href/src) plus ES module specifiers from the island boot script
 // (`import ... from "/assets/..."`), which are just as important.
 const URL_PATTERN = /(?:(?:href|src)=|\bfrom\s+|\bimport\s+)"(\/[^"?#]*)/g;
 
-function isUnderBasePath(urlPath: string, basePath: string): boolean {
-  return urlPath === basePath || urlPath.startsWith(`${basePath}/`);
-}
-
 /** URL path → the file path (POSIX, relative to dist/) that should exist. */
 function targetForUrl(urlPath: string, basePath: string): string {
   const rel = urlPath.slice(basePath.length).replace(/^\//, "");
   return extname(rel) === "" ? posixJoin(rel, "index.html") : rel;
-}
-
-/** Index every file in dist/ (POSIX separators) so lookups are O(1). */
-async function indexDistFiles(distDir: string): Promise<Set<string>> {
-  const files = new Set<string>();
-  for await (const file of walkFiles(distDir)) {
-    files.add(relative(distDir, file).split(SEPARATOR).join("/"));
-  }
-  return files;
 }
 
 /**
@@ -44,7 +32,12 @@ export async function verifyOutput(
   distDir: string,
   basePath: string,
 ): Promise<number> {
-  const distFiles = await indexDistFiles(distDir);
+  // Index every file in dist/ (POSIX separators) so lookups are O(1).
+  const distFiles = new Set<string>();
+  for await (const file of walkFiles(distDir)) {
+    distFiles.add(relative(distDir, file).split(SEPARATOR).join("/"));
+  }
+
   const problems: string[] = [];
   let checked = 0;
 

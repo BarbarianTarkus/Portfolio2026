@@ -6,8 +6,6 @@ import { CloseIcon, MenuIcon } from "../components/Icons.tsx";
 interface HeaderProps {
   /** Deployment prefix, e.g. "/Portfolio" ("" when served from the root). */
   basePath: string;
-  /** Current path without the base path, e.g. "/about" (used for active nav). */
-  currentPath: string;
 }
 
 interface MenuToggleProps {
@@ -35,6 +33,7 @@ function useMenuEffects(open: Signal<boolean>): void {
 }
 
 function MenuToggle({ open, onToggle }: MenuToggleProps) {
+  // ARIA attributes need the literal strings "true"/"false", not booleans.
   const pressed = open ? "true" : "false";
   return (
     <button
@@ -45,7 +44,7 @@ function MenuToggle({ open, onToggle }: MenuToggleProps) {
       aria-controls="main-nav"
       onClick={onToggle}
     >
-      <span class="sr-only">Toggle navigation menu</span>
+      <span class="sr-only">Abrir o cerrar el menú de navegación</span>
       <MenuIcon />
     </button>
   );
@@ -59,7 +58,7 @@ function MenuToggle({ open, onToggle }: MenuToggleProps) {
  * Active-link state is not computed here: Fresh annotates matching anchors with
  * `aria-current`, which the stylesheet uses for the active nav indicator.
  */
-export default function Header({ basePath, currentPath }: HeaderProps) {
+export default function Header({ basePath }: HeaderProps) {
   const open = useSignal(false);
   const href = (route: string) => `${basePath}${route}`;
   const closeMenu = () => (open.value = false);
@@ -68,12 +67,14 @@ export default function Header({ basePath, currentPath }: HeaderProps) {
 
   return (
     <header>
-      <a class="skip-to-content-link" href="#main">Skip to main content</a>
+      <a class="skip-to-content-link" href="#main">
+        Saltar al contenido principal
+      </a>
 
       <a
         class="site-title"
         href={href("/")}
-        aria-label={`${site.author} — home`}
+        aria-label={`${site.author} — inicio`}
       >
         {site.shortTitle}
       </a>
@@ -86,32 +87,29 @@ export default function Header({ basePath, currentPath }: HeaderProps) {
       <nav
         id="main-nav"
         class={`main-nav${open.value ? " open" : ""}`}
-        aria-label="Main"
+        aria-label="Navegación principal"
       >
         <ul onClick={closeMenu}>
-          {site.nav.map((item, index) => {
-            const active = currentPath === item.route ||
-              currentPath.startsWith(`${item.route}/`);
-            return (
-              <li key={item.route}>
-                <a
-                  href={href(item.route)}
-                  aria-current={active ? "page" : undefined}
-                >
-                  <b class="nav-index">
-                    {String(index + 1).padStart(2, "0")}.{" "}
-                  </b>
-                  {item.title}
-                </a>
-              </li>
-            );
-          })}
+          {site.nav.map((item, index) => (
+            <li key={item.route}>
+              <a href={href(item.route)}>
+                <b class="nav-index">
+                  {String(index + 1).padStart(2, "0")}.{" "}
+                </b>
+                {item.title}
+              </a>
+            </li>
+          ))}
         </ul>
+
+        <a class="nav-cv" href={href(site.cvPath)} download>
+          CV
+        </a>
 
         <button
           type="button"
           class="menu-button close-menu"
-          aria-label="Close navigation menu"
+          aria-label="Cerrar el menú de navegación"
           onClick={closeMenu}
         >
           <CloseIcon />

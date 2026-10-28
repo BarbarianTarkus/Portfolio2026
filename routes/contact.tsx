@@ -3,20 +3,38 @@ import { site } from "../data/site.ts";
 import { define } from "../utils.ts";
 import { GitHubIcon, LinkedInIcon } from "../components/Icons.tsx";
 
-export default define.page(function Contact() {
+export default define.page(function Contact(ctx) {
+  const basePath = ctx.config.basePath;
+
   return (
     <>
       <Head>
-        <title>Contact — {site.author}</title>
+        <title>Contacto — {site.author}</title>
+        <meta
+          name="description"
+          content="Contacto de Ricardo Verduguez: GitHub, LinkedIn, correo electrónico y CV en PDF."
+        />
       </Head>
 
-      <h1 class="page-title">Get in touch</h1>
+      <h1 class="page-title">Contacto</h1>
       <p class="page-lede">
-        I am open to internships, junior roles and security-related side
-        projects. The quickest way to reach me is through one of these:
+        Estoy abierto a roles junior de desarrollo, sistemas o seguridad, y a
+        proyectos donde las dos cosas se crucen. La forma más rápida de
+        contactarme es esta:
       </p>
 
       <div class="contact-grid">
+        {site.email !== "" && (
+          <a
+            class="contact-card contact-card-wide"
+            href={`mailto:${site.email}`}
+          >
+            <h2>Correo</h2>
+            <p>Para cualquier cosa que no encaje en un issue de GitHub.</p>
+            <span class="contact-handle">{site.email}</span>
+          </a>
+        )}
+
         <a
           class="contact-card"
           href={site.github}
@@ -25,7 +43,7 @@ export default define.page(function Contact() {
         >
           <GitHubIcon />
           <h2>GitHub</h2>
-          <p>Code, experiments and open-source contributions.</p>
+          <p>Código, experimentos y contribuciones en abierto.</p>
           <span class="contact-handle">{site.githubHandle}</span>
         </a>
 
@@ -37,18 +55,25 @@ export default define.page(function Contact() {
         >
           <LinkedInIcon />
           <h2>LinkedIn</h2>
-          <p>Experience, studies and professional updates.</p>
+          <p>Experiencia, estudios y novedades profesionales.</p>
           <span class="contact-handle">{site.linkedinHandle}</span>
         </a>
-
-        {site.email !== "" && (
-          <a class="contact-card" href={`mailto:${site.email}`}>
-            <h2>Email</h2>
-            <p>For anything that does not fit in a GitHub issue.</p>
-            <span class="contact-handle">{site.email}</span>
-          </a>
-        )}
       </div>
+
+      <h2 class="section-title">CV</h2>
+      <p class="section-lede">
+        Una página, todo lo relevante: experiencia, proyectos, homelab y
+        competencias técnicas.
+      </p>
+      <p class="hero-actions">
+        <a
+          class="button button-primary"
+          href={`${basePath}${site.cvPath}`}
+          download
+        >
+          Descargar CV (PDF)
+        </a>
+      </p>
     </>
   );
 });

@@ -16,7 +16,11 @@
 
 import { join } from "@std/path";
 import { serveDir } from "@std/http/file-server";
-import { DEFAULT_BASE_PATH, normalizeBasePath } from "../config.ts";
+import {
+  DEFAULT_BASE_PATH,
+  isUnderBasePath,
+  normalizeBasePath,
+} from "../config.ts";
 
 const ROOT = join(import.meta.dirname!, "..");
 const DIST = join(ROOT, "dist");
@@ -36,16 +40,11 @@ async function notFoundResponse(): Promise<Response> {
   });
 }
 
-/** Requests outside the deployment prefix are not part of the site. */
-function isUnderBasePath(pathname: string): boolean {
-  return pathname === basePath || pathname.startsWith(`${basePath}/`);
-}
-
 async function handleRequest(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const pathname = url.pathname;
 
-  if (!isUnderBasePath(pathname)) {
+  if (!isUnderBasePath(pathname, basePath)) {
     return pathname === "/"
       ? Response.redirect(`${url.origin}${basePath}/`, 302)
       : await notFoundResponse();
@@ -62,15 +61,13 @@ async function handleRequest(request: Request): Promise<Response> {
   return response.status === 404 ? await notFoundResponse() : response;
 }
 
-const displayBase = basePath === "" ? "" : basePath;
-
 Deno.serve(
   {
     hostname: "127.0.0.1",
     port,
     onListen({ port }) {
       console.log(
-        `\nPreviewing dist/ at http://127.0.0.1:${port}${displayBase}/\n`,
+        `\nPreviewing dist/ at http://127.0.0.1:${port}${basePath}/\n`,
       );
     },
   },

@@ -989,3 +989,314 @@ footer p {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ==========================================================================
+   14. Content pages (2026 content pass)
+   --------------------------------------------------------------------------
+   Home cards, project fiches, the experience list and the CV shortcut in the
+   header. Same tokens and rhythm as the legacy sections above: nothing here
+   introduces a new palette or type scale.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Header: CV shortcut (inside the nav so it also appears in the mobile menu)
+   -------------------------------------------------------------------------- */
+
+header .main-nav {
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+header .main-nav .nav-cv {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--text-accent);
+  border-radius: var(--radius);
+  color: var(--text-accent);
+  font-family: var(--codeFont);
+  font-size: 0.9rem;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    background-color var(--transition),
+    color var(--transition);
+}
+
+header .main-nav .nav-cv:hover,
+header .main-nav .nav-cv:focus-visible {
+  background-color: var(--text-accent);
+  color: var(--background);
+}
+
+@media (min-width: 48rem) {
+  header .main-nav {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Home: highlights, actions and archetype cards
+   -------------------------------------------------------------------------- */
+
+/* The hero carries three levels of type: name, proposition, body. The legacy
+   theme gave the name and the proposition the same size, which made a two-line
+   role compete with the name. */
+.big-heading {
+  font-size: clamp(2.5rem, 7vw, 4rem);
+}
+
+.big-heading-faded {
+  font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+}
+
+.hero-highlights {
+  margin: 1.5rem 0 0;
+  font-family: var(--codeFont);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--slate);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 2rem 0 0;
+}
+
+/* The legacy hero rule pushes every button down 2rem; inside an action row the
+   gap already provides that spacing. */
+.hero-actions .button {
+  margin-top: 0;
+}
+
+.button-primary {
+  background-color: var(--text-accent);
+  border-color: var(--text-accent);
+  color: var(--background);
+}
+
+.button-primary:hover,
+.button-primary:focus,
+.button-primary:active {
+  background-color: transparent;
+  color: var(--text-accent);
+}
+
+.archetype-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 48rem) {
+  .archetype-grid {
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  }
+}
+
+.archetype-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  border-left: 3px solid transparent;
+  border-radius: var(--radius);
+  background: var(--lightAccent);
+  color: var(--slate);
+  text-decoration: none;
+  transition:
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.archetype-card:hover,
+.archetype-card:focus-visible {
+  border-left-color: var(--text-accent);
+  transform: translateY(-2px);
+}
+
+.archetype-card h3 {
+  margin: 0;
+  font-family: var(--primaryFont);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--heading-accent);
+}
+
+.archetype-card p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.archetype-more {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  font-family: var(--codeFont);
+  font-size: 0.85rem;
+  color: var(--text-accent);
+}
+
+/* --------------------------------------------------------------------------
+   About: experience list and education block
+   -------------------------------------------------------------------------- */
+
+.experience {
+  display: grid;
+  gap: 2rem;
+  margin: 2rem 0 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.experience-item {
+  padding-left: 1.5rem;
+  border-left: 2px solid rgba(241, 200, 27, 0.35);
+}
+
+.experience-item h3,
+.education h3 {
+  margin: 0;
+  font-family: var(--primaryFont);
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--lightest-slate);
+}
+
+.experience-meta {
+  margin: 0.35rem 0 0.85rem;
+  font-family: var(--codeFont);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--slate);
+}
+
+.experience-item ul {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--slate);
+}
+
+/* --------------------------------------------------------------------------
+   Projects: one fiche per project
+   -------------------------------------------------------------------------- */
+
+.project-fiche {
+  padding: 2.5rem 0;
+  border-top: 1px solid rgba(136, 146, 176, 0.2);
+}
+
+.project-fiche:first-of-type {
+  margin-top: 2.5rem;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.fiche-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.35rem 1.5rem;
+}
+
+.fiche-head h2 {
+  margin: 0;
+  font-family: var(--primaryFont);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--lightest-slate);
+}
+
+.fiche-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+  font-family: var(--codeFont);
+  font-size: 0.85rem;
+  color: var(--slate);
+}
+
+.fiche-summary {
+  margin: 1rem 0 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--lightest-slate);
+}
+
+.fiche-block {
+  margin-top: 1.75rem;
+}
+
+/* Block labels are navigation aids, not headings competing with the title. */
+.fiche-block h3 {
+  margin: 0 0 0.5rem;
+  font-family: var(--codeFont);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-accent);
+}
+
+.fiche-block p {
+  margin: 0;
+  line-height: 1.65;
+  color: var(--slate);
+}
+
+.fiche-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--slate);
+}
+
+.fiche-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 1.75rem 0 0;
+  padding: 0;
+}
+
+.fiche-links a {
+  font-family: var(--codeFont);
+  font-size: 0.9rem;
+  color: var(--text-accent);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--transition);
+}
+
+.fiche-links a:hover,
+.fiche-links a:focus-visible {
+  border-bottom-color: currentColor;
+}
+
+/* --------------------------------------------------------------------------
+   Contact: three cards fit one row on desktop now that email is listed
+   -------------------------------------------------------------------------- */
+
+/* The address is long enough to break mid-word inside a narrow card, so it
+   takes the full row and keeps GitHub/LinkedIn paired below. */
+.contact-card-wide {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 48rem) {
+  .contact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

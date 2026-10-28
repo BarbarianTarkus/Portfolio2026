@@ -46,6 +46,7 @@ function log(message: string): void {
   console.log(`  ${message}`);
 }
 
+/** Print a step in the pipeline. */
 function heading(message: string): void {
   console.log(`\n▸ ${message}`);
 }
@@ -67,35 +68,14 @@ async function runTask(name: string): Promise<void> {
   }
 }
 
-function printBanner(basePath: string): void {
-  console.log(`\n🍋 Fresh static site export`);
-  console.log(`   base path: ${basePath}/`);
-  console.log(`   output:    ${DIST}`);
-}
-
-async function writeNoJekyll(): Promise<void> {
-  // GitHub Pages runs Jekyll unless this marker exists, and Jekyll would drop
-  // files/directories whose names start with an underscore.
-  await Deno.writeTextFile(join(DIST, ".nojekyll"), "");
-  log(".nojekyll written");
-}
-
-async function renderAll(
-  origin: string,
-  basePath: string,
-  routes: string[],
-): Promise<void> {
-  for (const route of routes) {
-    const file = await renderRoute(origin, basePath, route, DIST);
-    log(`${route.padEnd(12)} → ${relative(ROOT, file)}`);
-  }
-}
-
 async function main(): Promise<void> {
   const basePath = normalizeBasePath(
     Deno.env.get("BASE_PATH") ?? DEFAULT_BASE_PATH,
   );
-  printBanner(basePath);
+
+  console.log(`\n🍋 Fresh static site export`);
+  console.log(`   base path: ${basePath}/`);
+  console.log(`   output:    ${DIST}`);
 
   // The build must see the same base path as the renderer below.
   Deno.env.set("BASE_PATH", basePath);
@@ -110,14 +90,21 @@ async function main(): Promise<void> {
     await removeDir(DIST);
 
     heading("Rendering routes");
-    await renderAll(server.origin, basePath, routes);
+    for (const route of routes) {
+      const file = await renderRoute(server.origin, basePath, route, DIST);
+      log(`${route.padEnd(12)} → ${relative(ROOT, file)}`);
+    }
     await renderNotFound(server.origin, basePath, DIST, NOT_FOUND_PROBE);
     log(`/404         → dist/404.html`);
 
     heading("Copying client assets");
     const copied = await copyDirectory(CLIENT_DIR, DIST, isBuildArtifact);
     log(`${copied} files copied from _fresh/client`);
-    await writeNoJekyll();
+
+    // GitHub Pages runs Jekyll unless this marker exists, and Jekyll would drop
+    // files/directories whose names start with an underscore.
+    await Deno.writeTextFile(join(DIST, ".nojekyll"), "");
+    log(".nojekyll written");
 
     heading("Verifying output");
     const checked = await verifyOutput(DIST, basePath);

@@ -103,6 +103,11 @@ server with `@std/http/file-server` plus a thin prefix/404 wrapper, removed a
 hand-rolled trailing-slash regex (S8786), fixed the `Array#sort` comparator
 (S2871) and let `aria-current` replace custom active-link logic.
 
+Later passes changed these figures: the content pass added `/projects` and more
+copy (complexity 117), and the [complexity pass](complexity-pass-2026-10-28.md)
+brought the project to **99** (cognitive 41), with the projects page down from 8
+to 2.
+
 ## Verification checklist
 
 - [x] `deno task check` (fmt, lint, type-check) — exit 0.

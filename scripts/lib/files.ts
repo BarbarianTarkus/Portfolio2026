@@ -27,14 +27,18 @@ export async function writeText(path: string, content: string): Promise<void> {
 }
 
 export async function removeDir(dir: string): Promise<void> {
-  await Deno.remove(dir, { recursive: true }).catch(() => {});
+  try {
+    await Deno.remove(dir, { recursive: true });
+  } catch {
+    // Nothing to remove (e.g. the first run); treat it as already clean.
+  }
 }
 
-/** Copy every file from `source` into `destination`, optionally skipping paths. */
+/** Copy every file from `source` into `destination`, skipping paths matched by `skip`. */
 export async function copyDirectory(
   source: string,
   destination: string,
-  skip: (relativePath: string) => boolean = () => false,
+  skip: (relativePath: string) => boolean,
 ): Promise<number> {
   let copied = 0;
   for await (const file of walkFiles(source)) {

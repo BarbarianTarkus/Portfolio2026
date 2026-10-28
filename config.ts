@@ -25,5 +25,18 @@ export function normalizeBasePath(raw: string | null | undefined): string {
 /** Effective base path for the current process (empty string means site root). */
 export const BASE_PATH = normalizeBasePath(Deno.env.get("BASE_PATH"));
 
-/** Vite wants a leading and trailing slash ("/" or "/Portfolio/"). */
-export const VITE_BASE = BASE_PATH === "" ? "/" : `${BASE_PATH}/`;
+/**
+ * Vite wants a leading and trailing slash ("/" or "/Portfolio/"). Because the
+ * root case normalizes to "", appending "/" already yields "/".
+ */
+export const VITE_BASE = `${BASE_PATH}/`;
+
+/**
+ * Whether a URL path is the deployment root or lives below it.
+ *
+ * Shared by the output verifier and the preview server, which both have to
+ * reject paths outside the published prefix ("" means the site root).
+ */
+export function isUnderBasePath(urlPath: string, basePath: string): boolean {
+  return urlPath === basePath || urlPath.startsWith(`${basePath}/`);
+}

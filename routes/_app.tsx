@@ -6,20 +6,22 @@ import { Footer } from "../components/Footer.tsx";
 /**
  * Application shell: <html>, <head> and the persistent header/footer.
  *
- * Props come from Fresh's layout/app wrapper: `Component` is the active page,
- * `config.basePath` is the deployment prefix and `url` the current request URL.
+ * Props come from Fresh's layout/app wrapper: `Component` is the active page and
+ * `config.basePath` is the deployment prefix. Active-link state is not passed
+ * down: Fresh annotates matching anchors with `aria-current` while rendering.
  */
-export default define.page(function App({ Component, config, url }) {
+export default define.page(function App({ Component, config }) {
   const basePath = config.basePath;
-  const currentPath = url.pathname.slice(basePath.length) || "/";
 
   return (
-    <html lang="en">
+    <html lang="es">
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content={site.description} />
+        <meta name="author" content={site.fullName} />
         <meta name="theme-color" content="#0e1217" />
+        <meta property="og:site_name" content={site.author} />
+        <meta property="og:type" content="website" />
         <link rel="icon" href={`${basePath}/favicon.png`} type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -35,11 +37,11 @@ export default define.page(function App({ Component, config, url }) {
       </head>
       <body>
         <div class="layout">
-          <Header basePath={basePath} currentPath={currentPath} />
+          <Header basePath={basePath} />
           <main id="main" tabindex={-1}>
             <Component />
           </main>
-          <Footer />
+          <Footer basePath={basePath} />
         </div>
       </body>
     </html>

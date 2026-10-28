@@ -16,13 +16,14 @@ from client-side Svelte to server-rendered Preact.
 routes/          Fresh file-system routes (pages + _app shell + _404)
 islands/         Components that need client-side JS (only the header/menu)
 components/      Static Preact components (footer, icons)
-data/site.ts     Shared identity, links, navigation and project list
-static/          Static assets copied as-is (styles, favicon, robots.txt)
+data/site.ts     Shared identity, links, navigation and project fiches
+static/          Static assets copied as-is (styles, favicon, robots.txt, cv.pdf)
 scripts/ssg.ts   Static site generator entry point (build, render, verify)
 scripts/lib/     Filesystem, route, rendering and output-verification helpers
 scripts/preview.ts  Local preview server that mimics GitHub Pages
 scripts/sonar-scan.sh  Local SonarQube analysis (reads .env)
 docs/redesign.md Light-touch redesign plan and design-token rationale
+docs/content-pass-2026-10-28.md  Content pass: scope, provenance, pending items
 config.ts        BASE_PATH handling shared by app, Vite and SSG
 ```
 
@@ -113,11 +114,17 @@ normalized to root by `config.ts`).
 
 Shared site metadata lives in [`data/site.ts`](data/site.ts):
 
-- `site` — name, role, intro, social links, navigation items and (optionally) an
-  email address. Leave `email` empty to hide the email card.
-- `projects` — name, description, tags and repository URL for the project cards.
+- `site` — name, role, intro, highlights, social links, navigation items, the CV
+  path (`cvPath`, served from `static/cv.pdf`) and (optionally) an email
+  address. Leave `email` empty to hide the email card.
+- `projects` — one fiche per project: `name`, `summary`, `tags`, `period`, an
+  optional verified `work` line (e.g. "12 PRs mergeados"), `links`, then the
+  narrative fields `problem`, `decisions`, `broke` and `next`. Every fiche is
+  rendered by `routes/projects.tsx`; omit `broke`/`next` rather than inventing
+  an incident.
 
-Page-specific prose (the About copy, the Contact intro) lives in the matching
+The site copy is written in Spanish (`<html lang="es">`); there is no English
+translation yet. Page-specific prose (About/Contact copy) lives in the matching
 file under [`routes/`](routes/). Colours, typography and layout are defined with
 CSS custom properties at the top of
 [`static/styles/main.css`](static/styles/main.css).
@@ -143,8 +150,10 @@ with the git-ignored `.env` (contains `SONAR_HOST_URL` and `SONARQUBE_API_KEY`):
 ```
 
 The scan currently reports zero open issues, zero code smells, zero security
-hotspots and A ratings for reliability, security and maintainability (cyclomatic
-complexity 107, cognitive complexity 46).
+hotspots and A ratings for reliability, security and maintainability. Cyclomatic
+complexity is 99 (cognitive complexity 41); the 2026-10-28 pass that brought it
+down from 117 is documented in
+[`docs/complexity-pass-2026-10-28.md`](docs/complexity-pass-2026-10-28.md).
 
 ## Checks
 

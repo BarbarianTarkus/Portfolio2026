@@ -7,7 +7,6 @@
 
 import { join } from "@std/path";
 import { writeText } from "./files.ts";
-import { outputFileForRoute } from "./routes.ts";
 
 export interface StaticServer {
   origin: string;
@@ -40,23 +39,6 @@ export async function startServer(basePath: string): Promise<StaticServer> {
   };
 }
 
-export async function fetchPage(
-  origin: string,
-  basePath: string,
-  route: string,
-): Promise<string> {
-  const url = `${origin}${basePath}${route}`;
-  const response = await fetch(url);
-  const body = await response.text();
-
-  if (!response.ok) {
-    throw new Error(
-      `GET ${url} returned ${response.status}:\n${body.slice(0, 500)}`,
-    );
-  }
-  return body;
-}
-
 /** Render one route and write it to its `index.html`; returns the file path. */
 export async function renderRoute(
   origin: string,
@@ -64,8 +46,17 @@ export async function renderRoute(
   route: string,
   distDir: string,
 ): Promise<string> {
-  const html = await fetchPage(origin, basePath, route);
-  const file = outputFileForRoute(distDir, route);
+  const url = `${origin}${basePath}${route}`;
+  const response = await fetch(url);
+  const html = await response.text();
+
+  if (!response.ok) {
+    throw new Error(
+      `GET ${url} returned ${response.status}:\n${html.slice(0, 500)}`,
+    );
+  }
+
+  const file = join(distDir, route.slice(1), "index.html");
   await writeText(file, html);
   return file;
 }

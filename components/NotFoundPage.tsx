@@ -14,22 +14,26 @@ export function NotFoundPage({ basePath }: NotFoundPageProps) {
   return (
     <>
       <Head>
-        <title>Page not found — {site.author}</title>
+        <title>Página no encontrada — {site.author}</title>
+        <meta
+          name="description"
+          content="La página que buscas no existe en el portfolio de Ricardo Verduguez."
+        />
       </Head>
 
       <div class="error-page">
         <p class="error-code" aria-hidden="true">404</p>
-        <h1 class="page-title">This page does not exist.</h1>
+        <h1 class="page-title">Esta página no existe.</h1>
         <p class="page-lede">
-          The link may be broken, or the page may have moved. Head back home and
-          start again.
+          El enlace puede estar roto o la página haberse movido. Vuelve al
+          inicio y empieza de nuevo.
         </p>
         {
           /* Explicit "false" stops Fresh from marking this home link as the
             current/ancestor page while rendering the 404 response. */
         }
         <a class="button" href={`${basePath}/`} aria-current="false">
-          Back to home
+          Volver al inicio
         </a>
       </div>
     </>
