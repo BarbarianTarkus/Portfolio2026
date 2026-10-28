@@ -25,15 +25,49 @@ export interface ProjectLink {
  * the problem was, which trade-offs were made and what broke, so the page reads
  * like engineering notes rather than a list of technologies.
  */
+/** Where a public repository comes from: a client, university, or my own work. */
+export type ProjectKind = "cliente" | "académico" | "propio";
+
+/** Human labels for `ProjectKind`, used by the project list and its index. */
+export const projectKindLabels: Record<ProjectKind, string> = {
+  cliente: "Cliente",
+  académico: "Académico",
+  propio: "Propio",
+};
+
+/**
+ * One period of paid or supported work. This is the primary content of the
+ * site: `experience` is rendered before any project list, and `/experience`
+ * is the page a recruiter should land on.
+ */
+export interface Job {
+  role: string;
+  company: string;
+  /** Human-readable range, e.g. "octubre 2023 — mayo 2026". */
+  period: string;
+  place: string;
+  /** Technologies that actually appear in the bullets below. */
+  stack: string[];
+  bullets: string[];
+}
+
 export interface Project {
   /** Anchor id used by /projects and by links from other pages. */
   slug: string;
   name: string;
+  /**
+   * Origin of the work. The site separates professional experience
+   * (`experience`) from public repositories, and this label keeps the
+   * distinction visible inside the project list.
+   */
+  kind: ProjectKind;
   /** One sentence, no adjectives. Shown under the title. */
   summary: string;
   tags: string[];
   /** Human-readable date range, e.g. "marzo – junio 2024". */
   period: string;
+  /** Compact label for the index rows where the full period does not fit. */
+  year: string;
   /** Only set when the count is verified against the repository. */
   work?: string;
   links: ProjectLink[];
@@ -62,11 +96,24 @@ export const site = {
   /** Intro paragraph on the home page. */
   intro:
     "Construyo aplicaciones web en producción y mantengo la infraestructura que las sostiene: un homelab con NAS, VPN, servidor Git propio y servicios publicados por túnel de Cloudflare.",
-  /** Factual one-liners under the intro: experience, studies, location. */
-  highlights: [
-    "2 años y 8 meses en producción",
-    "Ingeniería Informática (UPC, 2026)",
-    "Badalona, Barcelona",
+  /** Three verifiable facts, rendered as the rule-separated evidence strip. */
+  evidence: [
+    { value: "2 años y 8 meses", label: "en producción" },
+    { value: "Ingeniería Informática", label: "UPC · 2026" },
+    { value: "Badalona", label: "Barcelona" },
+  ],
+  /** Homelab technologies: shown on the home page and on /about. */
+  homelabStack: [
+    "Synology NAS",
+    "NFS / SMB",
+    "Docker",
+    "Ansible",
+    "Rsync",
+    "WireGuard",
+    "OpenVPN",
+    "Gitea",
+    "SonarQube",
+    "Cloudflare Tunnel",
   ],
   github: `https://github.com/${GITHUB_USERNAME}`,
   linkedin: `https://www.linkedin.com/in/${LINKEDIN_SLUG}/`,
@@ -76,6 +123,7 @@ export const site = {
   /** Public contact address. Empty hides the card. */
   email: "ricardoverdclar@gmail.com",
   nav: [
+    { title: "Experiencia", route: "/experience" },
     { title: "Proyectos", route: "/projects" },
     { title: "Sobre mí", route: "/about" },
     { title: "Contacto", route: "/contact" },
@@ -86,6 +134,8 @@ export const projects: Project[] = [
   {
     slug: "moodle",
     name: "Herramientas para Moodle",
+    kind: "propio",
+    year: "2023",
     summary:
       "Dos utilidades propias alrededor de Moodle: un traductor de ficheros de idioma y un bloque que publica un chiste del día.",
     tags: ["Python", "PHP", "Moodle", "PyInstaller"],
@@ -114,6 +164,8 @@ export const projects: Project[] = [
   {
     slug: "petsalut",
     name: "PetSalut",
+    kind: "académico",
+    year: "2024",
     summary:
       "Aplicación web de gestión para clínicas veterinarias, desarrollada en equipo dentro del proyecto de la UPC.",
     tags: ["C++", "PostgreSQL", "GitHub Actions", "Azure Functions"],
@@ -140,6 +192,8 @@ export const projects: Project[] = [
   {
     slug: "password-manager",
     name: "Password-Manager",
+    kind: "académico",
+    year: "2022–25",
     summary:
       "Gestor de contraseñas para la asignatura de administración de bases de datos: PostgreSQL ajustado a mano, PostgREST como API y Svelte en el front.",
     tags: ["PostgreSQL", "PostgREST", "Svelte", "Docker"],
@@ -164,6 +218,8 @@ export const projects: Project[] = [
   {
     slug: "rebost-api",
     name: "rebost-api",
+    kind: "propio",
+    year: "2025",
     summary:
       "API para una aplicación de la compra, construida con Deno KV y Oak como excusa para probar almacenamiento serverless sin administrar una base de datos.",
     tags: ["Deno", "TypeScript", "Deno KV", "Oak"],
@@ -190,6 +246,8 @@ export const projects: Project[] = [
   {
     slug: "mixology",
     name: "Mixology-Luismi",
+    kind: "cliente",
+    year: "2026",
     summary:
       "Landing page para un servicio de coctelería: sitio estático con Astro y un CMS headless para que el cliente edite sin tocar código.",
     tags: ["Astro", "TinaCMS", "Cloudflare", "GitHub Actions"],
@@ -212,5 +270,70 @@ export const projects: Project[] = [
       "El diseño generado con IA no mantenía un sistema: cada pantalla traía otra escala y otra paleta, y encajarlas costaba más que partir de una guía propia. La lección fue que la IA acelera la primera versión, pero los tokens de diseño se escriben a mano.",
     next:
       "Empezaría por un sistema de diseño mínimo —dos tipografías, tres colores, una escala de espaciado— antes de generar pantallas; ahora lo caro es rehacer estilos, no lógica.",
+  },
+];
+
+/**
+ * Work history, most recent first. Kept here rather than in a route because the
+ * home page (compact) and /experience (full) render the same source.
+ */
+export const experience: Job[] = [
+  {
+    role: "Junior Web Developer",
+    company: "3iPunt",
+    period: "octubre 2023 — mayo 2026",
+    place: "Barcelona",
+    stack: [
+      "PHP",
+      "JavaScript",
+      "Moodle",
+      "jQuery",
+      "Git",
+      "Bitbucket",
+      "Jira",
+    ],
+    bullets: [
+      "Desarrollo full-stack de aplicaciones web en producción con PHP, JavaScript, Moodle y jQuery.",
+      "Control de versiones y trabajo con ramas en Git y Bitbucket.",
+      "Seguimiento de incidencias, tareas y planificación en Jira.",
+      "Colaboración con el equipo técnico en un entorno de consultoría y desarrollo a medida.",
+    ],
+  },
+  {
+    role: "Desarrollador backend PHP",
+    company: "4DMOVIN Business / Namastech",
+    period: "junio 2022 — septiembre 2022",
+    place: "Castelldefels",
+    stack: [
+      "PHP",
+      "Angular",
+      "Google APIs",
+      "Microsoft Graph",
+      "IMAP / POP / SMTP",
+    ],
+    bullets: [
+      "Desarrollo sobre un ERP en PHP y Angular.",
+      "Automatización de correos y sincronización de calendarios integrando Google APIs y Microsoft Graph API, mejorando la compatibilidad con IMAP, POP y SMTP.",
+      "Pantalla de gestión y automatización de redes sociales (posts y feeds).",
+    ],
+  },
+  {
+    role: "Soporte TIC (becario)",
+    company: "EPSEVG — Universitat Politècnica de Catalunya",
+    period: "noviembre 2020 — enero 2022",
+    place: "Barcelona",
+    stack: [
+      "Linux",
+      "Windows",
+      "Active Directory",
+      "OpenGnsys",
+      "Raspberry Pi",
+    ],
+    bullets: [
+      "Helpdesk para el personal de la UPC: incidencias informáticas de primer nivel.",
+      "Administración de sistemas Linux y Windows: cuentas, permisos y resolución de incidencias.",
+      "Gestión de imágenes de sistemas operativos con OpenGnsys.",
+      "Puesta en marcha del Digital Signage de la universidad: sistema operativo Linux y hardware Raspberry.",
+    ],
   },
 ];

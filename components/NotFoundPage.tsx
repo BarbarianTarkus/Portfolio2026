@@ -10,15 +10,20 @@ interface NotFoundPageProps {
  * status code, so the route's GET handler renders this component and returns a
  * 404 response explicitly.
  */
+const pageDescription =
+  "La página que buscas no existe en el portfolio de Ricardo Verduguez.";
+
 export function NotFoundPage({ basePath }: NotFoundPageProps) {
   return (
     <>
       <Head>
         <title>Página no encontrada — {site.author}</title>
+        <meta name="description" content={pageDescription} />
         <meta
-          name="description"
-          content="La página que buscas no existe en el portfolio de Ricardo Verduguez."
+          property="og:title"
+          content={`Página no encontrada — ${site.author}`}
         />
+        <meta property="og:description" content={pageDescription} />
       </Head>
 
       <div class="error-page">

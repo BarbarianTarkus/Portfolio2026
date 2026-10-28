@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>A · Signal — Ricardo Verduguez</title>
+    <meta name="description"
+      content="Mockup del path A (Signal): misma identidad, craft más alto. 68rem shell, acento escaso, índice de trabajo.">
+    <!--
+      PATH A — "Signal" (same brand, sharper craft)
+      Tokens (locked, docs/redesign/briefs.md §Path A):
+        --bg #0B0E13 · --surface #12171F · --surface-2 #1A212B · --line #232C38
+        --text #CBD3DF · --muted #7F8CA3 · --accent #F1C81B · --accent-dim #98873B (corrección)
+        --brand #FB9B18 · --radius 2px
+      Type: Roboto Condensed 700 display (64/56/40) · Inter 400/500 body 17/1.65 ·
+            Fira Code 400 meta 13 uppercase .08em · shell 68rem · 12 col grid.
+      This is a standalone home-page mockup: nav anchors target the home sections
+      that exist in this file, since the four previews are not wired to routes.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&family=Inter:wght@400;500&family=Roboto+Condensed:wght@700&display=swap"
+      rel="stylesheet">
+    <style>
+    :root {
+      /* Locked tokens — do not edit. */
+      --bg: #0B0E13;
+      --surface: #12171F;
+      --surface-2: #1A212B;
+      --line: #232C38;
+      --text: #CBD3DF;
+      --muted: #7F8CA3;
+      --accent: #F1C81B;
+      --accent-dim: #98873B; /* briefs.md Correcciones §1: #8A7620 fallaba contraste (4.32/3.62) */
+      --brand: #FB9B18;
+      --radius: 2px;
+      /* Layout/type plumbing, not brand tokens. */
+      --shell: 68rem;
+      --font-display: "Roboto Condensed", "Arial Narrow", system-ui, sans-serif;
+      --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-mono: "Fira Code", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: var(--radius);
+    }
+    .shell {
+      width: 100%;
+      max-width: var(--shell);
+      margin-inline: auto;
+      padding-inline: 1.25rem;
+    }
+    .skip {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      min-height: 44px;
+      padding: 0 1rem;
+      display: inline-flex;
+      align-items: center;
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+    .skip:focus {
+      left: 1rem;
+      top: 1rem;
+      z-index: 20;
+    }
+
+    /* ---------- Header ---------- */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.25rem 1.5rem;
+      padding-block: 0.5rem;
+    }
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.15rem;
+      min-height: 44px;
+      padding-right: 0.5rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      position: relative;
+    }
+    .logo .mark {
+      color: var(--brand);
+    }
+    .logo .home-tag {
+      margin-left: 0.6rem;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .logo[aria-current="page"]::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0.5rem;
+      bottom: 0.3rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+    }
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      min-height: 44px;
+      padding-inline: 0.1rem;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 140ms ease-out;
+    }
+    .nav a .num {
+      color: var(--muted);
+    }
+    .nav a:hover {
+      color: var(--text);
+    }
+
+    /* ---------- Hero ---------- */
+    .hero {
+      padding-block: clamp(2.75rem, 8vw, 5.5rem) clamp(2rem, 5vw, 3rem);
+    }
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .eyebrow::before {
+      content: "";
+      width: 2rem;
+      height: 1px;
+      background: var(--accent);
+    }
+    h1 {
+      margin: 0.75rem 0 0;
+      overflow-wrap: break-word;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(2.5rem, 7.5vw, 4rem);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      color: var(--text);
+    }
+    .role {
+      margin: 0.4rem 0 0;
+      font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+      font-weight: 500;
+      color: var(--muted);
+    }
+    .intro {
+      max-width: 62ch;
+      margin: 1.5rem 0 0;
+      color: var(--text);
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 1.75rem;
+      margin-top: 1.75rem;
+    }
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 1.5rem;
+      background: var(--accent);
+      color: #0B0E13;
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      font-family: var(--font-body);
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 150ms ease-out, border-color 150ms ease-out,
+        color 150ms ease-out;
+    }
+    .button:hover {
+      background: var(--text);
+      border-color: var(--text);
+      color: var(--bg);
+    }
+    .link-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-height: 44px;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 16px;
+    }
+    .link-arrow .icon {
+      transition: transform 150ms ease-out;
+    }
+    .link-arrow:hover,
+    .link-arrow:focus-visible {
+      color: var(--accent);
+    }
+    .link-arrow:hover .icon {
+      transform: translateX(4px);
+    }
+    .icon {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      stroke-linecap: square;
+    }
+
+    /* ---------- Evidence strip (the hero's 3 highlights, no cards) ---------- */
+    .evidence {
+      margin-top: clamp(2.25rem, 5vw, 3.25rem);
+      border-top: 1px solid var(--line);
+      display: grid;
+    }
+    .evidence-cell {
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .ev-value {
+      display: block;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.625rem;
+      line-height: 1.2;
+      color: var(--text);
+    }
+    .ev-label {
+      display: block;
+      margin-top: 0.15rem;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ---------- Sections ---------- */
+    .section {
+      padding-block: clamp(2.75rem, 7vw, 4.5rem);
+      border-top: 1px solid var(--line);
+    }
+    .section-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.25rem 1rem;
+      margin-bottom: 1.75rem;
+    }
+    .sec-num {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+    }
+    h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.01em;
+    }
+
+    /* ---------- Selected work: numbered index rows, rules only ---------- */
+    .work-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      border-top: 1px solid var(--line);
+    }
+    .work-row {
+      display: grid;
+      gap: 0.35rem 0.9rem;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      grid-template-areas: "main main arrow" "year stack stack";
+      align-items: start;
+      padding: 1.15rem 0.75rem;
+      margin-inline: -0.75rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      min-height: 44px;
+      transition: background-color 160ms ease-out;
+    }
+    .w-main {
+      grid-area: main;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      min-width: 0;
+    }
+    .w-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.5rem;
+      line-height: 1.1;
+    }
+    .w-year {
+      grid-area: year;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .w-stack {
+      grid-area: stack;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--muted);
+      overflow-wrap: anywhere;
+    }
+    .w-outcome {
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+    .w-arrow {
+      grid-area: arrow;
+      justify-self: end;
+      color: var(--muted);
+    }
+    .work-row:hover,
+    .work-row:focus-visible {
+      background: var(--surface);
+    }
+    .work-row:hover .w-name,
+    .work-row:focus-visible .w-name {
+      color: var(--accent);
+    }
+    .work-row:hover .w-arrow {
+      color: var(--accent);
+      transform: translateX(4px);
+    }
+    .w-arrow {
+      transition: transform 160ms ease-out, color 160ms ease-out;
+    }
+
+    /* ---------- Qué hago: two columns of prose + stack list, no cards ---------- */
+    .about-grid {
+      display: grid;
+      gap: 2rem;
+    }
+    .archetype {
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+    .archetype h3 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.25rem;
+      line-height: 1.25;
+    }
+    .archetype p {
+      margin: 0.4rem 0 0;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 46ch;
+    }
+    .stack {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--line);
+    }
+    .stack-label {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.15rem 1rem;
+      list-style: none;
+      margin: 0.5rem 0 0;
+      padding: 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 2;
+      color: var(--text);
+    }
+    .stack-list li {
+      display: inline-flex;
+      align-items: baseline;
+      min-width: 0;
+    }
+    .stack-list li + li::before {
+      content: "·";
+      margin-right: 0.5rem;
+      color: var(--accent-dim);
+    }
+
+    /* ---------- Footer ---------- */
+    .site-footer {
+      border-top: 1px solid var(--line);
+      padding-block: clamp(2.5rem, 6vw, 4rem) 2rem;
+    }
+    .footer-cta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .footer-label {
+      margin: 0 0 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .footer-mail {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(1.5rem, 3.5vw, 2rem);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--text);
+      overflow-wrap: anywhere;
+    }
+    .footer-mail:hover {
+      color: var(--accent);
+    }
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.5rem;
+    }
+    .footer-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+    .footer-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1rem;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .footer-meta span + span::before {
+      content: "·";
+      margin-right: 1rem;
+      color: var(--line);
+    }
+
+    /* ---------- Motion: 120–180ms opacity / translateY(4px) ---------- */
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+    .hero .eyebrow,
+    .hero h1,
+    .hero .role,
+    .hero .intro,
+    .hero .actions {
+      animation: rise 160ms ease-out both;
+    }
+    .hero h1 {
+      animation-delay: 40ms;
+    }
+    .hero .role {
+      animation-delay: 80ms;
+    }
+    .hero .intro {
+      animation-delay: 120ms;
+    }
+    .hero .actions {
+      animation-delay: 160ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .work-row:hover .w-arrow,
+      .link-arrow:hover .icon {
+        transform: none;
+      }
+    }
+
+    /* ---------- Tablet / desktop ---------- */
+    @media (min-width: 760px) {
+      .header-inner {
+        padding-block: 0.35rem;
+      }
+      .nav {
+        width: auto;
+        margin-left: auto;
+        border-top: 0;
+        gap: 0.25rem;
+      }
+      .nav a {
+        padding-inline: 0.75rem;
+        gap: 0.4rem;
+        letter-spacing: 0.08em;
+      }
+      .evidence {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .evidence-cell {
+        border-bottom: 0;
+        padding: 1.5rem 1.5rem 1.5rem 0;
+      }
+      .evidence-cell + .evidence-cell {
+        border-left: 1px solid var(--line);
+        padding-left: 1.5rem;
+      }
+      .work-row {
+        grid-template-columns: 88px minmax(0, 1fr) minmax(18ch, 24ch) 24px;
+        grid-template-areas: "year main stack arrow";
+        gap: 0 24px;
+        align-items: start;
+        padding: 1.25rem 0.75rem;
+        margin-inline: -0.75rem;
+      }
+      .w-year {
+        padding-top: 0.35rem;
+      }
+      .w-name {
+        font-size: 1.75rem;
+      }
+      .w-outcome {
+        max-width: 62ch;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .w-stack {
+        padding-top: 0.3rem;
+      }
+      .about-grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+        gap: 3rem;
+      }
+      .about-grid > .col + .col {
+        padding-left: 3rem;
+        border-left: 1px solid var(--line);
+      }
+    }
+    @media (min-width: 1000px) {
+      .evidence-cell {
+        padding-block: 1.75rem;
+      }
+      .w-name {
+        font-size: 1.75rem;
+      }
+    }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#main">Saltar al contenido</a>
+    <svg width="0" height="0" aria-hidden="true" focusable="false"
+      style="position:absolute">
+      <symbol id="arrow-right" viewBox="0 0 20 20">
+        <path d="M3 10h13M11 4l6 6-6 6" />
+      </symbol>
+    </svg>
+
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="logo" href="a-signal.html" aria-current="page"
+          aria-label="Ricardo Verduguez — inicio">
+      <span class="mark">R</span><span>.</span><span class="home-tag">inicio</span>
+    </a>
+        <nav class="nav" aria-label="Principal">
+          <a href="#trabajo"><span class="num">01.</span> Proyectos</a>
+          <a href="#que-hago"><span class="num">02.</span> Sobre mí</a>
+          <a href="#contacto"><span class="num">03.</span> Contacto</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="shell hero" aria-labelledby="hero-title">
+        <p class="eyebrow">Hola, me llamo</p>
+        <h1 id="hero-title">Ricardo Verduguez.</h1>
+        <p class="role">Desarrollador full-stack con base en sistemas</p>
+        <p
+          class="intro">Construyo aplicaciones web en producción y mantengo la infraestructura que las sostiene: un homelab con NAS, VPN, servidor Git propio y servicios publicados por túnel de Cloudflare.</p>
+        <div class="actions">
+          <a class="button" href="#trabajo">Ver proyectos</a>
+          <a class="link-arrow"
+            href="#contacto">Contacto <svg class="icon" aria-hidden="true"><use href="#arrow-right"/></svg></a>
+        </div>
+
+        <div class="evidence" aria-label="Evidencia">
+          <div class="evidence-cell">
+            <span class="ev-value">2 años y 8 meses</span>
+            <span class="ev-label">en producción</span>
+          </div>
+          <div class="evidence-cell">
+            <span class="ev-value">Ingeniería Informática</span>
+            <span class="ev-label">UPC · 2026</span>
+          </div>
+          <div class="evidence-cell">
+            <span class="ev-value">Badalona</span>
+            <span class="ev-label">Barcelona</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="shell section" id="trabajo"
+        aria-labelledby="trabajo-title">
+        <div class="section-head">
+          <span class="sec-num">01</span>
+          <h2 id="trabajo-title">Trabajo seleccionado</h2>
+        </div>
+        <ol class="work-list">
+          <li>
+            <a class="work-row" href="#trabajo">
+              <span class="w-year">2024</span>
+              <span class="w-main">
+                <span class="w-name">PetSalut</span>
+                <span
+                  class="w-outcome">Aplicación web de gestión para clínicas veterinarias</span>
+              </span>
+              <span
+                class="w-stack">C++ · PostgreSQL · GitHub Actions · Azure Functions</span>
+              <svg class="icon w-arrow" aria-hidden="true">
+                <use href="#arrow-right" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="work-row" href="#trabajo">
+              <span class="w-year">2022—2025</span>
+              <span class="w-main">
+                <span class="w-name">Password-Manager</span>
+                <span
+                  class="w-outcome">Gestor de contraseñas para la asignatura de administración de bases de datos</span>
+              </span>
+              <span
+                class="w-stack">PostgreSQL · PostgREST · Svelte · Docker</span>
+              <svg class="icon w-arrow" aria-hidden="true">
+                <use href="#arrow-right" />
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="work-row" href="#trabajo">
+              <span class="w-year">2026</span>
+              <span class="w-main">
+                <span class="w-name">Mixology-Luismi</span>
+                <span
+                  class="w-outcome">Landing page para un servicio de coctelería</span>
+              </span>
+              <span
+                class="w-stack">Astro · TinaCMS · Cloudflare · GitHub Actions</span>
+              <svg class="icon w-arrow" aria-hidden="true">
+                <use href="#arrow-right" />
+              </svg>
+            </a>
+          </li>
+        </ol>
+      </section>
+
+      <section class="shell section" id="que-hago"
+        aria-labelledby="que-hago-title">
+        <div class="section-head">
+          <span class="sec-num">02</span>
+          <h2 id="que-hago-title">Qué hago</h2>
+        </div>
+        <div class="about-grid">
+          <div class="col">
+            <article class="archetype">
+              <h3>Infraestructura y seguridad</h3>
+              <p>NAS, WireGuard y OpenVPN, Gitea, SonarQube y servicios publicados por túnel de Cloudflare, sin abrir puertos en el router.</p>
+            </article>
+            <article class="archetype">
+              <h3>Desarrollo full-stack</h3>
+              <p>PHP, JavaScript y Moodle en producción; Svelte, Astro, Python, Rust y Deno en proyectos propios y en cliente.</p>
+            </article>
+          </div>
+          <div class="col">
+            <article class="archetype">
+              <h3>Experiencia real</h3>
+              <p>2 años y 8 meses en 3iPunt, un verano de backend en 4DMOVIN y año y medio de soporte TIC en la UPC.</p>
+            </article>
+            <div class="stack">
+              <p class="stack-label">Stack</p>
+              <ul class="stack-list">
+                <li>PHP</li>
+                <li>JavaScript</li>
+                <li>Moodle</li>
+                <li>Svelte</li>
+                <li>Astro</li>
+                <li>Python</li>
+                <li>Rust</li>
+                <li>Deno</li>
+                <li>C++</li>
+                <li>PostgreSQL</li>
+                <li>Docker</li>
+              </ul>
+            </div>
+            <div class="stack">
+              <p class="stack-label">Infraestructura</p>
+              <ul class="stack-list">
+                <li>NAS</li>
+                <li>WireGuard</li>
+                <li>OpenVPN</li>
+                <li>Gitea</li>
+                <li>SonarQube</li>
+                <li>Cloudflare Tunnel</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="contacto">
+      <div class="shell">
+        <div class="footer-cta">
+          <div>
+            <p class="footer-label">03 · Contacto</p>
+            <a class="footer-mail"
+              href="mailto:ricardoverdclar@gmail.com">ricardoverdclar@gmail.com</a>
+          </div>
+          <div class="footer-links">
+            <a href="https://github.com/BarbarianTarkus">@BarbarianTarkus</a>
+            <a
+              href="https://www.linkedin.com/in/ricardverdclar/">in/ricardverdclar</a>
+          </div>
+        </div>
+        <p class="footer-meta">
+          <span>Ricardo Verduguez Claros</span>
+          <span>Desarrollador full-stack</span>
+          <span>Badalona, Barcelona</span>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

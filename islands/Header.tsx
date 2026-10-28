@@ -7,6 +7,8 @@ import { CloseIcon, MenuIcon } from "../components/Icons.tsx";
 interface HeaderProps {
   /** Deployment prefix, e.g. "/Portfolio" ("" when served from the root). */
   basePath: string;
+  /** Current request path, used only to mark the logo when it is the page. */
+  path: string;
 }
 
 interface MenuToggleProps {
@@ -100,10 +102,12 @@ function MenuToggle({ open, onToggle, buttonRef }: MenuToggleProps) {
       class="menu-button"
       aria-expanded={open ? "true" : "false"}
       aria-controls="main-nav"
+      aria-label={open
+        ? "Cerrar el menú de navegación"
+        : "Abrir el menú de navegación"}
       ref={buttonRef}
       onClick={onToggle}
     >
-      <span class="sr-only">Abrir o cerrar el menú de navegación</span>
       <MenuIcon />
     </button>
   );
@@ -117,8 +121,18 @@ function MenuToggle({ open, onToggle, buttonRef }: MenuToggleProps) {
  * Active-link state is not computed here: Fresh annotates matching anchors with
  * `aria-current`, which the stylesheet uses for the active nav indicator.
  */
-export default function Header({ basePath }: HeaderProps) {
+export default function Header({ basePath, path }: HeaderProps) {
   const open = useSignal(false);
+  // The active state is owned here on purpose: Fresh annotates the matching
+  // anchor during SSR, but hydration re-renders this island from `site.nav`
+  // and the attribute would be lost. `data-current` is what the client router
+  // reads to keep intercepting links, so both are rendered together.
+  const normalise = (value: string) => value.replace(/\/+$/, "") || "/";
+  const route = normalise(
+    path.startsWith(basePath) ? path.slice(basePath.length) : path,
+  );
+  const isActive = (target: string) => normalise(target) === route;
+  const isHome = route === "/";
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const href = (route: string) => `${basePath}${route}`;
@@ -133,48 +147,55 @@ export default function Header({ basePath }: HeaderProps) {
         Saltar al contenido principal
       </a>
 
-      <a
-        class="site-title"
-        href={href("/")}
-        aria-label={`${site.author} — inicio`}
-      >
-        {site.shortTitle}
-      </a>
-
-      <MenuToggle
-        open={open.value}
-        onToggle={() => (open.value = !open.value)}
-        buttonRef={toggleRef}
-      />
-
-      <nav
-        id="main-nav"
-        class={`main-nav${open.value ? " open" : ""}`}
-        aria-label="Navegación principal"
-      >
-        <ul onClick={closeMenu}>
-          {site.nav.map((item, index) => (
-            <li key={item.route}>
-              <a href={href(item.route)}>
-                <b class="nav-index">
-                  {String(index + 1).padStart(2, "0")}.{" "}
-                </b>
-                {item.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <button
-          type="button"
-          class="menu-button close-menu"
-          aria-label="Cerrar el menú de navegación"
-          ref={closeRef}
-          onClick={closeMenu}
+      <div class="header-inner shell">
+        <a
+          class="site-title"
+          href={href("/")}
+          aria-label={`${site.author} — inicio`}
+          aria-current={isHome ? "page" : "false"}
         >
-          <CloseIcon />
-        </button>
-      </nav>
+          {site.shortTitle}
+        </a>
+
+        <MenuToggle
+          open={open.value}
+          onToggle={() => (open.value = !open.value)}
+          buttonRef={toggleRef}
+        />
+
+        <nav
+          id="main-nav"
+          class={`main-nav${open.value ? " open" : ""}`}
+          aria-label="Navegación principal"
+        >
+          <ul onClick={closeMenu}>
+            {site.nav.map((item, index) => (
+              <li key={item.route}>
+                <a
+                  href={href(item.route)}
+                  aria-current={isActive(item.route) ? "page" : undefined}
+                  data-current={isActive(item.route) ? "true" : undefined}
+                >
+                  <b class="nav-index">
+                    {String(index + 1).padStart(2, "0")}.{" "}
+                  </b>
+                  {item.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <button
+            type="button"
+            class="menu-button close-menu"
+            aria-label="Cerrar el menú de navegación"
+            ref={closeRef}
+            onClick={closeMenu}
+          >
+            <CloseIcon />
+          </button>
+        </nav>
+      </div>
     </header>
   );
 }

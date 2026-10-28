@@ -10,7 +10,7 @@ import { Footer } from "../components/Footer.tsx";
  * `config.basePath` is the deployment prefix. Active-link state is not passed
  * down: Fresh annotates matching anchors with `aria-current` while rendering.
  */
-export default define.page(function App({ Component, config }) {
+export default define.page(function App({ Component, config, url }) {
   const basePath = config.basePath;
 
   return (
@@ -19,9 +19,23 @@ export default define.page(function App({ Component, config }) {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="author" content={site.fullName} />
-        <meta name="theme-color" content="#0e1217" />
+        <meta name="theme-color" content="#0B0E13" />
         <meta property="og:site_name" content={site.author} />
         <meta property="og:type" content="website" />
+        <meta property="og:locale" content="es_ES" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content={site.title} />
+        <meta name="twitter:description" content={site.description} />
+        {
+          /*
+           * The mobile navigation is an overlay that only works once JavaScript
+           * has marked the document. This blocking script adds the `js` class
+           * before first paint: without it the stylesheet leaves the nav as a
+           * plain visible list, so the static export stays navigable without
+           * JavaScript, and there is no flash for everyone else.
+           */
+        }
+        <script src={`${basePath}/js/enable-js.js`} />
         <link rel="icon" href={`${basePath}/favicon.png`} type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -31,15 +45,17 @@ export default define.page(function App({ Component, config }) {
         />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Roboto+Condensed:wght@400;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;600&family=Roboto+Condensed:wght@700&display=swap"
         />
         <link rel="stylesheet" href={`${basePath}/styles/main.css`} />
       </head>
       <body>
         <div class="layout">
-          <Header basePath={basePath} />
+          <Header basePath={basePath} path={url.pathname} />
           <main id="main" tabindex={-1}>
-            <Component />
+            <div class="shell">
+              <Component />
+            </div>
           </main>
           <Footer />
         </div>

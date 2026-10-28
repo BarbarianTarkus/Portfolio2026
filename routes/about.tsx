@@ -2,52 +2,13 @@ import { Head } from "fresh/runtime";
 import { site } from "../data/site.ts";
 import { define } from "../utils.ts";
 
-interface Job {
-  role: string;
-  company: string;
-  period: string;
-  place: string;
-  bullets: string[];
-}
-
-/** Straight from the CV; the wording is updated once the details are confirmed. */
-const experience: Job[] = [
-  {
-    role: "Junior Web Developer",
-    company: "3iPunt",
-    period: "octubre 2023 — mayo 2026",
-    place: "Barcelona",
-    bullets: [
-      "Desarrollo full-stack de aplicaciones web en producción con PHP, JavaScript, Moodle y jQuery.",
-      "Control de versiones y trabajo con ramas en Git y Bitbucket.",
-      "Seguimiento de incidencias, tareas y planificación en Jira.",
-      "Colaboración con el equipo técnico en un entorno de consultoría y desarrollo a medida.",
-    ],
-  },
-  {
-    role: "Desarrollador backend PHP",
-    company: "4DMOVIN Business / Namastech",
-    period: "junio 2022 — septiembre 2022",
-    place: "Castelldefels",
-    bullets: [
-      "Desarrollo sobre un ERP en PHP y Angular.",
-      "Automatización de correos y sincronización de calendarios integrando Google APIs y Microsoft Graph API, mejorando la compatibilidad con IMAP, POP y SMTP.",
-      "Pantalla de gestión y automatización de redes sociales (posts y feeds).",
-    ],
-  },
-  {
-    role: "Soporte TIC (becario)",
-    company: "EPSEVG — Universitat Politècnica de Catalunya",
-    period: "noviembre 2020 — enero 2022",
-    place: "Barcelona",
-    bullets: [
-      "Helpdesk para el personal de la UPC: incidencias informáticas de primer nivel.",
-      "Administración de sistemas Linux y Windows: cuentas, permisos y resolución de incidencias.",
-      "Gestión de imágenes de sistemas operativos con OpenGnsys.",
-      "Puesta en marcha del Digital Signage de la universidad: sistema operativo Linux y hardware Raspberry.",
-    ],
-  },
-];
+/**
+ * Biography and the homelab. Work history moved to `/experience` so this page
+ * stops competing with the CV: a recruiter lands on experience, a curious
+ * reader lands here.
+ */
+const pageDescription =
+  "Sobre Ricardo Verduguez: de soporte TIC en la UPC a desarrollo full-stack en producción, y el homelab que mantiene desde hace más de dos años.";
 
 export default define.page(function About(ctx) {
   const basePath = ctx.config.basePath;
@@ -56,19 +17,18 @@ export default define.page(function About(ctx) {
     <>
       <Head>
         <title>Sobre mí — {site.author}</title>
-        <meta
-          name="description"
-          content="Desarrollador full-stack con base en sistemas: experiencia en producción, soporte TIC en la UPC y un homelab mantenido desde hace más de dos años."
-        />
+        <meta name="description" content={pageDescription} />
+        <meta property="og:title" content={`Sobre mí — ${site.author}`} />
+        <meta property="og:description" content={pageDescription} />
       </Head>
 
       <h1 class="page-title">Sobre mí</h1>
+      <p class="page-lede">
+        Soy desarrollador full-stack y acabo de terminar Ingeniería Informática
+        en la UPC, compaginándola con el trabajo.
+      </p>
 
-      <div class="about-copy">
-        <p class="page-lede">
-          Soy desarrollador full-stack y acabo de terminar Ingeniería
-          Informática en la UPC, compaginándola con el trabajo.
-        </p>
+      <div class="prose">
         <p>
           Empecé en el helpdesk de la universidad, donde aprendí cómo sufre la
           gente cuando un sistema falla: soporte a usuarios, gestión de
@@ -92,23 +52,12 @@ export default define.page(function About(ctx) {
         </p>
       </div>
 
-      <h2 class="section-title" id="experiencia">Experiencia</h2>
-      <ol class="experience">
-        {experience.map((job) => (
-          <li class="experience-item" key={`${job.company}-${job.period}`}>
-            <h3>{job.role}</h3>
-            <p class="experience-meta">
-              {job.company} · {job.period} · {job.place}
-            </p>
-            <ul>
-              {job.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
-            </ul>
-          </li>
-        ))}
-      </ol>
+      <div class="section-head">
+        <span class="section-num">01</span>
+        <h2 class="section-title" id="homelab">Homelab</h2>
+      </div>
 
-      <h2 class="section-title" id="homelab">Homelab</h2>
-      <p class="section-lede">
+      <p class="section-note">
         Infraestructura propia montada y mantenida desde hace más de dos años:
         un servidor Synology NAS y varias máquinas que sirven multimedia,
         almacenamiento, VPN y un Git propio. Jellyfin separa el cómputo (una
@@ -117,32 +66,23 @@ export default define.page(function About(ctx) {
         publicación al exterior va por túnel de Cloudflare, sin abrir puertos en
         el router.
       </p>
+
       <ul class="tag-list">
-        {[
-          "Synology NAS",
-          "NFS / SMB",
-          "Docker",
-          "Ansible",
-          "Rsync",
-          "WireGuard",
-          "OpenVPN",
-          "Gitea",
-          "SonarQube",
-          "Cloudflare Tunnel",
-        ].map((tag) => <li class="tag" key={tag}>{tag}</li>)}
+        {site.homelabStack.map((item) => (
+          <li class="tag" key={item}>{item}</li>
+        ))}
       </ul>
 
-      <h2 class="section-title">Formación</h2>
-      <div class="education">
-        <h3>Grado en Ingeniería Informática</h3>
-        <p class="experience-meta">
-          Universitat Politècnica de Catalunya (UPC) · 2017 — 2026 · Barcelona
-        </p>
+      <div class="section-head">
+        <span class="section-num">02</span>
+        <h2 class="section-title">Dónde seguir</h2>
       </div>
 
-      <p>
-        El detalle de lo que he construido está en{" "}
-        <a href={`${basePath}/projects`}>la página de proyectos</a>.
+      <p class="prose">
+        El historial laboral completo está en{" "}
+        <a href={`${basePath}/experience`}>experiencia</a>; el detalle técnico
+        de lo que he construido, en{" "}
+        <a href={`${basePath}/projects`}>proyectos</a>.
       </p>
     </>
   );
