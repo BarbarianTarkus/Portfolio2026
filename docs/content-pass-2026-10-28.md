@@ -1,5 +1,10 @@
 # Content pass — 2026-10-28
 
+> **Later update:** the CV described below was removed from the site on the same
+> day at the owner's request. `static/cv.pdf` is deleted and nothing links to
+> it; the document is shared through LinkedIn instead. The references to the CV
+> in this file describe the state of the site at the time of this pass.
+
 What this pass changed in the site, which facts are verified, and what is still
 blocked on the owner. Written so the next session does not have to re-derive it.
 

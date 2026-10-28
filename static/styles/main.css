@@ -39,10 +39,23 @@
   --primaryFont: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
   --codeFont: "Fira Code", monospace;
+  /* Two compact steps. The legacy theme drifted between 0.8/0.85/0.9/0.95rem
+     for secondary text; these tokens give metadata (dates, tags, handles) and
+     compact card copy one size each. */
+  --text-meta: 0.9rem;
+  --text-compact: 1rem;
 
   /* Layout */
   --page-width: 54rem;
-  --header-padding-x: 10rem;
+  /* Reading measure for long prose. At 20px the full 832px column runs to ~90
+     characters, noticeably wider than the home page's hero copy; capping prose
+     at 64ch keeps every page in the same 55–70 character band. `ch` follows the
+     font size, so the cap holds at every breakpoint. */
+  --measure: 64ch;
+  /* Horizontal header gutter. The legacy theme used 10rem at every width, which
+     pushed the mobile brand + menu pair off-centre and shrank the header box to
+     nothing below ~380px. It now grows with the breakpoints (below). */
+  --header-padding-x: 1.25rem;
   --radius: 0.5rem;
 
   /* Motion */
@@ -97,8 +110,10 @@ img {
   height: auto;
 }
 
-/* Visible keyboard focus ring; --focus-ring (#f1c81b) keeps >3:1 on the page. */
-*:focus {
+/* Keyboard-only focus ring: mouse/touch activation stays ring-free so clickable
+   cards and buttons do not flash an outline. --focus-ring (#f1c81b) keeps >3:1
+   against the page and card surfaces. */
+*:focus-visible {
   outline: 2px solid var(--focus-ring);
   outline-offset: 2px;
 }
@@ -118,6 +133,7 @@ main:focus {
   font-weight: bold;
   line-height: 1.1;
   color: var(--heading-accent);
+  text-wrap: balance;
 }
 
 h1 {
@@ -150,8 +166,12 @@ h6 {
 }
 
 @media (min-width: 48rem) {
+  /* Body copy carries the inner pages (About/Contact/Projects). It used to jump
+     to 1.5rem/1.6rem — 24 px/25.6 px on an 864 px column — which read far larger
+     than the home page's own display scale. The home page sizes its hero, cards
+     and metadata explicitly, so it is unaffected by this change. */
   body {
-    font-size: 1.5rem;
+    font-size: 1.125rem;
   }
 
   h1 {
@@ -165,7 +185,7 @@ h6 {
 
 @media (min-width: 80rem) {
   body {
-    font-size: 1.6rem;
+    font-size: 1.25rem;
   }
 
   h1 {
@@ -177,6 +197,11 @@ a {
   color: var(--slate);
   text-decoration-thickness: 1px;
   text-decoration-color: var(--dark);
+}
+
+/* Avoid a single trailing word on its own line in long prose paragraphs. */
+p {
+  text-wrap: pretty;
 }
 
 ul {
@@ -232,6 +257,12 @@ main {
   animation: fade_in 0.25s ease-out both;
 }
 
+/* Anchor targets (#experiencia, #homelab) land with breathing room instead of
+   flush against the top edge of the viewport. */
+[id] {
+  scroll-margin-top: 2rem;
+}
+
 /* ==========================================================================
    6. Header
    --------------------------------------------------------------------------
@@ -242,11 +273,27 @@ main {
 
 header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 1rem;
   padding: 2.5rem var(--header-padding-x);
   font-family: var(--primaryFont);
   background: var(--background);
   color: var(--darker);
+}
+
+/* The gutter widens with the viewport: 20px on a phone keeps the brand + menu
+   pair centred, 40px on tablets and the legacy 160px frame only from 1280px up,
+   where it actually fits next to the 482px navigation. */
+@media (min-width: 48rem) {
+  :root {
+    --header-padding-x: 2.5rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --header-padding-x: 10rem;
+  }
 }
 
 header a {
@@ -357,6 +404,11 @@ header .main-nav {
 }
 
 header .main-nav.open {
+  /* Opening must not animate `visibility`: the overlay has to be focusable on
+     the same frame it opens so focus can move into it (see Header.tsx). */
+  transition:
+    transform var(--transition-slow),
+    opacity var(--transition-slow);
   transform: translateX(0);
   visibility: visible;
   opacity: 1;
@@ -414,6 +466,12 @@ header .main-nav ul li {
   text-align: center;
 }
 
+/* Whole overlay row is the tap target (>=44px tall), not just the glyphs. */
+header .main-nav ul li a {
+  display: block;
+  padding: 0.65rem 1rem;
+}
+
 header .main-nav .nav-index {
   font-size: 1rem;
   color: var(--text-accent);
@@ -435,6 +493,7 @@ header .main-nav .menu-button {
 @media (min-width: 48rem) {
   header {
     justify-content: center;
+    gap: 0;
     height: auto;
   }
 
@@ -474,6 +533,13 @@ header .main-nav .menu-button {
     text-align: initial;
   }
 
+  /* Desktop nav links are inline text again; the 44px rows only exist in the
+     fullscreen overlay. */
+  header .main-nav ul li a {
+    display: inline;
+    padding: 0;
+  }
+
   header .main-nav .menu-button {
     display: none;
   }
@@ -507,7 +573,9 @@ header .main-nav .menu-button {
 }
 
 .skip-to-content-link:focus {
-  transform: translateY(6rem);
+  /* Land 4px inside the viewport (2px ring + 2px offset) so the focus ring is
+     not clipped by the top/left edge. */
+  transform: translate(4px, calc(6rem + 4px));
   opacity: 1;
 }
 
@@ -640,7 +708,7 @@ footer p {
 }
 
 .button:hover,
-.button:focus,
+.button:focus-visible,
 .button:active {
   background-color: var(--text-accent);
   border-color: var(--text-accent);
@@ -662,14 +730,20 @@ footer p {
    ========================================================================== */
 
 .page-title {
-  margin: 0;
+  /* The page title has to outrank both the 25.6px body copy and the 2rem
+     section headings under it; the legacy 2rem size flat-lined all three and
+     reset the h1 margins, so the title touched the paragraph below. */
+  margin: 0 0 1.5rem;
   font-family: var(--primaryFont);
-  font-size: 2rem;
+  font-size: clamp(2.25rem, 2.5vw + 1rem, 3rem);
   font-weight: 700;
+  line-height: 1.15;
   color: var(--lightest-slate);
+  text-wrap: balance;
 }
 
 .page-lede {
+  max-width: var(--measure);
   margin: 1rem 0 0;
   font-size: inherit;
   line-height: 1.6;
@@ -677,9 +751,9 @@ footer p {
 }
 
 .section-lede {
-  max-width: 44rem;
+  max-width: var(--measure);
   margin: 0 0 1.5rem;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   line-height: 1.6;
   color: var(--slate);
 }
@@ -704,6 +778,7 @@ footer p {
    ========================================================================== */
 
 .about-copy p {
+  max-width: var(--measure);
   margin: 0 0 1.25rem;
 }
 
@@ -732,7 +807,7 @@ footer p {
   background: var(--lightAccent);
   color: var(--slate);
   font-family: var(--codeFont);
-  font-size: 0.8rem;
+  font-size: var(--text-meta);
   line-height: 1.4;
 }
 
@@ -794,7 +869,7 @@ footer p {
 
 .contact-card p {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: var(--text-compact);
   line-height: 1.5;
 }
 
@@ -817,7 +892,7 @@ footer p {
 }
 
 .contact-card a:hover,
-.contact-card a:focus {
+.contact-card a:focus-visible {
   border-bottom-color: currentColor;
 }
 
@@ -888,39 +963,18 @@ footer p {
 /* ==========================================================================
    14. Content pages (2026 content pass)
    --------------------------------------------------------------------------
-   Home cards, project fiches, the experience list and the CV shortcut in the
-   header. Same tokens and rhythm as the legacy sections above: nothing here
-   introduces a new palette or type scale.
+   Home cards, project fiches and the experience list. Same tokens and rhythm
+   as the legacy sections above: nothing here introduces a new palette or type
+   scale.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Header: CV shortcut (inside the nav so it also appears in the mobile menu)
+   Header navigation: stacked inside the fullscreen overlay, inline on desktop
    -------------------------------------------------------------------------- */
 
 header .main-nav {
   flex-direction: column;
   gap: 2.5rem;
-}
-
-header .main-nav .nav-cv {
-  display: inline-block;
-  padding: 0.6rem 1.1rem;
-  border: 1px solid var(--text-accent);
-  border-radius: var(--radius);
-  color: var(--text-accent);
-  font-family: var(--codeFont);
-  font-size: 0.9rem;
-  line-height: 1;
-  text-decoration: none;
-  transition:
-    background-color var(--transition),
-    color var(--transition);
-}
-
-header .main-nav .nav-cv:hover,
-header .main-nav .nav-cv:focus-visible {
-  background-color: var(--text-accent);
-  color: var(--background);
 }
 
 @media (min-width: 48rem) {
@@ -949,7 +1003,7 @@ header .main-nav .nav-cv:focus-visible {
 .hero-highlights {
   margin: 1.5rem 0 0;
   font-family: var(--codeFont);
-  font-size: 0.9rem;
+  font-size: var(--text-compact);
   line-height: 1.6;
   color: var(--slate);
 }
@@ -974,7 +1028,7 @@ header .main-nav .nav-cv:focus-visible {
 }
 
 .button-primary:hover,
-.button-primary:focus,
+.button-primary:focus-visible,
 .button-primary:active {
   background-color: transparent;
   color: var(--text-accent);
@@ -1025,7 +1079,7 @@ header .main-nav .nav-cv:focus-visible {
 
 .archetype-card p {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: var(--text-compact);
   line-height: 1.5;
 }
 
@@ -1033,7 +1087,7 @@ header .main-nav .nav-cv:focus-visible {
   margin-top: auto;
   padding-top: 0.5rem;
   font-family: var(--codeFont);
-  font-size: 0.85rem;
+  font-size: var(--text-meta);
   color: var(--text-accent);
 }
 
@@ -1058,7 +1112,9 @@ header .main-nav .nav-cv:focus-visible {
 .education h3 {
   margin: 0;
   font-family: var(--primaryFont);
-  font-size: 1.15rem;
+  /* 20px on phones so it stays above the 16px body copy and below the 24px
+     section title; 24px from the tablet breakpoint up. */
+  font-size: clamp(1.25rem, 0.9rem + 0.8vw, 1.5rem);
   font-weight: 700;
   line-height: 1.3;
   color: var(--lightest-slate);
@@ -1067,7 +1123,7 @@ header .main-nav .nav-cv:focus-visible {
 .experience-meta {
   margin: 0.35rem 0 0.85rem;
   font-family: var(--codeFont);
-  font-size: 0.85rem;
+  font-size: var(--text-meta);
   line-height: 1.4;
   color: var(--slate);
 }
@@ -1075,6 +1131,7 @@ header .main-nav .nav-cv:focus-visible {
 .experience-item ul {
   display: grid;
   gap: 0.4rem;
+  max-width: var(--measure);
   margin: 0;
   padding-left: 1.15rem;
   color: var(--slate);
@@ -1118,13 +1175,14 @@ header .main-nav .nav-cv:focus-visible {
   gap: 0.25rem 1.25rem;
   margin: 0;
   font-family: var(--codeFont);
-  font-size: 0.85rem;
+  font-size: var(--text-meta);
   color: var(--slate);
 }
 
 .fiche-summary {
+  max-width: var(--measure);
   margin: 1rem 0 0;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   line-height: 1.6;
   color: var(--lightest-slate);
 }
@@ -1145,6 +1203,7 @@ header .main-nav .nav-cv:focus-visible {
 }
 
 .fiche-block p {
+  max-width: var(--measure);
   margin: 0;
   line-height: 1.65;
   color: var(--slate);
@@ -1153,6 +1212,7 @@ header .main-nav .nav-cv:focus-visible {
 .fiche-list {
   display: grid;
   gap: 0.6rem;
+  max-width: var(--measure);
   margin: 0;
   padding-left: 1.15rem;
   color: var(--slate);

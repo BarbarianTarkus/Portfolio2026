@@ -3,16 +3,14 @@ import { site } from "../data/site.ts";
 import { define } from "../utils.ts";
 import { GitHubIcon, LinkedInIcon } from "../components/Icons.tsx";
 
-export default define.page(function Contact(ctx) {
-  const basePath = ctx.config.basePath;
-
+export default define.page(function Contact() {
   return (
     <>
       <Head>
         <title>Contacto — {site.author}</title>
         <meta
           name="description"
-          content="Contacto de Ricardo Verduguez: GitHub, LinkedIn, correo electrónico y CV en PDF."
+          content="Contacto de Ricardo Verduguez: GitHub, LinkedIn y correo electrónico."
         />
       </Head>
 
@@ -59,21 +57,6 @@ export default define.page(function Contact(ctx) {
           <span class="contact-handle">{site.linkedinHandle}</span>
         </a>
       </div>
-
-      <h2 class="section-title">CV</h2>
-      <p class="section-lede">
-        Una página, todo lo relevante: experiencia, proyectos, homelab y
-        competencias técnicas.
-      </p>
-      <p class="hero-actions">
-        <a
-          class="button button-primary"
-          href={`${basePath}${site.cvPath}`}
-          download
-        >
-          Descargar CV (PDF)
-        </a>
-      </p>
     </>
   );
 });

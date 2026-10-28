@@ -17,20 +17,22 @@ routes/          Fresh file-system routes (pages + _app shell + _404)
 islands/         Components that need client-side JS (only the header/menu)
 components/      Static Preact components (footer, icons)
 data/site.ts     Shared identity, links, navigation and project fiches
-static/          Static assets copied as-is (styles, favicon, robots.txt, cv.pdf)
+static/          Static assets copied as-is (styles, favicon, robots.txt)
 scripts/ssg.ts   Static site generator entry point (build, render, verify)
 scripts/lib/     Filesystem, route, rendering and output-verification helpers
 scripts/preview.ts  Local preview server that mimics GitHub Pages
 scripts/sonar-scan.sh  Local SonarQube analysis (reads .env)
 docs/redesign.md Light-touch redesign plan and design-token rationale
 docs/content-pass-2026-10-28.md  Content pass: scope, provenance, pending items
+docs/ui-ux-pass-2026-10-28.md    Interaction, accessibility and hierarchy fixes
 config.ts        BASE_PATH handling shared by app, Vite and SSG
 ```
 
 - **Server rendering:** `routes/_app.tsx` renders the document shell and wraps
   every page with the header (an island) and the footer.
 - **Partial hydration:** only `islands/Header.tsx` ships JavaScript (mobile menu
-  state + Escape key + scroll lock). Everything else is static HTML.
+  state, Escape key, focus trap/inert handling and scroll lock). Everything else
+  is static HTML.
 - **Static export:** `deno task ssg` runs the Vite build, renders each route
   through the production server handler, copies hashed assets into `dist/`,
   writes `404.html` and `.nojekyll`, and finally verifies that every URL
@@ -114,9 +116,10 @@ normalized to root by `config.ts`).
 
 Shared site metadata lives in [`data/site.ts`](data/site.ts):
 
-- `site` — name, role, intro, highlights, social links, navigation items, the CV
-  path (`cvPath`, served from `static/cv.pdf`) and (optionally) an email
-  address. Leave `email` empty to hide the email card.
+- `site` — name, role, intro, highlights, social links, navigation items and
+  (optionally) an email address. Leave `email` empty to hide the email card.
+  There is deliberately no CV file in the repository: it is shared through
+  LinkedIn instead.
 - `projects` — one fiche per project: `name`, `summary`, `tags`, `period`, an
   optional verified `work` line (e.g. "12 PRs mergeados"), `links`, then the
   narrative fields `problem`, `decisions`, `broke` and `next`. Every fiche is
@@ -137,6 +140,18 @@ light-touch redesign pass unified every heading accent on `var(--text-accent)`
 accent underline for the active nav item, strengthened the focus ring and gave
 icon controls 44 px touch targets. Details, rationale and the optional phase-2
 backlog are in [`docs/redesign.md`](docs/redesign.md).
+
+A later UI/UX pass fixed what measurements exposed rather than restyling: the
+header gutter now scales (20/40/160 px) instead of being pinned at 10rem, page
+titles are 36–48 px instead of competing with section headings, focus rings are
+keyboard-only (`:focus-visible`), overlay rows are real 44 px touch targets, and
+the mobile menu moves focus into the overlay, traps Tab there, marks the page
+behind it `inert` and closes itself when the layout resizes to desktop. A
+follow-up review then removed the CV from the site entirely and brought inner
+page copy down to 16/18/20 px with a 64ch measure, so About/Contact/Projects
+match the home page instead of running at 24–25.6 px. Palette and type families
+are untouched. Details and the verification log are in
+[`docs/ui-ux-pass-2026-10-28.md`](docs/ui-ux-pass-2026-10-28.md).
 
 ## Code quality (SonarQube)
 

@@ -73,10 +73,8 @@ export const site = {
   /** Handles shown on the contact cards. */
   githubHandle: `@${GITHUB_USERNAME}`,
   linkedinHandle: `in/${LINKEDIN_SLUG}`,
-  /** Public contact address, as printed on the CV. Empty hides the card. */
+  /** Public contact address. Empty hides the card. */
   email: "ricardoverdclar@gmail.com",
-  /** Root-relative path of the downloadable CV, served from static/. */
-  cvPath: "/cv.pdf",
   nav: [
     { title: "Proyectos", route: "/projects" },
     { title: "Sobre mí", route: "/about" },

@@ -46,13 +46,6 @@ export default define.page(function Home(ctx) {
           <a class="button button-primary" href={`${basePath}/projects`}>
             Ver proyectos
           </a>
-          <a
-            class="button"
-            href={`${basePath}${site.cvPath}`}
-            download
-          >
-            Descargar CV
-          </a>
         </div>
       </section>
 

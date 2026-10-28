@@ -41,7 +41,7 @@ export default define.page(function App({ Component, config }) {
           <main id="main" tabindex={-1}>
             <Component />
           </main>
-          <Footer basePath={basePath} />
+          <Footer />
         </div>
       </body>
     </html>

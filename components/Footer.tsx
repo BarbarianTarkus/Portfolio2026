@@ -1,19 +1,15 @@
 import { site } from "../data/site.ts";
 import { GitHubIcon, LinkedInIcon } from "./Icons.tsx";
 
-interface FooterProps {
-  /** Deployment prefix, e.g. "/Portfolio" ("" when served from the root). */
-  basePath: string;
-}
-
 /**
- * Site footer with the social links and the CV shortcut. Fully static, so it is
- * a plain component rather than an island.
+ * Site footer with the social links. Fully static, so it is a plain component
+ * rather than an island. The CV is deliberately not hosted here: it is shared
+ * on request through LinkedIn instead.
  */
-export function Footer({ basePath }: FooterProps) {
+export function Footer() {
   return (
     <footer>
-      <nav aria-label="Redes y CV">
+      <nav aria-label="Redes">
         <ul>
           <li>
             <a
@@ -33,15 +29,6 @@ export function Footer({ basePath }: FooterProps) {
               aria-label="Perfil de LinkedIn"
             >
               <LinkedInIcon />
-            </a>
-          </li>
-          <li>
-            <a
-              href={`${basePath}${site.cvPath}`}
-              download
-              aria-label="Descargar el CV en PDF"
-            >
-              CV
             </a>
           </li>
         </ul>

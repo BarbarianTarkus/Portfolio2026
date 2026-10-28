@@ -1,4 +1,5 @@
-import { useEffect } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
+import type { RefObject } from "preact";
 import { type Signal, useSignal } from "@preact/signals";
 import { site } from "../data/site.ts";
 import { CloseIcon, MenuIcon } from "../components/Icons.tsx";
@@ -11,16 +12,37 @@ interface HeaderProps {
 interface MenuToggleProps {
   open: boolean;
   onToggle: () => void;
+  buttonRef: RefObject<HTMLButtonElement>;
 }
 
 /**
- * Keep the mobile menu keyboard-accessible: Escape closes it and the open
- * state locks page scroll behind the fullscreen overlay.
+ * Keep the mobile menu keyboard-accessible: Escape closes it, Tab stays inside
+ * the fullscreen overlay and the open state locks page scroll.
  */
 function useMenuEffects(open: Signal<boolean>): void {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") open.value = false;
+      if (!open.value) return;
+      if (event.key === "Escape") {
+        open.value = false;
+        return;
+      }
+      if (event.key !== "Tab") return;
+      // Cycle between the overlay's first and last focusable controls.
+      const nav = document.getElementById("main-nav");
+      const focusable = nav?.querySelectorAll<HTMLElement>(
+        "a[href], button:not([disabled])",
+      );
+      if (!focusable || focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     globalThis.addEventListener("keydown", onKeyDown);
     return () => globalThis.removeEventListener("keydown", onKeyDown);
@@ -28,20 +50,57 @@ function useMenuEffects(open: Signal<boolean>): void {
 
   useEffect(() => {
     document.body.classList.toggle("menu-open", open.value);
-    return () => document.body.classList.remove("menu-open");
+    // The overlay is modal: while it is open the page behind it is removed from
+    // the tab order and from the accessibility tree.
+    const background = document.querySelectorAll<HTMLElement>("main, footer");
+    for (const element of background) element.inert = open.value;
+    return () => {
+      document.body.classList.remove("menu-open");
+      for (const element of background) element.inert = false;
+    };
   });
+
+  // Rotating or resizing to the desktop layout while the menu is open would
+  // leave an invisible overlay trapping focus; close it instead of hiding it.
+  useEffect(() => {
+    const desktop = globalThis.matchMedia("(min-width: 48rem)");
+    const onChange = () => {
+      if (desktop.matches && open.value) open.value = false;
+    };
+    desktop.addEventListener("change", onChange);
+    return () => desktop.removeEventListener("change", onChange);
+  }, []);
 }
 
-function MenuToggle({ open, onToggle }: MenuToggleProps) {
-  // ARIA attributes need the literal strings "true"/"false", not booleans.
-  const pressed = open ? "true" : "false";
+/**
+ * The open overlay covers the hamburger, so focus has to move into it: the
+ * close button receives focus on open and the hamburger gets it back on close.
+ * Without this, keyboard users keep tabbing from a control they cannot see.
+ */
+function useMenuFocus(
+  open: Signal<boolean>,
+  toggleRef: RefObject<HTMLButtonElement>,
+  closeRef: RefObject<HTMLButtonElement>,
+): void {
+  const wasOpen = useRef(false);
+
+  useEffect(() => {
+    // Skip the initial render: the menu is closed and focus must stay put.
+    if (wasOpen.current === open.value) return;
+    wasOpen.current = open.value;
+    const target = open.value ? closeRef : toggleRef;
+    target.current?.focus();
+  }, [open.value]);
+}
+
+function MenuToggle({ open, onToggle, buttonRef }: MenuToggleProps) {
   return (
     <button
       type="button"
       class="menu-button"
-      aria-pressed={pressed}
-      aria-expanded={pressed}
+      aria-expanded={open ? "true" : "false"}
       aria-controls="main-nav"
+      ref={buttonRef}
       onClick={onToggle}
     >
       <span class="sr-only">Abrir o cerrar el menú de navegación</span>
@@ -52,18 +111,21 @@ function MenuToggle({ open, onToggle }: MenuToggleProps) {
 
 /**
  * Header island: the only part of the page that needs client-side JavaScript.
- * It owns the mobile menu state, Escape handling and scroll locking; the rest
- * of the site is plain server-rendered HTML.
+ * It owns the mobile menu state, Escape handling, focus management and scroll
+ * locking; the rest of the site is plain server-rendered HTML.
  *
  * Active-link state is not computed here: Fresh annotates matching anchors with
  * `aria-current`, which the stylesheet uses for the active nav indicator.
  */
 export default function Header({ basePath }: HeaderProps) {
   const open = useSignal(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const href = (route: string) => `${basePath}${route}`;
   const closeMenu = () => (open.value = false);
 
   useMenuEffects(open);
+  useMenuFocus(open, toggleRef, closeRef);
 
   return (
     <header>
@@ -82,6 +144,7 @@ export default function Header({ basePath }: HeaderProps) {
       <MenuToggle
         open={open.value}
         onToggle={() => (open.value = !open.value)}
+        buttonRef={toggleRef}
       />
 
       <nav
@@ -102,14 +165,11 @@ export default function Header({ basePath }: HeaderProps) {
           ))}
         </ul>
 
-        <a class="nav-cv" href={href(site.cvPath)} download>
-          CV
-        </a>
-
         <button
           type="button"
           class="menu-button close-menu"
           aria-label="Cerrar el menú de navegación"
+          ref={closeRef}
           onClick={closeMenu}
         >
           <CloseIcon />
