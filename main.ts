@@ -29,6 +29,41 @@ export async function createApp(): Promise<{
 
   app.use(staticFiles());
 
+  // Dune's stock admin preview renders the page's Markdown body in a generic
+  // template. This site keeps all copy in frontmatter and has empty bodies, so
+  // that preview would always be blank. Serve the real public route into the
+  // admin's preview iframe instead ("Preview" shows the saved page; the admin
+  // refreshes the iframe automatically after each save).
+  app.use(async (ctx) => {
+    const adminPath = dune.config.admin?.path ?? "/admin";
+    if (
+      ctx.req.method !== "GET" ||
+      ctx.url.pathname !== `${adminPath}/api/preview`
+    ) {
+      return ctx.next();
+    }
+    const sourcePath = ctx.url.searchParams.get("path");
+    const page = sourcePath
+      ? dune.engine.pages.find((p) => p.sourcePath === sourcePath)
+      : undefined;
+    if (page === undefined) return ctx.next();
+
+    // Render the public page in-process (no redirect: the admin's CSP would
+    // block a cross-document frame navigation) and reuse its HTML verbatim.
+    const basePath = normalizeBasePath(Deno.env.get("BASE_PATH"));
+    const target = new URL(`${basePath}${page.route}`, ctx.url);
+    const response = await app.handler()(
+      new Request(target, { headers: { accept: "text/html" } }),
+    );
+    return new Response(await response.text(), {
+      status: response.status,
+      headers: {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "no-store",
+      },
+    });
+  });
+
   // The static export only needs content rendering: skipping plugin mounting
   // avoids creating admin users/sessions directories in CI. The dev and
   // production servers mount everything.
