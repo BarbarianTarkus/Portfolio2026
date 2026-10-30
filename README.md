@@ -113,9 +113,16 @@ into `content/*/default.md` and rebuilds the site, so the result is a normal
 content diff that is committed with the rest of the site.
 
 The site itself is editable too: while logged in, open any public page and use
-the ✎ Edit handle on the title, lede or eyebrow (flat frontmatter fields). Edits
-are saved as you type and **Save** in the bar commits them; **✎ Edit source**
-opens the raw editor overlay for nested content such as jobs and project fiches.
+the ✎ Edit handle on plain fields (title, eyebrow, linkedin label). Edits are
+saved as you type and **Save** in the bar commits them; **✎ Edit source** opens
+the raw editor overlay for nested content such as jobs and project fiches.
+
+Prose fields also accept **inline Markdown**: bold (`**bold**`), italic
+(`*italic*`), inline code (between backticks) and `[links](/route)`. It is
+rendered sanitized by [`lib/markdown.tsx`](lib/markdown.tsx), with the
+deployment base path applied to internal links. Markdown is written in the
+raw/source editor (YAML); those fields are not inline-editable to avoid
+flattening existing formatting.
 
 The GitHub Pages deployment is static only: `/admin` and the content API do not
 exist there. The admin runs locally, or on a Deno server deployment of the same

@@ -1,5 +1,6 @@
 import { Head } from "fresh/runtime";
 import { EditableText } from "@dune/core/ui/editable";
+import { Markdown } from "../lib/markdown.tsx";
 import type {
   ExperienceContent,
   HomeContent,
@@ -75,7 +76,7 @@ export function HomePage(
           {site.role}
         </p>
         <p class="hero-intro">
-          {site.intro}
+          <Markdown text={site.intro} basePath={basePath} />
         </p>
 
         <div class="hero-actions">
@@ -175,7 +176,7 @@ export function HomePage(
       </div>
 
       <p class="section-note">
-        {page.projectsSection.note}
+        <Markdown text={page.projectsSection.note} basePath={basePath} />
       </p>
 
       <ol class="work-index">
@@ -228,7 +229,9 @@ export function HomePage(
           {page.focus.map((item) => (
             <div class="stack-block" key={item.title}>
               <h3>{item.title}</h3>
-              <p>{item.body}</p>
+              <p>
+                <Markdown text={item.body} basePath={basePath} />
+              </p>
             </div>
           ))}
         </div>

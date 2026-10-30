@@ -1,5 +1,6 @@
 import type { ComponentChildren } from "preact";
 import type { ProjectsContent } from "../lib/content.ts";
+import { Markdown } from "../lib/markdown.tsx";
 
 type Project = ProjectsContent["projects"][number];
 type KindLabels = ProjectsContent["kindLabels"];
@@ -28,6 +29,7 @@ interface ProjectFicheProps {
   project: Project;
   kindLabels: KindLabels;
   ficheLabels: FicheLabels;
+  basePath: string;
 }
 
 /**
@@ -44,7 +46,7 @@ interface ProjectFicheProps {
  * so keeping it on the root node preserves the rendered HTML.
  */
 export function ProjectFiche(
-  { project, kindLabels, ficheLabels }: ProjectFicheProps,
+  { project, kindLabels, ficheLabels, basePath }: ProjectFicheProps,
 ) {
   const kindLabel = kindLabels[project.kind as keyof KindLabels] ??
     project.kind;
@@ -54,7 +56,9 @@ export function ProjectFiche(
     <FicheBlock
       title={ficheLabels.problem}
     >
-      <p>{project.problem}</p>
+      <p>
+        <Markdown text={project.problem} basePath={basePath} />
+      </p>
     </FicheBlock>,
   );
 
@@ -64,10 +68,8 @@ export function ProjectFiche(
     >
       <ul class="fiche-list">
         {project.decisions.map((decision) => (
-          <li
-            key={decision}
-          >
-            {decision}
+          <li key={decision}>
+            <Markdown text={decision} basePath={basePath} />
           </li>
         ))}
       </ul>
@@ -80,7 +82,9 @@ export function ProjectFiche(
         <h3>
           {ficheLabels.broke}
         </h3>
-        <p>{project.broke}</p>
+        <p>
+          <Markdown text={project.broke} basePath={basePath} />
+        </p>
       </blockquote>,
     );
   }
@@ -90,7 +94,9 @@ export function ProjectFiche(
       <FicheBlock
         title={ficheLabels.next}
       >
-        <p>{project.next}</p>
+        <p>
+          <Markdown text={project.next} basePath={basePath} />
+        </p>
       </FicheBlock>,
     );
   }
@@ -123,7 +129,7 @@ export function ProjectFiche(
       </p>
 
       <p class="fiche-summary">
-        {project.summary}
+        <Markdown text={project.summary} basePath={basePath} />
       </p>
 
       <ul class="tag-list">

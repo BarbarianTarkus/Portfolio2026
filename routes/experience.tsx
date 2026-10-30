@@ -1,6 +1,6 @@
 import { Head } from "fresh/runtime";
 import { EditableText } from "@dune/core/ui/editable";
-import { InlineText } from "../components/InlineText.tsx";
+import { Markdown } from "../lib/markdown.tsx";
 import type { ExperienceContent, SiteContent } from "../lib/content.ts";
 import { loadExperiencePage } from "../lib/content.ts";
 import { define } from "../utils.ts";
@@ -51,9 +51,7 @@ export function ExperiencePage(
         {page.title}
       </h1>
       <p class="page-lede">
-        <EditableText field="lede" sourcePath={sourcePath}>
-          {page.lede}
-        </EditableText>
+        <Markdown text={page.lede} basePath={basePath} />
       </p>
 
       <p class="page-meta">
@@ -101,10 +99,8 @@ export function ExperiencePage(
               </p>
               <ul class="job-points">
                 {job.bullets.map((bullet) => (
-                  <li
-                    key={bullet}
-                  >
-                    {bullet}
+                  <li key={bullet}>
+                    <Markdown text={bullet} basePath={basePath} />
                   </li>
                 ))}
               </ul>
@@ -147,7 +143,7 @@ export function ExperiencePage(
       </div>
 
       <p class="prose">
-        <InlineText text={page.outro} basePath={basePath} />
+        <Markdown text={page.outro} basePath={basePath} />
       </p>
     </>
   );

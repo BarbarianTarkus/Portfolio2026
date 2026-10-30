@@ -1,5 +1,5 @@
 import { Head } from "fresh/runtime";
-import { EditableText } from "@dune/core/ui/editable";
+import { Markdown } from "../lib/markdown.tsx";
 import type { ContactContent, SiteContent } from "../lib/content.ts";
 import { loadContactPage } from "../lib/content.ts";
 import { define } from "../utils.ts";
@@ -10,9 +10,13 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page, sourcePath } = await loadContactPage(ctx);
+    const { site, page } = await loadContactPage(ctx);
     return ctx.render(
-      <ContactPage site={site} page={page} sourcePath={sourcePath} />,
+      <ContactPage
+        site={site}
+        page={page}
+        basePath={ctx.config.basePath}
+      />,
     );
   },
 });
@@ -20,7 +24,7 @@ export const handler = define.handlers({
 interface ContactPageProps {
   site: SiteContent;
   page: ContactContent;
-  sourcePath: string;
+  basePath: string;
 }
 
 interface ContactRowProps {
@@ -58,7 +62,7 @@ function ContactRow(
   );
 }
 
-export function ContactPage({ site, page, sourcePath }: ContactPageProps) {
+export function ContactPage({ site, page, basePath }: ContactPageProps) {
   const metaTitle = page.meta.title + " — " + site.author;
 
   return (
@@ -77,9 +81,7 @@ export function ContactPage({ site, page, sourcePath }: ContactPageProps) {
         {page.title}
       </h1>
       <p class="page-lede">
-        <EditableText field="lede" sourcePath={sourcePath}>
-          {page.lede}
-        </EditableText>
+        <Markdown text={page.lede} basePath={basePath} />
       </p>
 
       <ul class="contact-rows">

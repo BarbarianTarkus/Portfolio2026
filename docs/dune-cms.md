@@ -91,6 +91,25 @@ Notes on editing the files by hand:
 - The copy is Spanish (`<html lang="es">`); labels, accents and typographic
   quotes are part of the content, not the code.
 
+## Markdown in prose fields
+
+Prose fields are rendered through [`lib/markdown.tsx`](../lib/markdown.tsx):
+editors can use inline Markdown: bold (`**bold**`), italic (`*italic*`), inline
+code (between backticks) and `[label](/route)` links. The HTML is sanitized with
+Dune's allowlist (scripts, event handlers and style attributes are dropped), and
+root-relative links are prefixed with the deployment `basePath`.
+
+Markdown is supported in: the About `lede`, `paragraphs`, `homelabNote` and
+`follow`; Contact `lede`; Experience `lede`, job bullets and `outro`; Projects
+`lede`, each project's `summary`, `problem`, `decisions`, `broke` and `next`;
+and the home hero intro, section note and focus blocks.
+
+Field text is stored as plain YAML strings, so Markdown is written **as source**
+— in the raw editor (or by hand). Inline ✎ editing stays enabled only for plain
+fields (title, eyebrow, `linkedinLabel`): the inline editor writes plain text
+and would flatten existing Markdown, so prose fields are intentionally not
+inline-editable.
+
 ## Content API usage
 
 [`lib/content.ts`](../lib/content.ts) is the only module that talks to Dune.

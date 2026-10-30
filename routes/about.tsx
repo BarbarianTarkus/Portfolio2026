@@ -1,6 +1,5 @@
 import { Head } from "fresh/runtime";
-import { EditableText } from "@dune/core/ui/editable";
-import { InlineText } from "../components/InlineText.tsx";
+import { Markdown } from "../lib/markdown.tsx";
 import type { AboutContent, SiteContent } from "../lib/content.ts";
 import { loadAboutPage } from "../lib/content.ts";
 import { define } from "../utils.ts";
@@ -12,14 +11,9 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page, sourcePath } = await loadAboutPage(ctx);
+    const { site, page } = await loadAboutPage(ctx);
     return ctx.render(
-      <AboutPage
-        site={site}
-        page={page}
-        basePath={ctx.config.basePath}
-        sourcePath={sourcePath}
-      />,
+      <AboutPage site={site} page={page} basePath={ctx.config.basePath} />,
     );
   },
 });
@@ -28,12 +22,9 @@ interface AboutPageProps {
   site: SiteContent;
   page: AboutContent;
   basePath: string;
-  sourcePath: string;
 }
 
-export function AboutPage(
-  { site, page, basePath, sourcePath }: AboutPageProps,
-) {
+export function AboutPage({ site, page, basePath }: AboutPageProps) {
   const metaTitle = page.meta.title + " — " + site.author;
 
   return (
@@ -52,17 +43,13 @@ export function AboutPage(
         {page.title}
       </h1>
       <p class="page-lede">
-        <EditableText field="lede" sourcePath={sourcePath}>
-          {page.lede}
-        </EditableText>
+        <Markdown text={page.lede} basePath={basePath} />
       </p>
 
       <div class="prose">
         {page.paragraphs.map((paragraph, index) => (
-          <p
-            key={index}
-          >
-            {paragraph}
+          <p key={index}>
+            <Markdown text={paragraph} basePath={basePath} />
           </p>
         ))}
       </div>
@@ -78,7 +65,7 @@ export function AboutPage(
       </div>
 
       <p class="section-note">
-        {page.homelabNote}
+        <Markdown text={page.homelabNote} basePath={basePath} />
       </p>
 
       <ul class="tag-list">
@@ -100,7 +87,7 @@ export function AboutPage(
       </div>
 
       <p class="prose">
-        <InlineText text={page.follow} basePath={basePath} />
+        <Markdown text={page.follow} basePath={basePath} />
       </p>
     </>
   );

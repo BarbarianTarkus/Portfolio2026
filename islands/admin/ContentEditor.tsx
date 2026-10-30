@@ -8,6 +8,8 @@ import { useEffect, useRef, useState } from "preact/hooks";
  * flat frontmatter; this site keeps every piece of copy in nested YAML
  * frontmatter, so it is unmanaged there. This editor edits the raw page file
  * (frontmatter + body) and shows the real page in a preview pane.
+ *
+ * Prose fields may contain inline Markdown (rendered by lib/markdown.tsx).
  */
 
 interface SourceData {
@@ -197,6 +199,11 @@ export default function ContentEditor_(
             <li>
               The YAML frontmatter between the <code>---</code>{" "}
               markers is all the copy the public site renders.
+            </li>
+            <li>
+              Prose fields accept inline Markdown: <code>**bold**</code>,{" "}
+              <code>*italic*</code>, <code>`code`</code> and{" "}
+              <code>[links](/route)</code>. It is rendered sanitized.
             </li>
             <li>
               The Markdown body below the frontmatter is unused by this site;

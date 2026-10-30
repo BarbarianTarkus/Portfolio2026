@@ -1,5 +1,6 @@
 import { Head } from "fresh/runtime";
 import { EditableText } from "@dune/core/ui/editable";
+import { Markdown } from "../lib/markdown.tsx";
 import { ProjectFiche } from "../components/ProjectFiche.tsx";
 import type { ProjectsContent, SiteContent } from "../lib/content.ts";
 import { loadProjectsPage } from "../lib/content.ts";
@@ -15,7 +16,12 @@ export const handler = define.handlers({
   async GET(ctx) {
     const { site, page, sourcePath } = await loadProjectsPage(ctx);
     return ctx.render(
-      <ProjectsPage site={site} page={page} sourcePath={sourcePath} />,
+      <ProjectsPage
+        site={site}
+        page={page}
+        sourcePath={sourcePath}
+        basePath={ctx.config.basePath}
+      />,
     );
   },
 });
@@ -24,10 +30,11 @@ interface ProjectsPageProps {
   site: SiteContent;
   page: ProjectsContent;
   sourcePath: string;
+  basePath: string;
 }
 
 export function ProjectsPage(
-  { site, page, sourcePath }: ProjectsPageProps,
+  { site, page, sourcePath, basePath }: ProjectsPageProps,
 ) {
   const metaTitle = page.meta.title + " — " + site.author;
   const kindLabels = page.kindLabels;
@@ -48,9 +55,7 @@ export function ProjectsPage(
         {page.title}
       </h1>
       <p class="page-lede">
-        <EditableText field="lede" sourcePath={sourcePath}>
-          {page.lede}
-        </EditableText>
+        <Markdown text={page.lede} basePath={basePath} />
       </p>
 
       <ol class="work-index">
@@ -114,6 +119,7 @@ export function ProjectsPage(
               project={project}
               kindLabels={kindLabels}
               ficheLabels={page.ficheLabels}
+              basePath={basePath}
               key={project.slug}
             />
           ))}
