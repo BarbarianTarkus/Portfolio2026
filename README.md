@@ -22,9 +22,11 @@ islands/         Client-side JS: the header/menu island, one thin bridge file
                  per Dune admin island (islands/dune-admin/) and the custom admin
                  content editor (islands/admin/)
 plugins/         Dune plugins: content-editor (raw page editor + live preview)
+                 (plus @dune/plugin-inline-edit from JSR, configured in config/)
 components/      Static Preact components (footer, icons, page pieces)
 content/         Dune pages: one folder per page, copy in default.md frontmatter
 lib/content.ts   Typed loaders over Dune's content API (the only CMS client)
+lib/inline-edit-runtime.ts  Headless glue for admin-bar injection, editor bundle, WS
 lib/content-types.ts  TypeScript shapes for each page's frontmatter
 config/          Dune configuration (site.yaml, system.yaml)
 static/          Static assets copied as-is (styles, favicon, robots.txt)
@@ -55,6 +57,13 @@ data/            Dune runtime state (git-ignored): users, permissions, password
   the admin at `/admin`. The public pages still come from [`routes/`](routes/);
   [`lib/content.ts`](lib/content.ts) is the only module that reads content. See
   [`docs/dune-cms.md`](docs/dune-cms.md).
+- **Inline editing:** while logged in as an admin, public pages get Dune's admin
+  bar and a ✎ Edit handle on editable text (page title, lede, eyebrow…). Edits
+  patch the page frontmatter and **Save** commits them; **✎ Edit source** opens
+  the raw-content editor for everything else. The browser bundle, admin-bar
+  injection and Y.js WebSocket are wired in
+  [`lib/inline-edit-runtime.ts`](lib/inline-edit-runtime.ts) because headless
+  Dune does not mount them.
 - **Static export:** `deno task ssg` builds the app with Fresh's Builder,
   renders each route through the production server handler, copies the bundled
   assets into `dist/`, writes `404.html` and `.nojekyll`, and finally verifies
@@ -102,6 +111,11 @@ body), clearly labels the file and route it is editing, and previews the real
 public page next to it (open by default). Saving (Ctrl/Cmd+S) writes straight
 into `content/*/default.md` and rebuilds the site, so the result is a normal
 content diff that is committed with the rest of the site.
+
+The site itself is editable too: while logged in, open any public page and use
+the ✎ Edit handle on the title, lede or eyebrow (flat frontmatter fields). Edits
+are saved as you type and **Save** in the bar commits them; **✎ Edit source**
+opens the raw editor overlay for nested content such as jobs and project fiches.
 
 The GitHub Pages deployment is static only: `/admin` and the content API do not
 exist there. The admin runs locally, or on a Deno server deployment of the same

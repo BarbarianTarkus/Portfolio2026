@@ -3,6 +3,11 @@ import { bootstrap } from "@dune/core/bootstrap";
 import { mountPlugins } from "@dune/core/plugins";
 import type { BootstrapResult } from "@dune/core/bootstrap";
 import { normalizeBasePath } from "./config.ts";
+import {
+  buildClientBundles,
+  installInlineEditMiddleware,
+  installInlineEditRoutes,
+} from "./lib/inline-edit-runtime.ts";
 import type { State } from "./utils.ts";
 
 /**
@@ -17,9 +22,8 @@ export async function createApp(): Promise<{
   app: App<State>;
   dune: BootstrapResult;
 }> {
-  const app = new App<State>({
-    basePath: normalizeBasePath(Deno.env.get("BASE_PATH")),
-  });
+  const basePath = normalizeBasePath(Deno.env.get("BASE_PATH"));
+  const app = new App<State>({ basePath });
 
   const dune = await bootstrap(import.meta.dirname!, {
     // Dev mode relaxes cookie security (the local server is plain HTTP) and
@@ -28,6 +32,13 @@ export async function createApp(): Promise<{
   });
 
   app.use(staticFiles());
+
+  // Inline-edit chrome: transform middleware must be registered before the
+  // page routes so it can post-process their HTML responses.
+  const inlineEditEnabled = Deno.env.get("DUNE_STATIC") !== "1";
+  if (inlineEditEnabled) {
+    installInlineEditMiddleware(app, dune, { basePath });
+  }
 
   // Dune's stock admin preview renders the page's Markdown body in a generic
   // template. This site keeps all copy in frontmatter and has empty bodies, so
@@ -69,6 +80,14 @@ export async function createApp(): Promise<{
   // production servers mount everything.
   if (Deno.env.get("DUNE_STATIC") !== "1") {
     await mountPlugins(app, dune);
+  }
+
+  if (inlineEditEnabled) {
+    const bundles = await buildClientBundles(dune, {
+      root: import.meta.dirname!,
+      dev: Deno.env.get("DUNE_DEV") === "1",
+    });
+    installInlineEditRoutes(app, dune, { bundles, basePath });
   }
 
   // Route handlers reach the Dune content API through ctx.state.

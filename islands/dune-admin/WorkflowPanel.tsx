@@ -7,4 +7,4 @@
 // ./islands to discover a client island, so each file here re-exports one
 // admin component under the exact island name Dune renders. Keep the list in
 // sync with @dune/plugin-admin's adminIslands when upgrading Dune.
-export { default } from "https://jsr.io/@dune/plugin-admin/3.1.2/src/admin/islands/WorkflowPanel.tsx";
+export { default } from "https://jsr.io/@dune/plugin-admin/3.1.3/src/admin/islands/WorkflowPanel.tsx";

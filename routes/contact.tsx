@@ -1,4 +1,5 @@
 import { Head } from "fresh/runtime";
+import { EditableText } from "@dune/core/ui/editable";
 import type { ContactContent, SiteContent } from "../lib/content.ts";
 import { loadContactPage } from "../lib/content.ts";
 import { define } from "../utils.ts";
@@ -9,9 +10,9 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page } = await loadContactPage(ctx);
+    const { site, page, sourcePath } = await loadContactPage(ctx);
     return ctx.render(
-      <ContactPage site={site} page={page} />,
+      <ContactPage site={site} page={page} sourcePath={sourcePath} />,
     );
   },
 });
@@ -19,6 +20,7 @@ export const handler = define.handlers({
 interface ContactPageProps {
   site: SiteContent;
   page: ContactContent;
+  sourcePath: string;
 }
 
 interface ContactRowProps {
@@ -56,7 +58,7 @@ function ContactRow(
   );
 }
 
-export function ContactPage({ site, page }: ContactPageProps) {
+export function ContactPage({ site, page, sourcePath }: ContactPageProps) {
   const metaTitle = page.meta.title + " — " + site.author;
 
   return (
@@ -75,7 +77,9 @@ export function ContactPage({ site, page }: ContactPageProps) {
         {page.title}
       </h1>
       <p class="page-lede">
-        {page.lede}
+        <EditableText field="lede" sourcePath={sourcePath}>
+          {page.lede}
+        </EditableText>
       </p>
 
       <ul class="contact-rows">

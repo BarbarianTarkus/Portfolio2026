@@ -29,6 +29,7 @@ import {
   directorySize,
   isBuildArtifact,
   removeDir,
+  walkFiles,
 } from "./lib/files.ts";
 import { discoverRoutes } from "./lib/routes.ts";
 import { renderNotFound, renderRoute, startServer } from "./lib/render.ts";
@@ -42,6 +43,27 @@ const BUNDLED_ASSETS_DIR = join(ROOT, "_fresh", "static");
 
 /** Route path that cannot exist, used to render the 404 page. */
 const NOT_FOUND_PROBE = "/__fresh_ssg_404_probe__";
+
+/**
+ * Inline-edit markers are an admin-only contract: Dune's response pipeline
+ * strips them for anonymous visitors, but the static export skips that
+ * pipeline (DUNE_STATIC=1), so remove them here before publishing.
+ */
+const INLINE_EDIT_MARKER = /\s+data-dune-[a-zA-Z-]+(?:="[^"]*")?/g;
+
+async function scrubInlineEditMarkers(distDir: string): Promise<number> {
+  let changed = 0;
+  for await (const file of walkFiles(distDir)) {
+    if (!file.endsWith(".html")) continue;
+    const html = await Deno.readTextFile(file);
+    const stripped = html.replace(INLINE_EDIT_MARKER, "");
+    if (stripped !== html) {
+      await Deno.writeTextFile(file, stripped);
+      changed++;
+    }
+  }
+  return changed;
+}
 
 function log(message: string): void {
   console.log(`  ${message}`);
@@ -112,6 +134,10 @@ async function main(): Promise<void> {
       isBuildArtifact,
     );
     log(`${staticFiles} static files + ${bundleFiles} bundled assets copied`);
+
+    heading("Scrubbing inline-edit markers");
+    const scrubbed = await scrubInlineEditMarkers(DIST);
+    log(`${scrubbed} page(s) cleaned of data-dune-* attributes`);
 
     // GitHub Pages runs Jekyll unless this marker exists, and Jekyll would drop
     // files/directories whose names start with an underscore.

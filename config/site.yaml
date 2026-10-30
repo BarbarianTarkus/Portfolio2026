@@ -13,3 +13,5 @@ plugins:
   # Replaces Dune's stock page editor (Markdown body + blueprint fields) with a
   # raw page-source editor suited to this site's frontmatter-only content model.
   - src: plugins/content-editor/mod.tsx
+  # Y.js-backed inline editing on the public site for admins (remote plugin).
+  - src: "jsr:@dune/plugin-inline-edit@2.2.3"

@@ -6,9 +6,10 @@ Fresh — as its content backend. Dune is mounted **headless**: it indexes
 panel, but it does not render the public pages. Those still come from the Fresh
 routes in [`routes/`](../routes) and keep the portfolio's design.
 
-The two Dune packages are pinned in [`deno.json`](../deno.json): `@dune/core`
-`0.34.14` and `@dune/plugin-admin` `3.1.2`. Dune is pre-1.0, so treat upgrades
-as potentially breaking and read its changelog first.
+The Dune packages are pinned in [`deno.json`](../deno.json): `@dune/core`
+`0.35.0`, `@dune/plugin-admin` `3.1.3` and `@dune/plugin-inline-edit` `2.2.3`
+(the last one is loaded from `config/site.yaml`). Dune is pre-1.0, so treat
+upgrades as potentially breaking and read its changelog first.
 
 ## Mount
 
@@ -182,6 +183,37 @@ No CMS credentials belong in `.env` or CI: the admin is local and the deployment
 is static. Deleting `data/` resets local users, permissions and the admin
 password; the next start creates a fresh admin and password file.
 
+### Inline editing on the public site
+
+[`@dune/plugin-inline-edit`](https://github.com/duneorg/plugin-inline-edit) is
+enabled for admins: while logged in, every public page gets Dune's floating
+admin bar and a ✎ Edit handle on editable regions. Clicking the handle turns the
+text into an in-place editor; changes are patched into the page's frontmatter
+debounced (~600 ms), and the bar's **Save** commits the revision. **✎ Edit
+source** opens the custom raw-content editor from above in an overlay, which is
+how nested content (jobs, project fiches, labels) is edited.
+
+Templates opt regions in with the marker components from
+[`@dune/core/ui/editable`](https://jsr.io/@dune/core/doc/ui/editable) — see the
+`EditableText` wrappers in [`routes/`](../routes). The page title is annotated
+automatically from the first `<h1>`; fields use the top-level frontmatter key
+(`lede`, `eyebrow`, `linkedinLabel`, …). Inline editing currently covers flat
+string fields, not nested objects/arrays; use the source editor for those.
+
+Because the site mounts Dune headless (not `createDuneApp`), core does not wire
+the plugin's browser bundle, admin-bar injection or WebSocket route. Those three
+pieces live in [`lib/inline-edit-runtime.ts`](../lib/inline-edit-runtime.ts):
+
+| Piece                      | What it does                                                                        |
+| -------------------------- | ----------------------------------------------------------------------------------- |
+| Client bundle              | Bundles plugin `clientEntries` into `.dune/client-bundles/` and serves them         |
+| `transformResponse` runner | Injects the admin bar/markers for `pages.update` sessions; scrubs markers otherwise |
+| `/api/inline-edit/ws`      | Y.js document socket used by the body editor (auth + `pages.update` check)          |
+
+Markers are admin-only: Dune's own pipeline scrubs them for anonymous visitors,
+and `deno task ssg` strips them from the published HTML as well (the static
+export skips that pipeline).
+
 ## Static export limitation
 
 GitHub Pages only serves static files, so the deployed site has **no `/admin`
@@ -200,7 +232,9 @@ Consequences:
 - The export is byte-for-byte files, so no login, database or KV store is needed
   on the host. The `BASE_PATH` prefix applies to the static site only.
 - The renderer sets `DUNE_STATIC=1`, which skips mounting the admin/plugin
-  routes during the export (no user or session directories are created in CI).
+  routes and the inline-edit runtime during the export (no user or session
+  directories are created in CI), and the export scrubs any remaining
+  `data-dune-*` markers before writing `dist/`.
 
 ## Upgrading Dune (island bridge files)
 
@@ -213,7 +247,7 @@ each admin island has a one-line bridge file under
 
 ```tsx
 /** @jsxImportSource preact */
-export { default } from "https://jsr.io/@dune/plugin-admin/3.1.2/src/admin/islands/PageTree.tsx";
+export { default } from "https://jsr.io/@dune/plugin-admin/3.1.3/src/admin/islands/PageTree.tsx";
 ```
 
 (That is the whole file; it exists only so Fresh's bundler picks the island up.)
@@ -222,8 +256,10 @@ is unrelated to the bridges.
 
 When updating Dune:
 
-1. Bump `@dune/core` and `@dune/plugin-admin` in [`deno.json`](../deno.json) and
-   run `deno install` to refresh `deno.lock`.
+1. Bump `@dune/core` and `@dune/plugin-admin` in [`deno.json`](../deno.json),
+   the `@dune/plugin-inline-edit` specifier in
+   [`config/site.yaml`](../config/site.yaml), and run `deno install` to refresh
+   `deno.lock`. Delete `.dune/client-bundles/` so the editor bundle is rebuilt.
 2. Update the version in every bridge file's import URL to match the new
    `@dune/plugin-admin` release.
 3. Check the package's `adminIslands` export (the admin's island list) and add

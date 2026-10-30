@@ -39,12 +39,12 @@
     "preact/jsx-dev-runtime": "npm:preact@^10.29.1/jsx-dev-runtime",
     "preact-render-to-string": "npm:preact-render-to-string@^6.8.1",
     "@preact/signals": "npm:@preact/signals@^2.9.0",
-    "@dune/core": "jsr:@dune/core@0.34.14",
-    "@dune/core/bootstrap": "jsr:@dune/core@0.34.14/bootstrap",
-    "@dune/core/content": "jsr:@dune/core@0.34.14/content",
-    "@dune/core/plugins": "jsr:@dune/core@0.34.14/plugins",
-    "@dune/plugin-admin": "jsr:@dune/plugin-admin@3.1.2",
-    "@dune/plugin-admin/admin/mount": "jsr:@dune/plugin-admin@3.1.2/admin/mount",
+    "@dune/core": "jsr:@dune/core@0.35.0",
+    "@dune/core/bootstrap": "jsr:@dune/core@0.35.0/bootstrap",
+    "@dune/core/content": "jsr:@dune/core@0.35.0/content",
+    "@dune/core/plugins": "jsr:@dune/core@0.35.0/plugins",
+    "@dune/plugin-admin": "jsr:@dune/plugin-admin@3.1.3",
+    "@dune/plugin-admin/admin/mount": "jsr:@dune/plugin-admin@3.1.3/admin/mount",
     "@std/yaml": "jsr:@std/yaml@^1",
     "@std/fs": "jsr:@std/fs@^1",
     "@std/crypto": "jsr:@std/crypto@^1",
@@ -61,8 +61,11 @@
     "postgres": "npm:postgres@^3.4",
     "ioredis": "npm:ioredis@^5",
     "polizy": "npm:polizy@^0.6.0",
-    "@dune/core/hooks": "jsr:@dune/core@0.34.14/hooks",
-    "@dune/plugin-admin/admin/guards": "jsr:@dune/plugin-admin@3.1.2/admin/guards"
+    "@dune/core/hooks": "jsr:@dune/core@0.35.0/hooks",
+    "@dune/plugin-admin/admin/guards": "jsr:@dune/plugin-admin@3.1.3/admin/guards",
+    "@dune/plugin-inline-edit": "jsr:@dune/plugin-inline-edit@2.2.3",
+    "@dune/core/fresh-app": "jsr:@dune/core@0.35.0/fresh-app",
+    "@dune/core/ui/editable": "jsr:@dune/core@0.35.0/ui/editable"
   },
   "compilerOptions": {
     "lib": [

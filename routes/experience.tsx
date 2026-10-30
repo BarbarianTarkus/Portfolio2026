@@ -1,4 +1,5 @@
 import { Head } from "fresh/runtime";
+import { EditableText } from "@dune/core/ui/editable";
 import { InlineText } from "../components/InlineText.tsx";
 import type { ExperienceContent, SiteContent } from "../lib/content.ts";
 import { loadExperiencePage } from "../lib/content.ts";
@@ -10,12 +11,13 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page } = await loadExperiencePage(ctx);
+    const { site, page, sourcePath } = await loadExperiencePage(ctx);
     return ctx.render(
       <ExperiencePage
         site={site}
         page={page}
         basePath={ctx.config.basePath}
+        sourcePath={sourcePath}
       />,
     );
   },
@@ -25,9 +27,12 @@ interface ExperiencePageProps {
   site: SiteContent;
   page: ExperienceContent;
   basePath: string;
+  sourcePath: string;
 }
 
-export function ExperiencePage({ site, page, basePath }: ExperiencePageProps) {
+export function ExperiencePage(
+  { site, page, basePath, sourcePath }: ExperiencePageProps,
+) {
   const metaTitle = page.meta.title + " — " + site.author;
 
   return (
@@ -46,7 +51,9 @@ export function ExperiencePage({ site, page, basePath }: ExperiencePageProps) {
         {page.title}
       </h1>
       <p class="page-lede">
-        {page.lede}
+        <EditableText field="lede" sourcePath={sourcePath}>
+          {page.lede}
+        </EditableText>
       </p>
 
       <p class="page-meta">
@@ -56,7 +63,10 @@ export function ExperiencePage({ site, page, basePath }: ExperiencePageProps) {
           target="_blank"
           rel="me noopener noreferrer"
         >
-          {page.linkedinLabel} <span aria-hidden="true">→</span>
+          <EditableText field="linkedinLabel" sourcePath={sourcePath}>
+            {page.linkedinLabel}
+          </EditableText>{" "}
+          <span aria-hidden="true">→</span>
         </a>
       </p>
 

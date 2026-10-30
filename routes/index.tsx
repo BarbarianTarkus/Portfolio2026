@@ -1,4 +1,5 @@
 import { Head } from "fresh/runtime";
+import { EditableText } from "@dune/core/ui/editable";
 import type {
   ExperienceContent,
   HomeContent,
@@ -15,7 +16,9 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page, experience, projects } = await loadHomePage(ctx);
+    const { site, page, experience, projects, sourcePath } = await loadHomePage(
+      ctx,
+    );
     return ctx.render(
       <HomePage
         site={site}
@@ -23,6 +26,7 @@ export const handler = define.handlers({
         experience={experience}
         projects={projects}
         basePath={ctx.config.basePath}
+        sourcePath={sourcePath}
       />,
     );
   },
@@ -34,10 +38,11 @@ interface HomePageProps {
   experience: ExperienceContent;
   projects: ProjectsContent;
   basePath: string;
+  sourcePath: string;
 }
 
 export function HomePage(
-  { site, page, experience, projects, basePath }: HomePageProps,
+  { site, page, experience, projects, basePath, sourcePath }: HomePageProps,
 ) {
   const kindLabels = projects.kindLabels;
 
@@ -55,9 +60,15 @@ export function HomePage(
 
       <section class="hero">
         <p class="eyebrow">
-          {page.eyebrow}
+          <EditableText field="eyebrow" sourcePath={sourcePath}>
+            {page.eyebrow}
+          </EditableText>
         </p>
-        <h1 class="hero-name">
+        {
+          /* The heading shows the author from the site page, not this page's
+            title: keep it out of the title auto-annotation. */
+        }
+        <h1 class="hero-name" data-dune-no-edit>
           {site.author}.
         </h1>
         <p class="hero-role">

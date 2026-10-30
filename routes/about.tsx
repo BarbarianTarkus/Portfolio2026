@@ -1,4 +1,5 @@
 import { Head } from "fresh/runtime";
+import { EditableText } from "@dune/core/ui/editable";
 import { InlineText } from "../components/InlineText.tsx";
 import type { AboutContent, SiteContent } from "../lib/content.ts";
 import { loadAboutPage } from "../lib/content.ts";
@@ -11,9 +12,14 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page } = await loadAboutPage(ctx);
+    const { site, page, sourcePath } = await loadAboutPage(ctx);
     return ctx.render(
-      <AboutPage site={site} page={page} basePath={ctx.config.basePath} />,
+      <AboutPage
+        site={site}
+        page={page}
+        basePath={ctx.config.basePath}
+        sourcePath={sourcePath}
+      />,
     );
   },
 });
@@ -22,9 +28,12 @@ interface AboutPageProps {
   site: SiteContent;
   page: AboutContent;
   basePath: string;
+  sourcePath: string;
 }
 
-export function AboutPage({ site, page, basePath }: AboutPageProps) {
+export function AboutPage(
+  { site, page, basePath, sourcePath }: AboutPageProps,
+) {
   const metaTitle = page.meta.title + " — " + site.author;
 
   return (
@@ -43,7 +52,9 @@ export function AboutPage({ site, page, basePath }: AboutPageProps) {
         {page.title}
       </h1>
       <p class="page-lede">
-        {page.lede}
+        <EditableText field="lede" sourcePath={sourcePath}>
+          {page.lede}
+        </EditableText>
       </p>
 
       <div class="prose">

@@ -86,6 +86,12 @@ async function loadPage<FM>(
  * Site globals (identity, nav, footer labels, 404 copy) plus the page shared by
  * every route. The result is cached on `ctx.state.site` for the app shell.
  */
+/** Source path of a resolved page (used by inline-edit field markers). */
+function sourcePathOf(api: ContentApi, page: ResolvedPage<unknown>): string {
+  return api.pages().find((candidate) => candidate.route === page.route)
+    ?.sourcePath ?? "";
+}
+
 export async function loadSite(ctx: Context<State>): Promise<SiteContent> {
   const page = await loadPage<SiteContent>(ctx, "/site");
   ctx.state.site = page.frontmatter;
@@ -95,6 +101,7 @@ export async function loadSite(ctx: Context<State>): Promise<SiteContent> {
 /** Load one page document plus the site globals it renders inside. */
 export async function loadHomePage(ctx: Context<State>) {
   const site = await loadSite(ctx);
+  const api = contentApi(ctx);
   const [page, experience, projects] = await Promise.all([
     loadPage<HomeContent>(ctx, "/"),
     loadPage<ExperienceContent>(ctx, "/experience"),
@@ -106,37 +113,42 @@ export async function loadHomePage(ctx: Context<State>) {
     page: page.frontmatter,
     experience: experience.frontmatter,
     projects: projects.frontmatter,
+    sourcePath: sourcePathOf(api, page),
   };
 }
 
 export async function loadAboutPage(ctx: Context<State>) {
+  const api = contentApi(ctx);
   const [site, page] = await Promise.all([
     loadSite(ctx),
     loadPage<AboutContent>(ctx, "/about"),
   ]);
-  return { site, page: page.frontmatter };
+  return { site, page: page.frontmatter, sourcePath: sourcePathOf(api, page) };
 }
 
 export async function loadContactPage(ctx: Context<State>) {
+  const api = contentApi(ctx);
   const [site, page] = await Promise.all([
     loadSite(ctx),
     loadPage<ContactContent>(ctx, "/contact"),
   ]);
-  return { site, page: page.frontmatter };
+  return { site, page: page.frontmatter, sourcePath: sourcePathOf(api, page) };
 }
 
 export async function loadExperiencePage(ctx: Context<State>) {
+  const api = contentApi(ctx);
   const [site, page] = await Promise.all([
     loadSite(ctx),
     loadPage<ExperienceContent>(ctx, "/experience"),
   ]);
-  return { site, page: page.frontmatter };
+  return { site, page: page.frontmatter, sourcePath: sourcePathOf(api, page) };
 }
 
 export async function loadProjectsPage(ctx: Context<State>) {
+  const api = contentApi(ctx);
   const [site, page] = await Promise.all([
     loadSite(ctx),
     loadPage<ProjectsContent>(ctx, "/projects"),
   ]);
-  return { site, page: page.frontmatter };
+  return { site, page: page.frontmatter, sourcePath: sourcePathOf(api, page) };
 }
