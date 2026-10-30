@@ -93,8 +93,10 @@ function sourcePathOf(api: ContentApi, page: ResolvedPage<unknown>): string {
 }
 
 export async function loadSite(ctx: Context<State>): Promise<SiteContent> {
+  const api = contentApi(ctx);
   const page = await loadPage<SiteContent>(ctx, "/site");
   ctx.state.site = page.frontmatter;
+  ctx.state.siteSourcePath = sourcePathOf(api, page);
   return page.frontmatter;
 }
 
@@ -114,6 +116,7 @@ export async function loadHomePage(ctx: Context<State>) {
     experience: experience.frontmatter,
     projects: projects.frontmatter,
     sourcePath: sourcePathOf(api, page),
+    siteSourcePath: ctx.state.siteSourcePath ?? "",
   };
 }
 

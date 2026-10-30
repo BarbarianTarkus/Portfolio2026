@@ -1,6 +1,6 @@
 import type { ComponentChildren } from "preact";
 import type { ProjectsContent } from "../lib/content.ts";
-import { Markdown } from "../lib/markdown.tsx";
+import { ProseField } from "../lib/markdown.tsx";
 
 type Project = ProjectsContent["projects"][number];
 type KindLabels = ProjectsContent["kindLabels"];
@@ -30,6 +30,9 @@ interface ProjectFicheProps {
   kindLabels: KindLabels;
   ficheLabels: FicheLabels;
   basePath: string;
+  sourcePath: string;
+  inlineEditing: boolean;
+  projectIndex: number;
 }
 
 /**
@@ -46,7 +49,15 @@ interface ProjectFicheProps {
  * so keeping it on the root node preserves the rendered HTML.
  */
 export function ProjectFiche(
-  { project, kindLabels, ficheLabels, basePath }: ProjectFicheProps,
+  {
+    project,
+    kindLabels,
+    ficheLabels,
+    basePath,
+    sourcePath,
+    inlineEditing,
+    projectIndex,
+  }: ProjectFicheProps,
 ) {
   const kindLabel = kindLabels[project.kind as keyof KindLabels] ??
     project.kind;
@@ -57,7 +68,13 @@ export function ProjectFiche(
       title={ficheLabels.problem}
     >
       <p>
-        <Markdown text={project.problem} basePath={basePath} />
+        <ProseField
+          text={project.problem}
+          basePath={basePath}
+          path={`projects.${projectIndex}.problem`}
+          sourcePath={sourcePath}
+          editing={inlineEditing}
+        />
       </p>
     </FicheBlock>,
   );
@@ -67,9 +84,15 @@ export function ProjectFiche(
       title={ficheLabels.decisions}
     >
       <ul class="fiche-list">
-        {project.decisions.map((decision) => (
+        {project.decisions.map((decision, decisionIndex) => (
           <li key={decision}>
-            <Markdown text={decision} basePath={basePath} />
+            <ProseField
+              text={decision}
+              basePath={basePath}
+              path={`projects.${projectIndex}.decisions.${decisionIndex}`}
+              sourcePath={sourcePath}
+              editing={inlineEditing}
+            />
           </li>
         ))}
       </ul>
@@ -83,7 +106,13 @@ export function ProjectFiche(
           {ficheLabels.broke}
         </h3>
         <p>
-          <Markdown text={project.broke} basePath={basePath} />
+          <ProseField
+            text={project.broke}
+            basePath={basePath}
+            path={`projects.${projectIndex}.broke`}
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
         </p>
       </blockquote>,
     );
@@ -95,7 +124,13 @@ export function ProjectFiche(
         title={ficheLabels.next}
       >
         <p>
-          <Markdown text={project.next} basePath={basePath} />
+          <ProseField
+            text={project.next}
+            basePath={basePath}
+            path={`projects.${projectIndex}.next`}
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
         </p>
       </FicheBlock>,
     );
@@ -115,21 +150,42 @@ export function ProjectFiche(
         class="fiche-title"
         id={project.slug + "-title"}
       >
-        {project.name}
+        <ProseField
+          text={project.name}
+          path={`projects.${projectIndex}.name`}
+          sourcePath={sourcePath}
+          editing={inlineEditing}
+        />
       </h2>
       <p class="fiche-meta">
         <span>
-          {project.period}
+          <ProseField
+            text={project.period}
+            path={`projects.${projectIndex}.period`}
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
         </span>
         {project.work !== undefined && (
           <span>
-            {project.work}
+            <ProseField
+              text={project.work}
+              path={`projects.${projectIndex}.work`}
+              sourcePath={sourcePath}
+              editing={inlineEditing}
+            />
           </span>
         )}
       </p>
 
       <p class="fiche-summary">
-        <Markdown text={project.summary} basePath={basePath} />
+        <ProseField
+          text={project.summary}
+          basePath={basePath}
+          path={`projects.${projectIndex}.summary`}
+          sourcePath={sourcePath}
+          editing={inlineEditing}
+        />
       </p>
 
       <ul class="tag-list">

@@ -36,6 +36,21 @@ const NON_PAGE_PREFIXES = [
 /** Remove inline-edit marker attributes from HTML served to non-editors. */
 const MARKER_ATTR = /\s+data-dune-[a-zA-Z-]+(?:="[^"]*")?/g;
 
+/** Append the nested-prose inline editor (admin sessions only). */
+async function injectProseEditor(
+  response: Response,
+  src: string,
+): Promise<Response> {
+  const html = await response.text();
+  const tag = `<script type="module" src="${src}"></script>`;
+  const injected = html.includes("</body>")
+    ? html.replace("</body>", `${tag}</body>`)
+    : html + tag;
+  const headers = new Headers(response.headers);
+  headers.delete("content-length");
+  return new Response(injected, { status: response.status, headers });
+}
+
 function isPagePath(pathname: string): boolean {
   return !NON_PAGE_PREFIXES.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
@@ -198,22 +213,29 @@ export function installInlineEditMiddleware(
   const adminPrefix = dune.config.admin?.path ?? "/admin";
 
   app.use(async (ctx: Ctx) => {
-    const response: Response = await ctx.next();
-    if (ctx.req.method !== "GET") return response;
+    if (ctx.req.method !== "GET") return ctx.next();
 
     const url = new URL(ctx.req.url);
     let pathname = url.pathname;
     if (options.basePath && pathname.startsWith(options.basePath)) {
       pathname = pathname.slice(options.basePath.length) || "/";
     }
-    if (!isPagePath(pathname)) return response;
+    if (!isPagePath(pathname)) return ctx.next();
+
+    const page = await resolvePage(dune, pathname);
+    if (!page) return ctx.next();
+
+    const editor = await resolveEditor(dune, ctx.req);
+
+    // Routes render while ctx.next() runs; expose edit mode so prose fields can
+    // render their raw Markdown source (which the inline editor can save without
+    // flattening formatting). Visitors get the rendered, sanitized Markdown.
+    ctx.state.inlineEditing = editor !== null;
+
+    const response: Response = await ctx.next();
     const contentType = response.headers.get("Content-Type") ?? "";
     if (!contentType.includes("text/html")) return response;
 
-    const page = await resolvePage(dune, pathname);
-    if (!page) return response;
-
-    const editor = await resolveEditor(dune, ctx.req);
     let transformed = response;
 
     if (editor) {
@@ -237,7 +259,10 @@ export function installInlineEditMiddleware(
           config: dune.config,
         });
       }
-      return transformed;
+      return await injectProseEditor(
+        transformed,
+        `${options.basePath}/js/prose-inline-edit.js`,
+      );
     }
 
     // Anonymous/unauthorized: strip marker attributes from the markup.

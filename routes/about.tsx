@@ -1,5 +1,5 @@
 import { Head } from "fresh/runtime";
-import { Markdown } from "../lib/markdown.tsx";
+import { ProseField } from "../lib/markdown.tsx";
 import type { AboutContent, SiteContent } from "../lib/content.ts";
 import { loadAboutPage } from "../lib/content.ts";
 import { define } from "../utils.ts";
@@ -11,9 +11,15 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page } = await loadAboutPage(ctx);
+    const { site, page, sourcePath } = await loadAboutPage(ctx);
     return ctx.render(
-      <AboutPage site={site} page={page} basePath={ctx.config.basePath} />,
+      <AboutPage
+        site={site}
+        page={page}
+        basePath={ctx.config.basePath}
+        sourcePath={sourcePath}
+        inlineEditing={ctx.state.inlineEditing === true}
+      />,
     );
   },
 });
@@ -22,9 +28,13 @@ interface AboutPageProps {
   site: SiteContent;
   page: AboutContent;
   basePath: string;
+  sourcePath: string;
+  inlineEditing: boolean;
 }
 
-export function AboutPage({ site, page, basePath }: AboutPageProps) {
+export function AboutPage(
+  { site, page, basePath, sourcePath, inlineEditing }: AboutPageProps,
+) {
   const metaTitle = page.meta.title + " — " + site.author;
 
   return (
@@ -43,13 +53,25 @@ export function AboutPage({ site, page, basePath }: AboutPageProps) {
         {page.title}
       </h1>
       <p class="page-lede">
-        <Markdown text={page.lede} basePath={basePath} />
+        <ProseField
+          text={page.lede}
+          basePath={basePath}
+          path="lede"
+          sourcePath={sourcePath}
+          editing={inlineEditing}
+        />
       </p>
 
       <div class="prose">
         {page.paragraphs.map((paragraph, index) => (
           <p key={index}>
-            <Markdown text={paragraph} basePath={basePath} />
+            <ProseField
+              text={paragraph}
+              basePath={basePath}
+              path={`paragraphs.${index}`}
+              sourcePath={sourcePath}
+              editing={inlineEditing}
+            />
           </p>
         ))}
       </div>
@@ -60,12 +82,23 @@ export function AboutPage({ site, page, basePath }: AboutPageProps) {
           class="section-title"
           id="homelab"
         >
-          {page.homelabSection.title}
+          <ProseField
+            text={page.homelabSection.title}
+            path="homelabSection.title"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
         </h2>
       </div>
 
       <p class="section-note">
-        <Markdown text={page.homelabNote} basePath={basePath} />
+        <ProseField
+          text={page.homelabNote}
+          basePath={basePath}
+          path="homelabNote"
+          sourcePath={sourcePath}
+          editing={inlineEditing}
+        />
       </p>
 
       <ul class="tag-list">
@@ -82,12 +115,23 @@ export function AboutPage({ site, page, basePath }: AboutPageProps) {
       <div class="section-head">
         <span class="section-num">{page.followSection.num}</span>
         <h2 class="section-title">
-          {page.followSection.title}
+          <ProseField
+            text={page.followSection.title}
+            path="followSection.title"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
         </h2>
       </div>
 
       <p class="prose">
-        <Markdown text={page.follow} basePath={basePath} />
+        <ProseField
+          text={page.follow}
+          basePath={basePath}
+          path="follow"
+          sourcePath={sourcePath}
+          editing={inlineEditing}
+        />
       </p>
     </>
   );

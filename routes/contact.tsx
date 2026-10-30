@@ -1,5 +1,5 @@
 import { Head } from "fresh/runtime";
-import { Markdown } from "../lib/markdown.tsx";
+import { ProseField } from "../lib/markdown.tsx";
 import type { ContactContent, SiteContent } from "../lib/content.ts";
 import { loadContactPage } from "../lib/content.ts";
 import { define } from "../utils.ts";
@@ -10,12 +10,14 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page } = await loadContactPage(ctx);
+    const { site, page, sourcePath } = await loadContactPage(ctx);
     return ctx.render(
       <ContactPage
         site={site}
         page={page}
         basePath={ctx.config.basePath}
+        sourcePath={sourcePath}
+        inlineEditing={ctx.state.inlineEditing === true}
       />,
     );
   },
@@ -25,6 +27,8 @@ interface ContactPageProps {
   site: SiteContent;
   page: ContactContent;
   basePath: string;
+  sourcePath: string;
+  inlineEditing: boolean;
 }
 
 interface ContactRowProps {
@@ -62,7 +66,9 @@ function ContactRow(
   );
 }
 
-export function ContactPage({ site, page, basePath }: ContactPageProps) {
+export function ContactPage(
+  { site, page, basePath, sourcePath, inlineEditing }: ContactPageProps,
+) {
   const metaTitle = page.meta.title + " — " + site.author;
 
   return (
@@ -81,7 +87,13 @@ export function ContactPage({ site, page, basePath }: ContactPageProps) {
         {page.title}
       </h1>
       <p class="page-lede">
-        <Markdown text={page.lede} basePath={basePath} />
+        <ProseField
+          text={page.lede}
+          basePath={basePath}
+          path="lede"
+          sourcePath={sourcePath}
+          editing={inlineEditing}
+        />
       </p>
 
       <ul class="contact-rows">

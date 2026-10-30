@@ -104,11 +104,10 @@ Markdown is supported in: the About `lede`, `paragraphs`, `homelabNote` and
 `lede`, each project's `summary`, `problem`, `decisions`, `broke` and `next`;
 and the home hero intro, section note and focus blocks.
 
-Field text is stored as plain YAML strings, so Markdown is written **as source**
-— in the raw editor (or by hand). Inline ✎ editing stays enabled only for plain
-fields (title, eyebrow, `linkedinLabel`): the inline editor writes plain text
-and would flatten existing Markdown, so prose fields are intentionally not
-inline-editable.
+Field text is stored as plain YAML strings. Visitors get rendered Markdown;
+admins in edit mode get the raw Markdown so inline edits keep the formatting.
+Inline editing is available for every prose field (flat and nested), plus the
+page title via Dune's plugin. See the inline editor below.
 
 ## Content API usage
 
@@ -198,6 +197,11 @@ The editor preview uses `/admin/api/preview`; `main.ts` answers it by rendering
 the page's real public route in-process, because Dune's stock preview only
 renders the Markdown body (which is empty here).
 
+The same plugin exposes `POST /admin/api/portfolio-editor/field` for the public
+site's nested inline editor (see "Inline editing" below); it accepts
+`{ path, field, value }` where `field` is a dotted frontmatter path such as
+`jobs.0.bullets.1` or `projects.0.summary`.
+
 No CMS credentials belong in `.env` or CI: the admin is local and the deployment
 is static. Deleting `data/` resets local users, permissions and the admin
 password; the next start creates a fresh admin and password file.
@@ -212,12 +216,23 @@ debounced (~600 ms), and the bar's **Save** commits the revision. **✎ Edit
 source** opens the custom raw-content editor from above in an overlay, which is
 how nested content (jobs, project fiches, labels) is edited.
 
-Templates opt regions in with the marker components from
-[`@dune/core/ui/editable`](https://jsr.io/@dune/core/doc/ui/editable) — see the
-`EditableText` wrappers in [`routes/`](../routes). The page title is annotated
-automatically from the first `<h1>`; fields use the top-level frontmatter key
-(`lede`, `eyebrow`, `linkedinLabel`, …). Inline editing currently covers flat
-string fields, not nested objects/arrays; use the source editor for those.
+The Dune plugin covers the page title (annotated automatically from the first
+`<h1>`). Nested prose fields — paragraphs, job bullets, project fiches, focus
+blocks, section headings, site globals — are handled by this site's own inline
+editor because the plugin can only patch top-level frontmatter keys:
+
+- Server components render prose through `ProseField`
+  ([`lib/markdown.tsx`](../lib/markdown.tsx)). For visitors it emits sanitized
+  Markdown; for admins it emits the **raw Markdown** plus `data-prose-field`
+  (dot path) and `data-prose-source` markers.
+- [`static/js/prose-inline-edit.js`](../static/js/prose-inline-edit.js) adds a ✎
+  handle to those markers. Clicking opens a small editor with the raw Markdown;
+  saving posts to `POST /admin/api/portfolio-editor/field` (in
+  [`plugins/content-editor/`](../plugins/content-editor/mod.tsx)), which writes
+  the nested YAML value, rebuilds the content index and reloads the page.
+- The script is injected only for authenticated editors and the endpoint
+  re-checks `pages.update`, so visitors never receive the markers or the editor
+  script (the static export has neither).
 
 Because the site mounts Dune headless (not `createDuneApp`), core does not wire
 the plugin's browser bundle, admin-bar injection or WebSocket route. Those three

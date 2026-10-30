@@ -13,6 +13,10 @@ import type { SiteContent } from "./lib/content-types.ts";
 export type State = {
   contentApi?: ContentApi;
   site?: SiteContent;
+  /** True when the request carries an admin session allowed to edit content. */
+  inlineEditing?: boolean;
+  /** Source path of the site-globals page (content/06.site/default.md). */
+  siteSourcePath?: string;
 };
 
 export const define = createDefine<State>();

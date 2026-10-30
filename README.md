@@ -113,16 +113,21 @@ into `content/*/default.md` and rebuilds the site, so the result is a normal
 content diff that is committed with the rest of the site.
 
 The site itself is editable too: while logged in, open any public page and use
-the ✎ Edit handle on plain fields (title, eyebrow, linkedin label). Edits are
-saved as you type and **Save** in the bar commits them; **✎ Edit source** opens
-the raw editor overlay for nested content such as jobs and project fiches.
+the ✎ handles. Dune's plugin edits the page title; every prose field (ledes,
+paragraphs, job bullets, project fiches, focus blocks, section headings, site
+globals) gets a **✎ Editar** handle from
+[`static/js/prose-inline-edit.js`](static/js/prose-inline-edit.js). Clicking it
+opens a small Markdown editor; saving writes the value back into the page's
+frontmatter and reloads the page. Title edits are committed with **Save** in
+Dune's bar; `/admin/api/portfolio-editor/field` is the guarded endpoint behind
+the nested editor.
 
-Prose fields also accept **inline Markdown**: bold (`**bold**`), italic
-(`*italic*`), inline code (between backticks) and `[links](/route)`. It is
-rendered sanitized by [`lib/markdown.tsx`](lib/markdown.tsx), with the
-deployment base path applied to internal links. Markdown is written in the
-raw/source editor (YAML); those fields are not inline-editable to avoid
-flattening existing formatting.
+Prose fields accept **inline Markdown**: bold (`**bold**`), italic (`*italic*`),
+inline code (between backticks) and `[links](/route)`. It is rendered sanitized
+by [`lib/markdown.tsx`](lib/markdown.tsx), with the deployment base path applied
+to internal links. The inline editor shows the raw Markdown while editing, so
+formatting survives round-trips. **✎ Edit source** still opens the full YAML
+editor overlay for structural changes (adding jobs/projects, labels, etc.).
 
 The GitHub Pages deployment is static only: `/admin` and the content API do not
 exist there. The admin runs locally, or on a Deno server deployment of the same

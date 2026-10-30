@@ -1,6 +1,5 @@
 import { Head } from "fresh/runtime";
-import { EditableText } from "@dune/core/ui/editable";
-import { Markdown } from "../lib/markdown.tsx";
+import { ProseField } from "../lib/markdown.tsx";
 import { ProjectFiche } from "../components/ProjectFiche.tsx";
 import type { ProjectsContent, SiteContent } from "../lib/content.ts";
 import { loadProjectsPage } from "../lib/content.ts";
@@ -21,6 +20,7 @@ export const handler = define.handlers({
         page={page}
         sourcePath={sourcePath}
         basePath={ctx.config.basePath}
+        inlineEditing={ctx.state.inlineEditing === true}
       />,
     );
   },
@@ -31,10 +31,11 @@ interface ProjectsPageProps {
   page: ProjectsContent;
   sourcePath: string;
   basePath: string;
+  inlineEditing: boolean;
 }
 
 export function ProjectsPage(
-  { site, page, sourcePath, basePath }: ProjectsPageProps,
+  { site, page, sourcePath, basePath, inlineEditing }: ProjectsPageProps,
 ) {
   const metaTitle = page.meta.title + " — " + site.author;
   const kindLabels = page.kindLabels;
@@ -55,7 +56,13 @@ export function ProjectsPage(
         {page.title}
       </h1>
       <p class="page-lede">
-        <Markdown text={page.lede} basePath={basePath} />
+        <ProseField
+          text={page.lede}
+          basePath={basePath}
+          path="lede"
+          sourcePath={sourcePath}
+          editing={inlineEditing}
+        />
       </p>
 
       <ol class="work-index">
@@ -96,9 +103,12 @@ export function ProjectsPage(
           aria-label={page.indexAriaLabel}
         >
           <p class="eyebrow">
-            <EditableText field="fichesEyebrow" sourcePath={sourcePath}>
-              {page.fichesEyebrow}
-            </EditableText>
+            <ProseField
+              text={page.fichesEyebrow}
+              path="fichesEyebrow"
+              sourcePath={sourcePath}
+              editing={inlineEditing}
+            />
           </p>
           <ol>
             {page.projects.map((project, index) => (
@@ -114,12 +124,15 @@ export function ProjectsPage(
         </nav>
 
         <div>
-          {page.projects.map((project) => (
+          {page.projects.map((project, index) => (
             <ProjectFiche
               project={project}
               kindLabels={kindLabels}
               ficheLabels={page.ficheLabels}
               basePath={basePath}
+              sourcePath={sourcePath}
+              inlineEditing={inlineEditing}
+              projectIndex={index}
               key={project.slug}
             />
           ))}

@@ -93,5 +93,10 @@
       "noscript",
       "template"
     ]
+  },
+  "fmt": {
+    "exclude": [
+      "content/"
+    ]
   }
 }

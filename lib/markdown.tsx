@@ -46,3 +46,39 @@ export function Markdown({ text, basePath = "", class: cls }: MarkdownProps) {
   // deno-lint-ignore react-no-danger
   return <span class={cls} dangerouslySetInnerHTML={{ __html: html }} />;
 }
+
+interface ProseFieldProps extends MarkdownProps {
+  /** Dotted frontmatter path, e.g. "lede" or "projects.0.summary". */
+  path?: string;
+  /** Page source path used by the inline editor. */
+  sourcePath?: string;
+  /** True for admin sessions: render the raw Markdown so inline edits keep it. */
+  editing?: boolean;
+}
+
+/**
+ * Render a prose field: sanitized Markdown for visitors, but raw Markdown for
+ * admins in edit mode. The inline editor writes the element's text content, so
+ * showing the source (rather than formatted HTML) is what lets an inline edit
+ * preserve formatting (bold, code, links) instead of flattening it.
+ *
+ * The data-prose-* markers are only rendered for editors; static export and
+ * anonymous responses get the rendered Markdown without them.
+ */
+export function ProseField(
+  { text, basePath = "", class: cls, path, sourcePath, editing = false }:
+    ProseFieldProps,
+) {
+  if (editing && path !== undefined && sourcePath !== undefined) {
+    return (
+      <span
+        class={cls}
+        data-prose-field={path}
+        data-prose-source={sourcePath}
+      >
+        {text}
+      </span>
+    );
+  }
+  return <Markdown text={text} basePath={basePath} class={cls} />;
+}

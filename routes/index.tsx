@@ -1,6 +1,5 @@
 import { Head } from "fresh/runtime";
-import { EditableText } from "@dune/core/ui/editable";
-import { Markdown } from "../lib/markdown.tsx";
+import { ProseField } from "../lib/markdown.tsx";
 import type {
   ExperienceContent,
   HomeContent,
@@ -17,9 +16,8 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page, experience, projects, sourcePath } = await loadHomePage(
-      ctx,
-    );
+    const { site, page, experience, projects, sourcePath, siteSourcePath } =
+      await loadHomePage(ctx);
     return ctx.render(
       <HomePage
         site={site}
@@ -28,6 +26,8 @@ export const handler = define.handlers({
         projects={projects}
         basePath={ctx.config.basePath}
         sourcePath={sourcePath}
+        siteSourcePath={siteSourcePath}
+        inlineEditing={ctx.state.inlineEditing === true}
       />,
     );
   },
@@ -40,10 +40,21 @@ interface HomePageProps {
   projects: ProjectsContent;
   basePath: string;
   sourcePath: string;
+  siteSourcePath: string;
+  inlineEditing: boolean;
 }
 
 export function HomePage(
-  { site, page, experience, projects, basePath, sourcePath }: HomePageProps,
+  {
+    site,
+    page,
+    experience,
+    projects,
+    basePath,
+    sourcePath,
+    siteSourcePath,
+    inlineEditing,
+  }: HomePageProps,
 ) {
   const kindLabels = projects.kindLabels;
 
@@ -61,22 +72,43 @@ export function HomePage(
 
       <section class="hero">
         <p class="eyebrow">
-          <EditableText field="eyebrow" sourcePath={sourcePath}>
-            {page.eyebrow}
-          </EditableText>
+          <ProseField
+            text={page.eyebrow}
+            basePath={basePath}
+            path="eyebrow"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
         </p>
         {
           /* The heading shows the author from the site page, not this page's
             title: keep it out of the title auto-annotation. */
         }
         <h1 class="hero-name" data-dune-no-edit>
-          {site.author}.
+          <ProseField
+            text={site.author}
+            path="author"
+            sourcePath={siteSourcePath}
+            editing={inlineEditing}
+          />
+          .
         </h1>
         <p class="hero-role">
-          {site.role}
+          <ProseField
+            text={site.role}
+            path="role"
+            sourcePath={siteSourcePath}
+            editing={inlineEditing}
+          />
         </p>
         <p class="hero-intro">
-          <Markdown text={site.intro} basePath={basePath} />
+          <ProseField
+            text={site.intro}
+            basePath={basePath}
+            path="intro"
+            sourcePath={siteSourcePath}
+            editing={inlineEditing}
+          />
         </p>
 
         <div class="hero-actions">
@@ -113,7 +145,12 @@ export function HomePage(
           {page.experienceSection.num}
         </span>
         <h2 class="section-title">
-          {page.experienceSection.title}
+          <ProseField
+            text={page.experienceSection.title}
+            path="experienceSection.title"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
         </h2>
         <a
           class="section-link"
@@ -165,7 +202,12 @@ export function HomePage(
       <div class="section-head">
         <span class="section-num">{page.projectsSection.num}</span>
         <h2 class="section-title">
-          {page.projectsSection.title}
+          <ProseField
+            text={page.projectsSection.title}
+            path="projectsSection.title"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
         </h2>
         <a
           class="section-link"
@@ -176,7 +218,13 @@ export function HomePage(
       </div>
 
       <p class="section-note">
-        <Markdown text={page.projectsSection.note} basePath={basePath} />
+        <ProseField
+          text={page.projectsSection.note}
+          basePath={basePath}
+          path="projectsSection.note"
+          sourcePath={sourcePath}
+          editing={inlineEditing}
+        />
       </p>
 
       <ol class="work-index">
@@ -214,7 +262,12 @@ export function HomePage(
       <div class="section-head">
         <span class="section-num">{page.stackSection.num}</span>
         <h2 class="section-title">
-          {page.stackSection.title}
+          <ProseField
+            text={page.stackSection.title}
+            path="stackSection.title"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
         </h2>
         <a
           class="section-link"
@@ -226,11 +279,24 @@ export function HomePage(
 
       <div class="stack-grid">
         <div>
-          {page.focus.map((item) => (
+          {page.focus.map((item, index) => (
             <div class="stack-block" key={item.title}>
-              <h3>{item.title}</h3>
+              <h3>
+                <ProseField
+                  text={item.title}
+                  path={`focus.${index}.title`}
+                  sourcePath={sourcePath}
+                  editing={inlineEditing}
+                />
+              </h3>
               <p>
-                <Markdown text={item.body} basePath={basePath} />
+                <ProseField
+                  text={item.body}
+                  basePath={basePath}
+                  path={`focus.${index}.body`}
+                  sourcePath={sourcePath}
+                  editing={inlineEditing}
+                />
               </p>
             </div>
           ))}
