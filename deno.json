@@ -3,7 +3,7 @@
   "tasks": {
     "check": "deno fmt --check . && deno lint . && deno check",
     "fmt": "deno fmt .",
-    "dev": "deno run -A --watch=main.ts,dev.ts,config --watch-exclude=_fresh,dist,node_modules,data,.dune dev.ts",
+    "dev": "deno run -A --watch=main.ts,dev.ts,config,plugins,lib --watch-exclude=_fresh,dist,node_modules,data,.dune dev.ts",
     "build": "deno run -A scripts/build.ts",
     "start": "deno task build && deno serve --port 8001 -A _fresh/server.js",
     "ssg": "deno run -A scripts/ssg.ts",

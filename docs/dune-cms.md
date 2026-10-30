@@ -104,10 +104,12 @@ Markdown is supported in: the About `lede`, `paragraphs`, `homelabNote` and
 `lede`, each project's `summary`, `problem`, `decisions`, `broke` and `next`;
 and the home hero intro, section note and focus blocks.
 
-Field text is stored as plain YAML strings. Visitors get rendered Markdown;
-admins in edit mode get the raw Markdown so inline edits keep the formatting.
-Inline editing is available for every prose field (flat and nested), plus the
-page title via Dune's plugin. See the inline editor below.
+Field text is stored as plain YAML strings and rendered as sanitized Markdown
+for every visitor, editors included (the page never shows raw syntax). For
+editors, the rendered element also carries the raw source in `data-prose-raw`,
+which is what the inline editor loads and writes back, so formatting survives
+round-trips. Inline editing is available for every prose field (flat and
+nested), plus the page title via Dune's plugin.
 
 ## Content API usage
 
@@ -222,9 +224,9 @@ blocks, section headings, site globals — are handled by this site's own inline
 editor because the plugin can only patch top-level frontmatter keys:
 
 - Server components render prose through `ProseField`
-  ([`lib/markdown.tsx`](../lib/markdown.tsx)). For visitors it emits sanitized
-  Markdown; for admins it emits the **raw Markdown** plus `data-prose-field`
-  (dot path) and `data-prose-source` markers.
+  ([`lib/markdown.tsx`](../lib/markdown.tsx)). Visitors get sanitized Markdown;
+  admins get the same rendered Markdown plus `data-prose-field` (dot path),
+  `data-prose-source` and `data-prose-raw` (the Markdown source) markers.
 - [`static/js/prose-inline-edit.js`](../static/js/prose-inline-edit.js) adds a ✎
   handle to those markers. Clicking opens a small editor with the raw Markdown;
   saving posts to `POST /admin/api/portfolio-editor/field` (in

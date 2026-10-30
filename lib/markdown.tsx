@@ -70,13 +70,17 @@ export function ProseField(
     ProseFieldProps,
 ) {
   if (editing && path !== undefined && sourcePath !== undefined) {
+    // Editors also get the rendered Markdown (the page must not look broken),
+    // but the raw source travels in data-prose-raw so the inline editor can
+    // round-trip bold/italic/code/links without flattening them.
     return (
       <span
         class={cls}
         data-prose-field={path}
         data-prose-source={sourcePath}
+        data-prose-raw={text}
       >
-        {text}
+        <Markdown text={text} basePath={basePath} />
       </span>
     );
   }

@@ -94,7 +94,7 @@
     const field = element.dataset.proseField;
     if (!source || !field) return;
 
-    const original = element.textContent ?? "";
+    const original = element.dataset.proseRaw ?? element.textContent ?? "";
     const rect = element.getBoundingClientRect();
     hideHandle();
     editing = true;
