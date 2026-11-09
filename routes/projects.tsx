@@ -1,6 +1,7 @@
 import { Head } from "fresh/runtime";
 import { ProseField } from "../lib/markdown.tsx";
 import { ProjectFiche } from "../components/ProjectFiche.tsx";
+import { TechStack } from "../components/TechTags.tsx";
 import type { ProjectsContent, SiteContent } from "../lib/content.ts";
 import { loadProjectsPage } from "../lib/content.ts";
 import { define } from "../utils.ts";
@@ -88,9 +89,7 @@ export function ProjectsPage(
                   {project.summary}
                 </span>
               </span>
-              <span class="work-stack">
-                {project.tags.join(" · ")}
-              </span>
+              <TechStack tags={project.tags} class="work-stack" />
               <span class="work-arrow" aria-hidden="true">→</span>
             </a>
           </li>

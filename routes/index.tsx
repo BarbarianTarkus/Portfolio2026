@@ -7,6 +7,7 @@ import type {
   SiteContent,
 } from "../lib/content.ts";
 import { loadHomePage } from "../lib/content.ts";
+import { TechStack } from "../components/TechTags.tsx";
 import { define } from "../utils.ts";
 
 /**
@@ -250,9 +251,7 @@ export function HomePage(
                   {project.summary}
                 </span>
               </span>
-              <span class="work-stack">
-                {project.tags.join(" · ")}
-              </span>
+              <TechStack tags={project.tags} class="work-stack" />
               <span class="work-arrow" aria-hidden="true">→</span>
             </a>
           </li>

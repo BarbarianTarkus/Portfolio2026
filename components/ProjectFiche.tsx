@@ -1,6 +1,7 @@
 import type { ComponentChildren } from "preact";
 import type { ProjectsContent } from "../lib/content.ts";
 import { ProseField } from "../lib/markdown.tsx";
+import { TechStack } from "./TechTags.tsx";
 
 type Project = ProjectsContent["projects"][number];
 type KindLabels = ProjectsContent["kindLabels"];
@@ -22,6 +23,92 @@ function FicheBlock({ title, children }: FicheBlockProps) {
       <h3>{title}</h3>
       {children}
     </div>
+  );
+}
+
+interface ProjectGalleryProps {
+  images: NonNullable<Project["images"]>;
+  basePath: string;
+  projectName: string;
+}
+
+/**
+ * Screenshot slider for one fiche.
+ *
+ * Every capture is server-rendered into the horizontal track, so the static
+ * export keeps all the content (and works with JavaScript disabled as a plain
+ * horizontal scroller). static/js/gallery.js only adds the arrows and counter
+ * on top; it is not needed to read the page.
+ */
+function ProjectGallery(
+  { images, basePath, projectName }: ProjectGalleryProps,
+) {
+  const count = images.length;
+  const slider = count > 1;
+
+  return (
+    <section
+      class="fiche-gallery"
+      data-gallery
+      aria-label={"Capturas de " + projectName}
+    >
+      <div
+        class="gallery-track"
+        data-gallery-track
+        tabindex={slider ? 0 : undefined}
+        aria-label={slider
+          ? "Carrusel de capturas de " + projectName
+          : undefined}
+      >
+        {images.map((image, index) => (
+          <figure
+            class="gallery-slide"
+            data-gallery-slide
+            key={image.src}
+            role="group"
+            aria-roledescription="diapositiva"
+            aria-label={(index + 1) + " de " + count}
+          >
+            <div class="gallery-media">
+              <img
+                src={image.src.startsWith("http")
+                  ? image.src
+                  : basePath + image.src}
+                alt={image.alt}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </div>
+            {image.caption !== undefined && (
+              <figcaption>{image.caption}</figcaption>
+            )}
+          </figure>
+        ))}
+      </div>
+      {slider && (
+        <div class="gallery-controls" data-gallery-controls>
+          <button
+            class="gallery-button gallery-prev"
+            type="button"
+            data-gallery-prev
+            aria-label="Captura anterior"
+          >
+            <span aria-hidden="true">←</span>
+          </button>
+          <p class="gallery-counter" aria-live="polite">
+            <span data-gallery-current>1</span> / {count}
+          </p>
+          <button
+            class="gallery-button gallery-next"
+            type="button"
+            data-gallery-next
+            aria-label="Captura siguiente"
+          >
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      )}
+    </section>
   );
 }
 
@@ -188,35 +275,14 @@ export function ProjectFiche(
         />
       </p>
 
-      <ul class="tag-list">
-        {project.tags.map((tag) => (
-          <li
-            class="tag"
-            key={tag}
-          >
-            {tag}
-          </li>
-        ))}
-      </ul>
+      <TechStack tags={project.tags} />
 
       {project.images !== undefined && project.images.length > 0 && (
-        <div class="fiche-gallery">
-          {project.images.map((image) => (
-            <figure key={image.src}>
-              <img
-                src={image.src.startsWith("http")
-                  ? image.src
-                  : basePath + image.src}
-                alt={image.alt}
-                loading="lazy"
-                decoding="async"
-              />
-              {image.caption !== undefined && (
-                <figcaption>{image.caption}</figcaption>
-              )}
-            </figure>
-          ))}
-        </div>
+        <ProjectGallery
+          images={project.images}
+          basePath={basePath}
+          projectName={project.name}
+        />
       )}
 
       {blocks}

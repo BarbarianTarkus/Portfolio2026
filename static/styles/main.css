@@ -163,6 +163,9 @@ body.menu-open {
 
 .layout {
   display: grid;
+  /* Explicit minmax(0, 1fr): an intrinsic column lets wide scrollable content
+     (the project slider) widen the whole page instead of the shell. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
 }
@@ -838,11 +841,13 @@ html:not(.js) .menu-button {
 
 .work-stack {
   grid-column: 2;
+  margin-top: 0.5rem;
   color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  line-height: 1.7;
-  letter-spacing: 0.02em;
+}
+
+.work-stack.tag-list {
+  gap: 0.35rem;
+  margin-top: 0.5rem;
 }
 
 .work-arrow {
@@ -988,6 +993,10 @@ html:not(.js) .menu-button {
 
 .fiche-layout {
   display: grid;
+  /* The screenshot track is a scroll container with very wide content. The
+     explicit minmax(0, 1fr) stops its intrinsic width from widening the whole
+     page on phones; the rail restores the two-column template at 64rem. */
+  grid-template-columns: minmax(0, 1fr);
   gap: 0;
 }
 
@@ -1098,40 +1107,154 @@ html:not(.js) .menu-button {
   letter-spacing: 0.04em;
 }
 
-/* Screenshots are a masonry column strip: desktop and phone captures have very
-   different aspect ratios, and columns let both keep their natural height. */
+/* Project stacks are glyph tiles: a 16-image fiche already carries a lot of
+   visual weight, so the technology line stays a compact row instead of a
+   paragraph of pills. Each tile keeps its name in the tooltip and in the
+   screen-reader-only text. */
+.tag--tech {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+}
+
+.tag--tech svg {
+  width: 0.9375rem;
+  height: 0.9375rem;
+  fill: currentColor;
+}
+
+.tag-monogram {
+  font-size: 0.5625rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+/* Screenshots are a one-at-a-time slider. The frame has a fixed height so the
+   long fiches stop growing with every capture; the track is a native horizontal
+   scroller, which keeps the whole gallery usable without JavaScript. */
 .fiche-gallery {
+  min-width: 0;
   max-width: var(--measure);
   margin-top: 1.5rem;
-  columns: 2;
-  column-gap: 0.65rem;
 }
 
-.fiche-gallery figure {
-  margin: 0 0 0.65rem;
-  break-inside: avoid;
+.gallery-track {
+  display: flex;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  scrollbar-width: none;
 }
 
-.fiche-gallery img {
+.gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-slide {
+  display: flex;
+  flex: 0 0 100%;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.gallery-media {
+  display: grid;
+  place-items: center;
+  height: clamp(16rem, 52vw, 28rem);
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.gallery-media img {
   display: block;
-  width: 100%;
+  width: auto;
   height: auto;
+  max-width: 100%;
+  max-height: 100%;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--bg);
 }
 
-.fiche-gallery figcaption {
-  margin-top: 0.3rem;
+.gallery-slide figcaption {
+  padding: 0.55rem 0.75rem 0.65rem;
   color: var(--muted);
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
-@media (max-width: 40rem) {
-  .fiche-gallery {
-    columns: 1;
+.gallery-controls {
+  display: none;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.55rem;
+}
+
+.fiche-gallery.is-ready .gallery-controls {
+  display: grid;
+}
+
+.gallery-counter {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.gallery-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.gallery-prev {
+  justify-self: start;
+}
+
+.gallery-next {
+  justify-self: end;
+}
+
+.gallery-button:hover:not(:disabled),
+.gallery-button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.gallery-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+@media (max-width: 48rem) {
+  .gallery-media {
+    height: clamp(20rem, 112vw, 32rem);
   }
 }
 
