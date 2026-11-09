@@ -1,13 +1,12 @@
-/* Stack — focus areas and the chip lists inside them. */
+/* Stack — focus areas plus the layered stack map (UI / API / OPS). */
 
 .stack-grid {
-  display: grid;
-  gap: 2rem;
   margin-top: 2rem;
 }
 
-.stack-block + .stack-block {
-  margin-top: 2rem;
+.stack-focus {
+  display: grid;
+  gap: 1.75rem;
 }
 
 .stack-block h3 {
@@ -23,37 +22,129 @@
   line-height: 1.6;
 }
 
-.chip-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 0;
+/* The map is a cross-section, not a card: hairline rows, a code in a small
+   outline, and a spine that ties the three layers together. */
+.stack-map {
+  position: relative;
+  margin: 2.75rem 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
   list-style: none;
-  color: var(--text-small);
 }
 
-.chip-list li:not(:last-child)::after {
-  content: "·";
-  margin: 0 0.6rem;
-  color: var(--line);
+.stack-map::before {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  width: 1px;
+  background: var(--line);
+  pointer-events: none;
 }
 
-/* Chips that link to a technology's official page keep the inline run's
-   rhythm; the underline only appears on hover, where it signals the link. */
-.chip-link {
-  color: inherit;
-  text-decoration: none;
-  text-underline-offset: 0.2em;
+.stack-layer {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 11rem) minmax(0, 1fr) 2rem;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.15rem 0;
+  border-bottom: 1px solid var(--line);
 }
 
-.chip-link:hover {
+.stack-layer-code {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--accent-dim);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: -0.02em;
+  transition:
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.stack-layer:hover .stack-layer-code,
+.stack-layer:focus-within .stack-layer-code {
+  border-color: var(--accent-dim);
   color: var(--accent);
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
+}
+
+.stack-layer-head {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.stack-layer-title {
+  color: var(--text-strong);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.stack-layer-note {
+  max-width: 20ch;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.stack-map .stack-layer-tags {
+  margin-top: 0;
+}
+
+.stack-layer-count {
+  justify-self: end;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
 }
 
 @media (min-width: 48rem) {
-  .stack-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+  .stack-focus {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 3rem;
   }
+}
+
+@media (max-width: 47.99rem) {
+  .stack-map {
+    margin-top: 2rem;
+  }
+
+  .stack-layer {
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.7rem 1rem;
+    padding: 1rem 0;
+  }
+
+  .stack-layer-head {
+    padding-top: 0.15rem;
+  }
+
+  .stack-layer-note {
+    max-width: none;
+  }
+
+  .stack-layer-tags {
+    grid-column: 2 / -1;
+    grid-row: 2;
+  }
+}
+
+/* The homelab list is deliberately narrower than the prose: ten labeled
+   technologies wrap into two balanced rows instead of one long strip. */
+.homelab-stack {
+  max-width: 35rem;
 }
