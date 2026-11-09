@@ -153,7 +153,7 @@ export function StackGrid(
               {group.code}
             </span>
             <div class="stack-layer-head">
-              <h4 class="stack-layer-title">{group.title}</h4>
+              <h3 class="stack-layer-title">{group.title}</h3>
               <p class="stack-layer-note">{group.note}</p>
             </div>
             <TechStack
