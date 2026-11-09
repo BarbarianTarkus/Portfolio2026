@@ -11,8 +11,8 @@ evidence:
     label: en producción
   - value: Ingeniería Informática
     label: UPC · 2026
-  - value: Badalona
-    label: Barcelona
+  - value: Barcelona
+    label: Cataluña
 homelabStack:
   - Synology NAS
   - NFS / SMB
@@ -47,7 +47,7 @@ labels:
   githubProfile: Perfil de GitHub
   linkedinProfile: Perfil de LinkedIn
   contactEyebrow: Contacto
-  location: Badalona, Barcelona
+  location: Barcelona
   homeLink: inicio
 notFound:
   metaTitle: Página no encontrada
