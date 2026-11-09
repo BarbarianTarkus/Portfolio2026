@@ -204,11 +204,21 @@
 }
 
 /* One prominent action per card, with the same verb everywhere: the live
-   demo when there is one, its repository otherwise. */
+   demo when there is one, its repository otherwise. The page accent is the
+   loudest yellow in the site; a full button of it glares in the grid, so the
+   card CTA keeps the same family in a deeper gold. */
 .project-card-links .project-link-cta {
   gap: 0.5rem;
   padding: 0.6rem 1rem;
   letter-spacing: 0.04em;
+  border-color: #c9a30f;
+  background: #c9a30f;
+}
+
+.project-card-links .project-link-cta:hover,
+.project-card-links .project-link-cta:focus-visible {
+  border-color: #d8b31a;
+  background: #d8b31a;
 }
 
 .project-link-favicon {
