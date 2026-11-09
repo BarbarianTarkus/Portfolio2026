@@ -54,9 +54,23 @@
   fill: currentColor;
 }
 
+/* The linked tile sits inside a list item; making that item a flex container
+   keeps the row at the same 1.75rem height instead of inheriting the inline
+   anchor's taller line box. */
+.tag-list-item {
+  display: flex;
+}
+
+/* No official glyph: a 10px medium monogram is optically centred against the
+   15px icon and stays readable without competing with it. */
 .tag-monogram {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--tech-color, var(--muted));
-  font-size: 0.5625rem;
+  font-size: 0.625rem;
+  font-weight: 500;
+  line-height: 1;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
