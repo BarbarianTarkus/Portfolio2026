@@ -206,6 +206,7 @@
 /* One prominent action per card, with the same verb everywhere: the live
    demo when there is one, its repository otherwise. */
 .project-card-links .project-link-cta {
+  gap: 0.5rem;
   padding: 0.6rem 1rem;
   letter-spacing: 0.04em;
 }
