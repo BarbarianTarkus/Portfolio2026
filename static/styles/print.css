@@ -1,0 +1,85 @@
+/* Print — compact light-theme layout. */
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f2f2f2;
+    --surface-2: #e6e6e6;
+    --line: #b8b8b8;
+    --text: #1a1a1a;
+    --text-strong: #000000;
+    --muted: #4a4a4a;
+    --accent: #000000;
+    --accent-dim: #4a4a4a;
+    --accent-bright: #000000;
+    --brand: #000000;
+  }
+
+  header nav,
+  .site-title,
+  .menu-button,
+  .skip-to-content-link,
+  .hero-actions,
+  .footer-social,
+  .section-link {
+    display: none !important;
+  }
+
+  body {
+    font-size: 11pt;
+  }
+
+  main {
+    padding-block: 0;
+  }
+
+  .shell {
+    max-width: none;
+    padding-inline: 0;
+  }
+
+  .job,
+  .project-card,
+  .work-row {
+    break-inside: avoid;
+  }
+
+  .job {
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+  }
+
+  .job-period {
+    white-space: normal;
+  }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-details > summary,
+  .gallery-switcher,
+  .gallery-controls,
+  .gallery-zoom,
+  .gallery-lightbox {
+    display: none !important;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    color: #555;
+    font-size: 0.75em;
+    overflow-wrap: anywhere;
+  }
+
+  .section-head {
+    margin-top: 2rem;
+  }
+
+  .site-footer {
+    margin-top: 2rem;
+  }
+}

@@ -1,0 +1,47 @@
+/* Design tokens — colour, type, spacing and shell width for the whole site. */
+
+:root {
+  /* Surface and ink ------------------------------------------------------ */
+  --bg: #0b0e13; /* page */
+  --surface: #12171f; /* raised block, used sparingly */
+  --surface-2: #1a212b; /* inset only: the 404 numeral */
+  --line: #232c38; /* every decorative rule and border is 1px of this */
+  --line-strong: #595f69; /* 3:1 on --bg: only for borders that bound a control */
+  --text: #cbd3df; /* body copy */
+  --text-strong: #e8edf4; /* headings and the name: one step above body */
+  --muted: #7f8ca3; /* metadata, secondary prose */
+
+  /* Accent: links, action, active state, section numbers. Nothing else.
+     Values verified for WCAG contrast against --bg (docs/redesign/research.md):
+     accent 11.98:1, text 12.81:1, muted 5.69:1; accent-dim is 5.40:1 here and
+     4.52:1 at worst (on --surface-2), which still clears 4.5:1. */
+  --accent: #f1c81b;
+  --accent-bright: #ffd84d; /* hover only */
+  --accent-dim: #98873b; /* section numbers, resting marks */
+  --brand: #fb9b18; /* the "R" logo and nothing else */
+
+  /* Typography ----------------------------------------------------------- */
+  --font-display: "Roboto Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --font-mono: "Fira Code", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --text-body: 1.0625rem; /* 17px */
+  --text-meta: 0.75rem; /* 12px mono */
+  --text-small: 0.9375rem; /* 15px */
+
+  /* Layout --------------------------------------------------------------- */
+  /* 68rem shell: wider than the old 54rem, still clamped so it never forces a
+     horizontal scrollbar on a 1024px laptop. */
+  --shell: 68rem;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --measure: 62ch; /* prose cap, ~62-70 characters at 17px */
+  --radius: 2px; /* near-square: a rounded card reads "webapp" */
+
+  /* Motion --------------------------------------------------------------- */
+  --transition: 150ms ease-out;
+
+  font-size: 1rem;
+  line-height: 1.65;
+  color-scheme: dark;
+}

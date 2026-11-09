@@ -1,0 +1,261 @@
+/* Projects — cards, covers, disclosures and fiche text. */
+
+.project-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 1.25rem;
+  margin-top: 2.25rem;
+}
+
+@media (min-width: 64rem) {
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+/* A card is a cover, a short pitch and a disclosure. It is a real border, not
+   a shadow: the page already uses rules as its hierarchy device. */
+.project-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color var(--transition);
+}
+
+.project-card:hover,
+.project-card:focus-within {
+  border-color: var(--line-strong);
+}
+
+/* An expanded card takes the whole row: a 1700px-tall detail column next to a
+   700px card would leave a large dead gutter on the other side of the grid. */
+@media (min-width: 64rem) {
+  .project-card:has(.project-details[open]) {
+    grid-column: 1 / -1;
+  }
+
+  /* Keep the impact image as a banner when the card spans both columns; a
+     full-width 16:10 cover would push the expanded detail below the fold. */
+  .project-card:has(.project-details[open]) .project-cover,
+  .project-card:has(.project-details[open]) .project-gallery--cover .gallery-media {
+    height: clamp(18rem, 32vw, 26rem);
+    aspect-ratio: auto;
+  }
+}
+
+.project-cover {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  margin: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+.project-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease-out;
+}
+
+.project-card:hover .project-cover img {
+  transform: scale(1.015);
+}
+
+/* Projects without screenshots get a typographic panel, not a broken image. */
+.project-cover--empty {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.project-cover--empty::before {
+  position: absolute;
+  content: attr(data-initial);
+  color: var(--surface-2);
+  font-family: var(--font-display);
+  font-size: clamp(7rem, 14vw, 12rem);
+  font-weight: 700;
+  line-height: 0.8;
+  transform: translate(-0.1em, -0.08em);
+}
+
+.project-cover--empty span {
+  position: relative;
+  color: var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* The card's first-impact area is the slider itself. The controls sit over the
+   image so the media reads as one block, not as a widget stacked above it. */
+.project-media {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+.project-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.25rem 1.25rem 1rem;
+}
+
+.fiche-kind {
+  margin-bottom: 0.35rem;
+  color: var(--accent-dim);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project-card-title {
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  letter-spacing: -0.015em;
+}
+
+.fiche-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-top: 0.6rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+}
+
+.project-card-summary {
+  margin-top: 0.7rem;
+  color: var(--text);
+  font-size: var(--text-small);
+  line-height: 1.6;
+}
+
+.project-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin-top: 0.9rem;
+}
+
+.project-card-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  text-decoration: none;
+}
+
+.project-card-links a:hover {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Repository links are a GitHub glyph, not a long owner/name string: the
+   accessible name and tooltip keep the full label. */
+.project-card-links .project-link--icon {
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.project-card-links .project-link--icon:hover {
+  border-color: var(--accent);
+}
+
+.project-link-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: currentColor;
+}
+
+.project-details {
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.project-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.06em;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.project-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.project-details > summary::after {
+  content: "+";
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.project-details[open] > summary::after {
+  content: "−";
+}
+
+.project-details[open] .details-closed,
+.project-details:not([open]) .details-open {
+  display: none;
+}
+
+.project-details-body {
+  max-width: 52rem;
+  padding-top: 0.35rem;
+}
+
+.fiche-block {
+  margin-top: 1.5rem;
+}
+
+.fiche-block h3 {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.fiche-block p,
+.fiche-block li {
+  color: var(--text);
+  font-size: var(--text-small);
+  line-height: 1.65;
+}
+
+.fiche-list {
+  padding-left: 1.1rem;
+  list-style: square;
+}
+
+.fiche-list li + li {
+  margin-top: 0.5rem;
+}

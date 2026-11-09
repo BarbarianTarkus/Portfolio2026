@@ -1,0 +1,35 @@
+/* Inner pages — titles, ledes, prose and section notes. */
+
+.page-title {
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+  letter-spacing: -0.02em;
+}
+
+.page-lede {
+  max-width: var(--measure);
+  margin-top: 1rem;
+  color: var(--muted);
+  font-size: 1.1875rem;
+  line-height: 1.55;
+}
+
+.page-meta {
+  margin-top: 1.25rem;
+}
+
+.prose {
+  max-width: var(--measure);
+  margin-top: 1.5rem;
+  color: var(--text);
+}
+
+.prose > * + * {
+  margin-top: 1rem;
+}
+
+.section-note {
+  max-width: var(--measure);
+  margin-top: 0.75rem;
+  color: var(--muted);
+  font-size: var(--text-small);
+}

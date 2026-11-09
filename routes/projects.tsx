@@ -1,8 +1,9 @@
-import { Head } from "fresh/runtime";
 import { ProseField } from "../lib/markdown.tsx";
-import { ProjectCard } from "../components/ProjectFiche.tsx";
 import type { ProjectsContent, SiteContent } from "../lib/content.ts";
 import { loadProjectsPage } from "../lib/content.ts";
+import { PageHeader } from "../components/PageHeader.tsx";
+import { PageMeta } from "../components/PageMeta.tsx";
+import { ProjectCard } from "../components/projects/ProjectCard.tsx";
 import { define } from "../utils.ts";
 
 /**
@@ -42,28 +43,20 @@ export function ProjectsPage(
 
   return (
     <>
-      <Head>
-        <title>{metaTitle}</title>
-        <meta
-          name="description"
-          content={page.meta.description}
-        />
-        <meta property="og:title" content={metaTitle} />
-        <meta property="og:description" content={page.meta.description} />
-      </Head>
+      <PageMeta title={metaTitle} description={page.meta.description} />
 
-      <h1 class="page-title">
-        {page.title}
-      </h1>
-      <p class="page-lede">
-        <ProseField
-          text={page.lede}
-          basePath={basePath}
-          path="lede"
-          sourcePath={sourcePath}
-          editing={inlineEditing}
-        />
-      </p>
+      <PageHeader
+        title={page.title}
+        lede={
+          <ProseField
+            text={page.lede}
+            basePath={basePath}
+            path="lede"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
+        }
+      />
 
       <div class="project-grid">
         {page.projects.map((project, index) => (

@@ -1,5 +1,6 @@
-import { Head } from "fresh/runtime";
 import type { SiteContent } from "../lib/content.ts";
+import { PageHeader } from "./PageHeader.tsx";
+import { PageMeta } from "./PageMeta.tsx";
 
 interface NotFoundPageProps {
   basePath: string;
@@ -13,39 +14,16 @@ interface NotFoundPageProps {
  */
 export function NotFoundPage({ basePath, site }: NotFoundPageProps) {
   const notFound = site.notFound;
+  const metaTitle = notFound.metaTitle + " — " + site.author;
   return (
     <>
-      <Head>
-        <title>
-          {notFound.metaTitle + " — " + site.author}
-        </title>
-        <meta
-          name="description"
-          content={notFound.metaDescription}
-        />
-        <meta
-          property="og:title"
-          content={notFound.metaTitle + " — " + site.author}
-        />
-        <meta
-          property="og:description"
-          content={notFound.metaDescription}
-        />
-      </Head>
+      <PageMeta title={metaTitle} description={notFound.metaDescription} />
 
       <div class="error-page">
-        <p
-          class="error-code"
-          aria-hidden="true"
-        >
+        <p class="error-code" aria-hidden="true">
           {notFound.code}
         </p>
-        <h1 class="page-title">
-          {notFound.heading}
-        </h1>
-        <p class="page-lede">
-          {notFound.lede}
-        </p>
+        <PageHeader title={notFound.heading} lede={notFound.lede} />
         {
           /* Explicit "false" stops Fresh from marking this home link as the
             current/ancestor page while rendering the 404 response. */

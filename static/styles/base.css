@@ -1,0 +1,94 @@
+/* Base — reset, document defaults, focus, accessibility helpers and scroll lock. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.65;
+  background: var(--bg);
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+::selection {
+  color: var(--bg);
+  background: var(--accent);
+}
+
+/* The skip link moves focus to <main>; the outline is suppressed there. */
+main:focus {
+  outline: none;
+}
+
+/* Anchor targets land with breathing room instead of flush against the edge. */
+[id] {
+  scroll-margin-top: 2rem;
+}
+
+/* Keyboard-only focus ring: mouse/touch activation stays ring-free. */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-to-content-link {
+  position: fixed;
+  z-index: 10;
+  top: 0.75rem;
+  left: 0.75rem;
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+  transform: translateY(-200%);
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  text-decoration: none;
+  transition: transform var(--transition);
+}
+
+.skip-to-content-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* Scroll lock while the mobile navigation overlay is open. */
+body.menu-open {
+  overflow: hidden;
+}

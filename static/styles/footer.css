@@ -1,0 +1,78 @@
+/* Footer — call to action, social links and colophon. */
+
+.site-footer {
+  margin-top: clamp(3.5rem, 8vw, 5rem);
+  padding-block: clamp(2.5rem, 5vw, 3.5rem) 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.footer-cta {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.footer-mail {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+  border-bottom: 1px solid var(--line);
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  text-decoration: none;
+}
+
+.footer-mail:hover {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+
+.footer-social ul {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+.footer-social a {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.footer-social a:hover {
+  color: var(--accent);
+}
+
+.footer-social svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: currentColor;
+}
+
+.colophon {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.03em;
+}
+
+@media (min-width: 48rem) {
+  .footer-cta {
+    grid-template-columns: 1fr auto;
+    align-items: end;
+  }
+}

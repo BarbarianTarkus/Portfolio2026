@@ -1,0 +1,45 @@
+/* Stack — focus areas and the chip lists inside them. */
+
+.stack-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.stack-block + .stack-block {
+  margin-top: 2rem;
+}
+
+.stack-block h3 {
+  margin-bottom: 0.75rem;
+  color: var(--text-strong);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.stack-block p {
+  color: var(--muted);
+  font-size: var(--text-small);
+  line-height: 1.6;
+}
+
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 0;
+  list-style: none;
+  color: var(--text-small);
+}
+
+.chip-list li:not(:last-child)::after {
+  content: "·";
+  margin: 0 0.6rem;
+  color: var(--line);
+}
+
+@media (min-width: 48rem) {
+  .stack-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}

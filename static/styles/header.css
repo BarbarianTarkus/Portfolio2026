@@ -1,0 +1,186 @@
+/* Header — brand, navigation, mobile menu overlay and menu button. */
+
+header {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  padding-block: 1rem;
+}
+
+.site-title {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--brand);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+}
+
+.site-title:hover {
+  color: var(--brand);
+}
+
+.main-nav {
+  flex-basis: 100%;
+}
+
+.main-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  list-style: none;
+}
+
+.main-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  color: var(--muted);
+  font-size: var(--text-small);
+  text-decoration: none;
+}
+
+.main-nav a:hover,
+.main-nav a:focus-visible {
+  color: var(--text-strong);
+}
+
+.nav-index {
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  font-weight: 400;
+  color: var(--accent-dim);
+}
+
+/* Active page: accent underline under the label, not a filled state. */
+.main-nav a[aria-current="page"] {
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
+.menu-button {
+  display: none;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.menu-button svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: currentColor;
+}
+
+/* Without JavaScript the overlay cannot open, so it renders as a plain list
+   and the toggle is hidden (the `js` class is added in routes/_app.tsx). */
+html:not(.js) .menu-button {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Mobile overlay — only when JavaScript is available.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 47.999rem) {
+  html.js .menu-button {
+    display: grid;
+  }
+
+  html.js .main-nav {
+    position: fixed;
+    z-index: 5;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: var(--gutter);
+    transform: translateX(-100%);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--bg);
+    transition:
+      transform 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86),
+      opacity 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86),
+      visibility 250ms;
+  }
+
+  html.js .main-nav.open {
+    transform: translateX(0);
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  html.js .main-nav ul {
+    flex-direction: column;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  html.js .main-nav a:not([aria-current="page"]) {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    color: var(--text);
+  }
+
+  html.js .main-nav a {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+  }
+
+  html.js .main-nav .nav-index {
+    font-size: 0.875rem;
+  }
+
+  html.js .main-nav .close-menu {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+  }
+}
+
+/* Desktop: single row, brand left, nav right, no toggle. */
+@media (min-width: 48rem) {
+  .header-inner {
+    flex-wrap: nowrap;
+  }
+
+  .main-nav {
+    flex-basis: auto;
+  }
+
+  .menu-button {
+    display: none;
+  }
+}
+
+@media (min-width: 80rem) {
+  .header-inner {
+    padding-block: 1.25rem;
+  }
+}

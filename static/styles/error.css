@@ -1,0 +1,22 @@
+/* 404 page. */
+
+.error-page {
+  max-width: var(--measure);
+  padding-block: clamp(2rem, 6vw, 4rem);
+}
+
+.error-code {
+  color: var(--surface-2);
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 14vw, 7rem);
+  font-weight: 700;
+  line-height: 0.9;
+}
+
+.error-page .page-title {
+  margin-top: 1rem;
+}
+
+.error-page .button {
+  margin-top: 2rem;
+}

@@ -23,13 +23,16 @@ islands/         Client-side JS: the header/menu island, one thin bridge file
                  content editor (islands/admin/)
 plugins/         Dune plugins: content-editor (raw page editor + live preview)
                  (plus @dune/plugin-inline-edit from JSR, configured in config/)
-components/      Static Preact components (footer, icons, page pieces)
+components/      Static Preact components: page sections (hero, evidence,
+                 job list, work index, stack, contact rows), project
+                 card/gallery/lightbox, section/meta helpers, footer, icons
 content/         Dune pages: one folder per page, copy in default.md frontmatter
 lib/content.ts   Typed loaders over Dune's content API (the only CMS client)
 lib/inline-edit-runtime.ts  Headless glue for admin-bar injection, editor bundle, WS
 lib/content-types.ts  TypeScript shapes for each page's frontmatter
 config/          Dune configuration (site.yaml, system.yaml)
-static/          Static assets copied as-is (styles, favicon, robots.txt)
+static/          Static assets copied as-is (per-component CSS, favicon,
+                 robots.txt)
 scripts/build.ts Production build → _fresh/ (server.js + static/)
 scripts/ssg.ts   Static export: build, render, verify links → dist/
 scripts/preview.ts  Local server that mimics GitHub Pages
@@ -46,6 +49,11 @@ data/            Dune runtime state (git-ignored): users, permissions, password
 - **Server rendering:** [`routes/_app.tsx`](routes/_app.tsx) renders the
   document shell and wraps every page with the header (an island) and the
   footer.
+- **Component composition:** routes load content and compose the page; the
+  presentational pieces live in [`components/`](components/): shared `PageMeta`,
+  `PageHeader`, `SectionHead` and `JobList`, the home sections in
+  `components/home/`, and the project card, gallery and lightbox in
+  `components/projects/`. Markup stays identical to the pre-split pages.
 - **Partial hydration:** only [`islands/Header.tsx`](islands/Header.tsx) ships
   JavaScript to public pages (mobile menu state, Escape key, focus trap/inert
   handling and scroll lock). The files in
@@ -68,8 +76,8 @@ data/            Dune runtime state (git-ignored): users, permissions, password
   renders each route through the production server handler, copies the bundled
   assets into `dist/`, writes `404.html` and `.nojekyll`, and finally verifies
   that every URL referenced by the HTML — including the island module imports —
-  exists on disk (CSS `url()` references are not inspected; the stylesheet has
-  none today).
+  exists on disk (CSS `url()` and `@import` targets are not part of that check;
+  the stylesheet has no `url()` references).
 
 ## Requirements
 
@@ -208,9 +216,14 @@ The frontmatter is typed in [`lib/content-types.ts`](lib/content-types.ts) and
 loaded by [`lib/content.ts`](lib/content.ts), which passes it to the routes;
 routes only see plain data. Edit the frontmatter by hand or through the
 [admin](#editing-content). The site copy is written in Spanish
-(`<html lang="es">`); there is no English translation yet. Colours, typography
-and layout are defined with CSS custom properties at the top of
-[`static/styles/main.css`](static/styles/main.css).
+(`<html lang="es">`); there is no English translation yet.
+
+Colours, spacing and type are defined once as CSS custom properties in
+[`static/styles/tokens.css`](static/styles/tokens.css).
+[`static/styles/main.css`](static/styles/main.css) is only the `@import` entry
+point: it loads one stylesheet per component in cascade order (base, layout,
+header, hero, work, projects, gallery, … print). Adding a component means
+creating its file and adding the import in the right layer.
 
 ## Design notes
 

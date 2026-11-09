@@ -1,0 +1,42 @@
+import type { Project, ProjectKindLabels } from "../../lib/content.ts";
+import { TechStack } from "../TechTags.tsx";
+
+interface WorkIndexProps {
+  projects: Project[];
+  kindLabels: ProjectKindLabels;
+  basePath: string;
+}
+
+/** Numbered project rows: the scanning layer over the project fiches. */
+export function WorkIndex({ projects, kindLabels, basePath }: WorkIndexProps) {
+  return (
+    <ol class="work-index">
+      {projects.map((project) => (
+        <li key={project.slug}>
+          <a
+            class="work-row"
+            href={basePath + "/projects#" + project.slug}
+            aria-label={project.name + " — " + kindLabels[project.kind]}
+          >
+            <span class="work-year">
+              {project.year}
+            </span>
+            <span>
+              <span class="work-title">
+                <span class="work-name">{project.name}</span>
+                <span class="kind">
+                  {kindLabels[project.kind]}
+                </span>
+              </span>
+              <span class="work-summary">
+                {project.summary}
+              </span>
+            </span>
+            <TechStack tags={project.tags} class="work-stack" />
+            <span class="work-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  );
+}

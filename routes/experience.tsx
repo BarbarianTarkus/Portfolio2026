@@ -1,7 +1,10 @@
-import { Head } from "fresh/runtime";
 import { ProseField } from "../lib/markdown.tsx";
 import type { ExperienceContent, SiteContent } from "../lib/content.ts";
 import { loadExperiencePage } from "../lib/content.ts";
+import { JobList } from "../components/JobList.tsx";
+import { PageHeader } from "../components/PageHeader.tsx";
+import { PageMeta } from "../components/PageMeta.tsx";
+import { SectionHead } from "../components/SectionHead.tsx";
 import { define } from "../utils.ts";
 
 /**
@@ -38,28 +41,20 @@ export function ExperiencePage(
 
   return (
     <>
-      <Head>
-        <title>{metaTitle}</title>
-        <meta
-          name="description"
-          content={page.meta.description}
-        />
-        <meta property="og:title" content={metaTitle} />
-        <meta property="og:description" content={page.meta.description} />
-      </Head>
+      <PageMeta title={metaTitle} description={page.meta.description} />
 
-      <h1 class="page-title">
-        {page.title}
-      </h1>
-      <p class="page-lede">
-        <ProseField
-          text={page.lede}
-          basePath={basePath}
-          path="lede"
-          sourcePath={sourcePath}
-          editing={inlineEditing}
-        />
-      </p>
+      <PageHeader
+        title={page.title}
+        lede={
+          <ProseField
+            text={page.lede}
+            basePath={basePath}
+            path="lede"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
+        }
+      />
 
       <p class="page-meta">
         <a
@@ -78,92 +73,38 @@ export function ExperiencePage(
         </a>
       </p>
 
-      <div class="section-head">
-        <span class="section-num">{page.jobsSection.num}</span>
-        <h2 class="section-title">
+      <SectionHead
+        num={page.jobsSection.num}
+        title={
           <ProseField
             text={page.jobsSection.title}
             path="jobsSection.title"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
-        </h2>
-      </div>
+        }
+      />
 
-      <ol class="job-list">
-        {page.jobs.map((job, jobIndex) => (
-          <li
-            class="job"
-            key={job.company + "-" + job.period}
-          >
-            <p class="job-period">
-              <ProseField
-                text={job.period}
-                path={`jobs.${jobIndex}.period`}
-                sourcePath={sourcePath}
-                editing={inlineEditing}
-              />
-            </p>
-            <div>
-              <h3 class="job-role">
-                <ProseField
-                  text={job.role}
-                  path={`jobs.${jobIndex}.role`}
-                  sourcePath={sourcePath}
-                  editing={inlineEditing}
-                />
-              </h3>
-              <p class="job-company">
-                <span>
-                  <ProseField
-                    text={job.company}
-                    path={`jobs.${jobIndex}.company`}
-                    sourcePath={sourcePath}
-                    editing={inlineEditing}
-                  />
-                </span>
-                {" · "}
-                <span>
-                  <ProseField
-                    text={job.place}
-                    path={`jobs.${jobIndex}.place`}
-                    sourcePath={sourcePath}
-                    editing={inlineEditing}
-                  />
-                </span>
-              </p>
-              <ul class="job-points">
-                {job.bullets.map((bullet, bulletIndex) => (
-                  <li key={bullet}>
-                    <ProseField
-                      text={bullet}
-                      basePath={basePath}
-                      path={`jobs.${jobIndex}.bullets.${bulletIndex}`}
-                      sourcePath={sourcePath}
-                      editing={inlineEditing}
-                    />
-                  </li>
-                ))}
-              </ul>
-              <p class="job-stack">
-                {job.stack.join(" · ")}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <JobList
+        jobs={page.jobs}
+        edit={{
+          sourcePath: sourcePath,
+          basePath: basePath,
+          editing: inlineEditing,
+        }}
+      />
 
-      <div class="section-head">
-        <span class="section-num">{page.educationSection.num}</span>
-        <h2 class="section-title">
+      <SectionHead
+        num={page.educationSection.num}
+        title={
           <ProseField
             text={page.educationSection.title}
             path="educationSection.title"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
-        </h2>
-      </div>
+        }
+      />
 
       <ol class="job-list">
         <li class="job">
@@ -196,17 +137,17 @@ export function ExperiencePage(
         </li>
       </ol>
 
-      <div class="section-head">
-        <span class="section-num">{page.outroSection.num}</span>
-        <h2 class="section-title">
+      <SectionHead
+        num={page.outroSection.num}
+        title={
           <ProseField
             text={page.outroSection.title}
             path="outroSection.title"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
-        </h2>
-      </div>
+        }
+      />
 
       <p class="prose">
         <ProseField

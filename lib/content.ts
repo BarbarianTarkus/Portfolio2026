@@ -15,10 +15,13 @@ import type { State } from "../utils.ts";
 import type {
   AboutContent,
   ContactContent,
+  EvidenceItem,
   ExperienceContent,
   HomeContent,
+  JobEntry,
   Project,
   ProjectGalleryGroup,
+  ProjectKindLabels,
   ProjectsContent,
   SiteContent,
 } from "./content-types.ts";
@@ -26,10 +29,13 @@ import type {
 export type {
   AboutContent,
   ContactContent,
+  EvidenceItem,
   ExperienceContent,
   HomeContent,
+  JobEntry,
   Project,
   ProjectGalleryGroup,
+  ProjectKindLabels,
   ProjectsContent,
   SiteContent,
 };

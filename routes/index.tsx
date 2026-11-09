@@ -1,4 +1,3 @@
-import { Head } from "fresh/runtime";
 import { ProseField } from "../lib/markdown.tsx";
 import type {
   ExperienceContent,
@@ -7,7 +6,13 @@ import type {
   SiteContent,
 } from "../lib/content.ts";
 import { loadHomePage } from "../lib/content.ts";
-import { TechStack } from "../components/TechTags.tsx";
+import { EvidenceStrip } from "../components/home/EvidenceStrip.tsx";
+import { Hero } from "../components/home/Hero.tsx";
+import { StackGrid } from "../components/home/StackGrid.tsx";
+import { WorkIndex } from "../components/home/WorkIndex.tsx";
+import { JobList } from "../components/JobList.tsx";
+import { PageMeta } from "../components/PageMeta.tsx";
+import { SectionHead } from "../components/SectionHead.tsx";
 import { define } from "../utils.ts";
 
 /**
@@ -61,162 +66,52 @@ export function HomePage(
 
   return (
     <>
-      <Head>
-        <title>{site.title}</title>
-        <meta
-          name="description"
-          content={site.description}
-        />
-        <meta property="og:title" content={site.title} />
-        <meta property="og:description" content={site.description} />
-      </Head>
+      <PageMeta title={site.title} description={site.description} />
 
-      <section class="hero">
-        <p class="eyebrow">
-          <ProseField
-            text={page.eyebrow}
-            basePath={basePath}
-            path="eyebrow"
-            sourcePath={sourcePath}
-            editing={inlineEditing}
-          />
-        </p>
-        {
-          /* The heading shows the author from the site page, not this page's
-            title: keep it out of the title auto-annotation. */
-        }
-        <h1 class="hero-name" data-dune-no-edit>
-          <ProseField
-            text={site.author}
-            path="author"
-            sourcePath={siteSourcePath}
-            editing={inlineEditing}
-          />
-          .
-        </h1>
-        <p class="hero-role">
-          <ProseField
-            text={site.role}
-            path="role"
-            sourcePath={siteSourcePath}
-            editing={inlineEditing}
-          />
-        </p>
-        <p class="hero-intro">
-          <ProseField
-            text={site.intro}
-            basePath={basePath}
-            path="intro"
-            sourcePath={siteSourcePath}
-            editing={inlineEditing}
-          />
-        </p>
+      <Hero
+        page={page}
+        site={site}
+        basePath={basePath}
+        sourcePath={sourcePath}
+        siteSourcePath={siteSourcePath}
+        inlineEditing={inlineEditing}
+      />
 
-        <div class="hero-actions">
-          <a
-            class="button"
-            href={basePath + page.primaryAction.route}
-          >
-            {page.primaryAction.label}
-          </a>
-          <a
-            class="button button-ghost"
-            href={basePath + page.secondaryAction.route}
-          >
-            {page.secondaryAction.label}
-          </a>
-        </div>
-      </section>
+      <EvidenceStrip items={site.evidence} />
 
-      <ul class="evidence">
-        {site.evidence.map((item) => (
-          <li key={item.label}>
-            <span class="evidence-value">
-              {item.value}
-            </span>
-            <span class="evidence-label">
-              {item.label}
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      <div class="section-head">
-        <span class="section-num">
-          {page.experienceSection.num}
-        </span>
-        <h2 class="section-title">
+      <SectionHead
+        num={page.experienceSection.num}
+        title={
           <ProseField
             text={page.experienceSection.title}
             path="experienceSection.title"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
-        </h2>
-        <a
-          class="section-link"
-          href={basePath + page.experienceSection.linkRoute}
-        >
-          {page.experienceSection.linkLabel}
-        </a>
-      </div>
+        }
+        link={{
+          href: basePath + page.experienceSection.linkRoute,
+          label: page.experienceSection.linkLabel,
+        }}
+      />
 
-      <ol class="job-list">
-        {experience.jobs.map((job) => (
-          <li
-            class="job"
-            key={job.company + "-" + job.period}
-          >
-            <p class="job-period">
-              {job.period}
-            </p>
-            <div>
-              <h3 class="job-role">
-                {job.role}
-              </h3>
-              <p class="job-company">
-                <span>
-                  {job.company}
-                </span>
-                {" · "}
-                <span>
-                  {job.place}
-                </span>
-              </p>
-              <ul class="job-points">
-                {job.bullets.slice(0, 2).map((bullet) => (
-                  <li
-                    key={bullet}
-                  >
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
-              <p class="job-stack">
-                {job.stack.join(" · ")}
-              </p>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <JobList jobs={experience.jobs} maxBullets={2} />
 
-      <div class="section-head">
-        <span class="section-num">{page.projectsSection.num}</span>
-        <h2 class="section-title">
+      <SectionHead
+        num={page.projectsSection.num}
+        title={
           <ProseField
             text={page.projectsSection.title}
             path="projectsSection.title"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
-        </h2>
-        <a
-          class="section-link"
-          href={basePath + page.projectsSection.linkRoute}
-        >
-          {page.projectsSection.linkLabel}
-        </a>
-      </div>
+        }
+        link={{
+          href: basePath + page.projectsSection.linkRoute,
+          label: page.projectsSection.linkLabel,
+        }}
+      />
 
       <p class="section-note">
         <ProseField
@@ -228,109 +123,35 @@ export function HomePage(
         />
       </p>
 
-      <ol class="work-index">
-        {projects.projects.map((project) => (
-          <li key={project.slug}>
-            <a
-              class="work-row"
-              href={basePath + "/projects#" + project.slug}
-              aria-label={project.name + " — " +
-                kindLabels[project.kind as keyof typeof kindLabels]}
-            >
-              <span class="work-year">
-                {project.year}
-              </span>
-              <span>
-                <span class="work-title">
-                  <span class="work-name">{project.name}</span>
-                  <span class="kind">
-                    {kindLabels[project.kind as keyof typeof kindLabels]}
-                  </span>
-                </span>
-                <span class="work-summary">
-                  {project.summary}
-                </span>
-              </span>
-              <TechStack tags={project.tags} class="work-stack" />
-              <span class="work-arrow" aria-hidden="true">→</span>
-            </a>
-          </li>
-        ))}
-      </ol>
+      <WorkIndex
+        projects={projects.projects}
+        kindLabels={kindLabels}
+        basePath={basePath}
+      />
 
-      <div class="section-head">
-        <span class="section-num">{page.stackSection.num}</span>
-        <h2 class="section-title">
+      <SectionHead
+        num={page.stackSection.num}
+        title={
           <ProseField
             text={page.stackSection.title}
             path="stackSection.title"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
-        </h2>
-        <a
-          class="section-link"
-          href={basePath + page.stackSection.linkRoute}
-        >
-          {page.stackSection.linkLabel}
-        </a>
-      </div>
+        }
+        link={{
+          href: basePath + page.stackSection.linkRoute,
+          label: page.stackSection.linkLabel,
+        }}
+      />
 
-      <div class="stack-grid">
-        <div>
-          {page.focus.map((item, index) => (
-            <div class="stack-block" key={item.title}>
-              <h3>
-                <ProseField
-                  text={item.title}
-                  path={`focus.${index}.title`}
-                  sourcePath={sourcePath}
-                  editing={inlineEditing}
-                />
-              </h3>
-              <p>
-                <ProseField
-                  text={item.body}
-                  basePath={basePath}
-                  path={`focus.${index}.body`}
-                  sourcePath={sourcePath}
-                  editing={inlineEditing}
-                />
-              </p>
-            </div>
-          ))}
-        </div>
-        <div>
-          <div class="stack-block">
-            <h3>
-              {page.stackSection.stackLabel}
-            </h3>
-            <ul class="chip-list">
-              {page.stack.map((item) => (
-                <li
-                  key={item}
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div class="stack-block">
-            <h3>
-              {page.stackSection.infrastructureLabel}
-            </h3>
-            <ul class="chip-list">
-              {site.homelabStack.map((item) => (
-                <li
-                  key={item}
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
+      <StackGrid
+        page={page}
+        site={site}
+        basePath={basePath}
+        sourcePath={sourcePath}
+        inlineEditing={inlineEditing}
+      />
     </>
   );
 }

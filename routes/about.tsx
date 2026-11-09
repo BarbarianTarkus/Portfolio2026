@@ -1,7 +1,9 @@
-import { Head } from "fresh/runtime";
 import { ProseField } from "../lib/markdown.tsx";
 import type { AboutContent, SiteContent } from "../lib/content.ts";
 import { loadAboutPage } from "../lib/content.ts";
+import { PageHeader } from "../components/PageHeader.tsx";
+import { PageMeta } from "../components/PageMeta.tsx";
+import { SectionHead } from "../components/SectionHead.tsx";
 import { define } from "../utils.ts";
 
 /**
@@ -39,28 +41,20 @@ export function AboutPage(
 
   return (
     <>
-      <Head>
-        <title>{metaTitle}</title>
-        <meta
-          name="description"
-          content={page.meta.description}
-        />
-        <meta property="og:title" content={metaTitle} />
-        <meta property="og:description" content={page.meta.description} />
-      </Head>
+      <PageMeta title={metaTitle} description={page.meta.description} />
 
-      <h1 class="page-title">
-        {page.title}
-      </h1>
-      <p class="page-lede">
-        <ProseField
-          text={page.lede}
-          basePath={basePath}
-          path="lede"
-          sourcePath={sourcePath}
-          editing={inlineEditing}
-        />
-      </p>
+      <PageHeader
+        title={page.title}
+        lede={
+          <ProseField
+            text={page.lede}
+            basePath={basePath}
+            path="lede"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
+        }
+      />
 
       <div class="prose">
         {page.paragraphs.map((paragraph, index) => (
@@ -76,20 +70,18 @@ export function AboutPage(
         ))}
       </div>
 
-      <div class="section-head">
-        <span class="section-num">{page.homelabSection.num}</span>
-        <h2
-          class="section-title"
-          id="homelab"
-        >
+      <SectionHead
+        num={page.homelabSection.num}
+        id="homelab"
+        title={
           <ProseField
             text={page.homelabSection.title}
             path="homelabSection.title"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
-        </h2>
-      </div>
+        }
+      />
 
       <p class="section-note">
         <ProseField
@@ -103,26 +95,23 @@ export function AboutPage(
 
       <ul class="tag-list">
         {site.homelabStack.map((item) => (
-          <li
-            class="tag"
-            key={item}
-          >
+          <li class="tag" key={item}>
             {item}
           </li>
         ))}
       </ul>
 
-      <div class="section-head">
-        <span class="section-num">{page.followSection.num}</span>
-        <h2 class="section-title">
+      <SectionHead
+        num={page.followSection.num}
+        title={
           <ProseField
             text={page.followSection.title}
             path="followSection.title"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
-        </h2>
-      </div>
+        }
+      />
 
       <p class="prose">
         <ProseField

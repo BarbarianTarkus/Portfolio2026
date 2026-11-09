@@ -1,0 +1,340 @@
+/* Galleries — cover slider, panels, track, slides and controls. */
+
+.project-gallery--cover {
+  position: relative;
+  margin-top: 0;
+}
+
+.project-gallery--cover .gallery-track {
+  border: 0;
+  border-radius: 0;
+}
+
+.project-gallery--cover .gallery-slide {
+  justify-content: center;
+}
+
+/* The image is absolutely positioned inside a fixed-ratio frame: as a normal
+   grid item its intrinsic height would override the frame and break the
+   slider's crop. */
+.project-gallery--cover .gallery-media {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--surface-2);
+}
+
+.project-gallery--cover .gallery-media img {
+  position: relative;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  object-fit: contain;
+}
+
+/* A phone capture gets a portrait frame and is letterboxed rather than cropped:
+   stretching it to the desktop ratio would cut the interface or leave it
+   unreadably small. */
+.project-gallery--cover .gallery-panel[data-gallery-view="mobile"] .gallery-media {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  border: 0;
+}
+
+.project-gallery--cover .gallery-panel[data-gallery-view="mobile"] .gallery-media img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  object-fit: contain;
+  object-position: center;
+}
+
+.project-gallery--cover .gallery-slide figcaption {
+  display: none;
+}
+
+.project-gallery--cover .gallery-switcher {
+  position: absolute;
+  top: 0.65rem;
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  margin: 0;
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(12, 12, 12, 0.62);
+  backdrop-filter: blur(6px);
+}
+
+.project-gallery--cover .gallery-tab {
+  min-height: 34px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.project-gallery--cover .gallery-tab[aria-selected="true"] {
+  background: var(--text-strong);
+  color: var(--bg);
+}
+
+.project-gallery--cover .gallery-controls {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.65rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent);
+}
+
+.project-gallery--cover .gallery-button {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(12, 12, 12, 0.55);
+  color: #fff;
+}
+
+.project-gallery--cover .gallery-button:hover:not(:disabled),
+.project-gallery--cover .gallery-button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.project-gallery--cover .gallery-counter {
+  color: #fff;
+}
+
+/* Screenshots are a one-at-a-time slider inside the open card. The track is a
+   native horizontal scroller, so the pack is readable without JavaScript. */
+.project-gallery {
+  min-width: 0;
+  margin-top: 1.5rem;
+}
+
+.gallery-switcher {
+  display: none;
+  width: max-content;
+  max-width: 100%;
+  margin-bottom: 0.6rem;
+  padding: 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+html.js .project-gallery.is-ready .gallery-switcher {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.gallery-tab {
+  min-height: 40px;
+  padding: 0.35rem 0.8rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.gallery-tab[aria-selected="true"] {
+  background: var(--text-strong);
+  color: var(--bg);
+}
+
+.gallery-panel {
+  min-width: 0;
+}
+
+/* Switching packs replaces a display:none panel, so the new one fades in while
+   the wrapper's height is animated from gallery.js. */
+@keyframes gallery-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gallery-panel.is-active {
+  animation: gallery-panel-in 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+html.js .project-gallery.is-ready .gallery-panel:not(.is-active) {
+  display: none;
+}
+
+.gallery-track {
+  display: flex;
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  scrollbar-width: none;
+}
+
+.gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-slide {
+  display: flex;
+  flex: 0 0 100%;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.gallery-media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 10;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+/* Magnifier button over every capture: with JavaScript it opens the lightbox,
+   without it the same anchor opens the full-size image in a new tab. */
+.gallery-zoom {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  z-index: 2;
+  display: inline-grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 50%;
+  background: rgba(12, 12, 12, 0.66);
+  color: #fff;
+  backdrop-filter: blur(6px);
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.gallery-zoom:hover,
+.gallery-zoom:focus-visible {
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(12, 12, 12, 0.86);
+  transform: scale(1.05);
+}
+
+.gallery-zoom svg {
+  width: 1.05rem;
+  height: 1.05rem;
+}
+
+.gallery-media img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+/* Phone captures keep a phone-shaped frame; stretching a 390x844 screenshot
+   to the desktop frame would crop the interface or leave it tiny. */
+.gallery-panel[data-gallery-view="mobile"] .gallery-media {
+  width: auto;
+  height: clamp(22rem, 40vw, 28rem);
+  aspect-ratio: 390 / 844;
+  margin: 0.75rem auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.gallery-slide figcaption {
+  padding: 0.55rem 0.75rem 0.65rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  line-height: 1.45;
+}
+
+.gallery-controls {
+  display: none;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.55rem;
+}
+
+.project-gallery.is-ready .gallery-controls {
+  display: grid;
+}
+
+.gallery-counter {
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.gallery-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.gallery-prev {
+  justify-self: start;
+}
+
+.gallery-next {
+  justify-self: end;
+}
+
+.gallery-button:hover:not(:disabled),
+.gallery-button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.gallery-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}

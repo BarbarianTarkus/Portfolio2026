@@ -1,0 +1,76 @@
+/* Work history — experience and education rows. */
+
+.job-list {
+  margin-top: 0.5rem;
+  list-style: none;
+}
+
+.job {
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.75rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.job-period {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+}
+
+.job-role {
+  color: var(--text-strong);
+  font-family: var(--font-display);
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.job-company,
+.job-stack {
+  max-width: var(--measure);
+}
+
+.job-company {
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: var(--text-small);
+}
+
+.job-points {
+  max-width: var(--measure);
+  margin-top: 0.85rem;
+  padding-left: 1.1rem;
+  color: var(--text);
+  font-size: var(--text-body);
+  line-height: 1.65;
+  list-style: square;
+}
+
+.job-points li + li {
+  margin-top: 0.4rem;
+}
+
+.job-stack {
+  margin-top: 0.9rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+}
+
+@media (min-width: 48rem) {
+  .job {
+    grid-template-columns: 14rem minmax(0, 1fr);
+    gap: 2rem;
+    padding: 2rem 0;
+  }
+
+  .job-period {
+    padding-top: 0.3rem;
+    white-space: nowrap;
+  }
+}
