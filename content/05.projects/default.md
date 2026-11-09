@@ -127,6 +127,34 @@ projects:
       - "Generé la primera versión visual con ayuda de IA para iterar rápido y después fijé tipografía, colores y espaciado a mano: dejar el sistema en manos del generador producía inconsistencias."
     broke: "El diseño generado con IA no mantenía un sistema: cada pantalla traía otra escala y otra paleta, y encajarlas costaba más que partir de una guía propia. La lección fue que la IA acelera la primera versión, pero los tokens de diseño se escriben a mano."
     next: Empezaría por un sistema de diseño mínimo —dos tipografías, tres colores, una escala de espaciado— antes de generar pantallas; ahora lo caro es rehacer estilos, no lógica.
+  - slug: moodle
+    name: moodle_langer-script
+    kind: propio
+    year: "2023–26"
+    summary: "Script propio para traducir ficheros de idioma de Moodle y colaboración en la rama `develop` de `local_plugincompatibility`, que comprueba qué plugins instalados siguen siendo compatibles con cada versión de Moodle."
+    tags:
+      - Python
+      - PHP
+      - Moodle
+      - PyInstaller
+    period: octubre 2023 — marzo 2026
+    work: 7 commits + 19 en develop
+    links:
+      - label: moodle_langer-script
+        href: https://github.com/BarbarianTarkus/moodle_langer-script
+      - label: local_plugincompatibility (develop)
+        href: https://github.com/BarbarianTarkus/moodle-local_plugincompatibility/tree/develop
+    images:
+      - src: /projects/moodle/plugin-compat.webp
+        alt: Tabla de compatibilidad de plugins de Moodle con la versión objetivo seleccionada.
+        caption: Tabla de compatibilidad de local_plugincompatibility
+    problem: "Moodle no avisa de si los plugins de terceros seguirán funcionando al subir de versión, y traducir a mano los ficheros de idioma de un plugin es lento y repetitivo."
+    decisions:
+      - "El script lee el fichero `lang/en` original y genera `lang/es` conservando la estructura de carpetas de Moodle, con una caché en JSON para no pagar dos veces la misma traducción."
+      - "En la rama `develop` de `local_plugincompatibility` trabajé sobre la tabla que cruza los plugins instalados con el pluglist oficial: cada uno queda como compatible, no compatible o no encontrado para la versión elegida."
+      - "La compatibilidad se deriva de la API `download.moodle.org/api/1.3/pluglist.php` con caché de una hora, en vez de raspar HTML; la tabla usa `flexible_table` y se puede exportar a CSV."
+    broke: "Al instalar la versión con la tabla nueva, Moodle reventaba con `Call to undefined function normalize_version()`: la función se usaba antes de definirla. Se corrigió y, al probar Moodle 5.1, la tabla no mostraba compatibilidad para 5.1 porque el formato de versión no coincidía; se normalizó antes de comparar."
+    next: "Añadiría tests de integración contra el pluglist con fixtures de varias versiones de Moodle, para detectar antes los cambios de formato y de API."
   - slug: rebost-api
     name: rebost-api
     kind: propio
@@ -192,32 +220,4 @@ projects:
       - Fijamos primero el esquema de base de datos y las historias de usuario; cada cambio de esquema obligaba a reescribir las historias antes de seguir con la interfaz.
     broke: "Empezamos a programar sin una base de datos sólida y la clase de conexión dejó de responder a mitad del proyecto: sin conexión no había forma de probar el CRUD ni de cerrar tareas. Se arregló rediseñando el diagrama de clases de la base de datos y redefiniendo las historias, y de paso unificamos el login de clínicas y propietarios en una sola interfaz."
     next: "Separaría la capa de acceso a datos de la interfaz desde el primer día: en un equipo, una clase de conexión mal aislada bloquea a todo el mundo a la vez."
-  - slug: moodle
-    name: moodle_langer-script
-    kind: propio
-    year: "2023–26"
-    summary: "Script propio para traducir ficheros de idioma de Moodle y colaboración en la rama `develop` de `local_plugincompatibility`, que comprueba qué plugins instalados siguen siendo compatibles con cada versión de Moodle."
-    tags:
-      - Python
-      - PHP
-      - Moodle
-      - PyInstaller
-    period: octubre 2023 — marzo 2026
-    work: 7 commits + 19 en develop
-    links:
-      - label: moodle_langer-script
-        href: https://github.com/BarbarianTarkus/moodle_langer-script
-      - label: local_plugincompatibility (develop)
-        href: https://github.com/BarbarianTarkus/moodle-local_plugincompatibility/tree/develop
-    images:
-      - src: /projects/moodle/plugin-compat.webp
-        alt: Tabla de compatibilidad de plugins de Moodle con la versión objetivo seleccionada.
-        caption: Tabla de compatibilidad de local_plugincompatibility
-    problem: "Moodle no avisa de si los plugins de terceros seguirán funcionando al subir de versión, y traducir a mano los ficheros de idioma de un plugin es lento y repetitivo."
-    decisions:
-      - "El script lee el fichero `lang/en` original y genera `lang/es` conservando la estructura de carpetas de Moodle, con una caché en JSON para no pagar dos veces la misma traducción."
-      - "En la rama `develop` de `local_plugincompatibility` trabajé sobre la tabla que cruza los plugins instalados con el pluglist oficial: cada uno queda como compatible, no compatible o no encontrado para la versión elegida."
-      - "La compatibilidad se deriva de la API `download.moodle.org/api/1.3/pluglist.php` con caché de una hora, en vez de raspar HTML; la tabla usa `flexible_table` y se puede exportar a CSV."
-    broke: "Al instalar la versión con la tabla nueva, Moodle reventaba con `Call to undefined function normalize_version()`: la función se usaba antes de definirla. Se corrigió y, al probar Moodle 5.1, la tabla no mostraba compatibilidad para 5.1 porque el formato de versión no coincidía; se normalizó antes de comparar."
-    next: "Añadiría tests de integración contra el pluglist con fixtures de varias versiones de Moodle, para detectar antes los cambios de formato y de API."
 ---
