@@ -30,6 +30,7 @@
   height: 1.75rem;
   padding: 0;
   color: var(--tech-color, var(--muted));
+  text-decoration: none;
   border-color: color-mix(
     in srgb,
     var(--tech-color, var(--line)) 38%,
@@ -43,6 +44,7 @@
 }
 
 .tag--tech:hover {
+  color: var(--tech-color, var(--muted));
   border-color: var(--tech-color, var(--line-strong));
 }
 

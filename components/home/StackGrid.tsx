@@ -1,5 +1,6 @@
 import type { HomeContent, SiteContent } from "../../lib/content.ts";
 import { ProseField } from "../../lib/markdown.tsx";
+import { techLinkForTag } from "../../lib/tech-links.ts";
 
 interface StackGridProps {
   page: HomeContent;
@@ -7,6 +8,32 @@ interface StackGridProps {
   basePath: string;
   sourcePath: string;
   inlineEditing: boolean;
+}
+
+/**
+ * One chip in the home stack lists. Technologies with a canonical page become
+ * links; the rest stay plain text instead of pointing at an approximate source.
+ */
+function StackChip({ item }: { item: string }) {
+  const href = techLinkForTag(item);
+  if (href === undefined) {
+    return <li>{item}</li>;
+  }
+  return (
+    <li>
+      <a
+        class="chip-link"
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={"Web oficial de " + item + " (se abre en una pestaña nueva)"}
+        aria-label={item + ", web oficial (se abre en una pestaña nueva)"}
+        data-tech-link={item}
+      >
+        {item}
+      </a>
+    </li>
+  );
 }
 
 /** Two columns: focus areas on the left, the chip lists on the right. */
@@ -44,11 +71,7 @@ export function StackGrid(
             {page.stackSection.stackLabel}
           </h3>
           <ul class="chip-list">
-            {page.stack.map((item) => (
-              <li key={item}>
-                {item}
-              </li>
-            ))}
+            {page.stack.map((item) => <StackChip item={item} key={item} />)}
           </ul>
         </div>
         <div class="stack-block">
@@ -57,9 +80,7 @@ export function StackGrid(
           </h3>
           <ul class="chip-list">
             {site.homelabStack.map((item) => (
-              <li key={item}>
-                {item}
-              </li>
+              <StackChip item={item} key={item} />
             ))}
           </ul>
         </div>

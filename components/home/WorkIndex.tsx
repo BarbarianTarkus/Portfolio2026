@@ -32,7 +32,7 @@ export function WorkIndex({ projects, kindLabels, basePath }: WorkIndexProps) {
                 {project.summary}
               </span>
             </span>
-            <TechStack tags={project.tags} class="work-stack" />
+            <TechStack tags={project.tags} class="work-stack" linked={false} />
             <span class="work-arrow" aria-hidden="true">→</span>
           </a>
         </li>

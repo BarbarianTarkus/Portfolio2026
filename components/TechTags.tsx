@@ -1,4 +1,5 @@
 import { techColorForTag, techIconForTag } from "../lib/tech-icons.ts";
+import { techLinkForTag } from "../lib/tech-links.ts";
 
 /**
  * Short labels for the stacks that have no official Simple Icons glyph. They
@@ -35,39 +36,96 @@ function GlyphContent({ tag }: { tag: string }) {
   );
 }
 
+/** Screen-reader label and tooltip text for a linked technology tile. */
+function techLinkLabel(tag: string): string {
+  return tag + ", web oficial (se abre en una pestaña nueva)";
+}
+
 /** One technology tile for an unordered list (fiche stacks). */
-export function TechTag({ tag }: { tag: string }) {
+export function TechTag(
+  { tag, linked = true }: { tag: string; linked?: boolean },
+) {
+  const href = linked ? techLinkForTag(tag) : undefined;
+  const style = "--tech-color:" + techColorForTag(tag);
+
+  if (href === undefined) {
+    return (
+      <li
+        class="tag tag--tech"
+        title={tag}
+        data-tech={tag}
+        style={style}
+      >
+        <GlyphContent tag={tag} />
+        <span class="sr-only">{tag}</span>
+      </li>
+    );
+  }
+
   return (
-    <li
-      class="tag tag--tech"
-      title={tag}
-      data-tech={tag}
-      style={"--tech-color:" + techColorForTag(tag)}
-    >
-      <GlyphContent tag={tag} />
-      <span class="sr-only">{tag}</span>
+    <li class="tag-list-item" data-tech={tag} style={style}>
+      <a
+        class="tag tag--tech"
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        title={"Web oficial de " + tag + " (se abre en una pestaña nueva)"}
+        aria-label={techLinkLabel(tag)}
+        data-tech-link={tag}
+      >
+        <GlyphContent tag={tag} />
+        <span class="sr-only">{tag}</span>
+      </a>
     </li>
   );
 }
 
 /** One technology tile for inline runs of text (index rows, metadata). */
-export function TechGlyph({ tag }: { tag: string }) {
-  return (
-    <span
-      class="tag tag--tech"
-      title={tag}
-      data-tech={tag}
-      style={"--tech-color:" + techColorForTag(tag)}
-    >
+export function TechGlyph(
+  { tag, linked = true }: { tag: string; linked?: boolean },
+) {
+  const href = linked ? techLinkForTag(tag) : undefined;
+  const style = "--tech-color:" + techColorForTag(tag);
+  const glyph = (
+    <>
       <GlyphContent tag={tag} />
       <span class="sr-only">{tag}</span>
-    </span>
+    </>
+  );
+
+  if (href === undefined) {
+    return (
+      <span class="tag tag--tech" title={tag} data-tech={tag} style={style}>
+        {glyph}
+      </span>
+    );
+  }
+
+  return (
+    <a
+      class="tag tag--tech"
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      title={"Web oficial de " + tag + " (se abre en una pestaña nueva)"}
+      aria-label={techLinkLabel(tag)}
+      data-tech-link={tag}
+      style={style}
+    >
+      {glyph}
+    </a>
   );
 }
 
 interface TechStackProps {
   tags: string[];
   class?: string;
+  /**
+   * Whether the tiles link to each technology's official page. The project
+   * index wraps the whole row in a link, so it disables the inner links to
+   * avoid nested anchors.
+   */
+  linked?: boolean;
 }
 
 /**
@@ -75,13 +133,15 @@ interface TechStackProps {
  * puts the same row inside its row link, so the stack reads the same in both
  * places instead of falling back to a line of text.
  */
-export function TechStack({ tags, class: className }: TechStackProps) {
+export function TechStack(
+  { tags, class: className, linked = true }: TechStackProps,
+) {
   const classes = className === undefined
     ? "tag-list"
     : "tag-list " + className;
   return (
     <ul class={classes}>
-      {tags.map((tag) => <TechTag tag={tag} key={tag} />)}
+      {tags.map((tag) => <TechTag tag={tag} linked={linked} key={tag} />)}
     </ul>
   );
 }
