@@ -121,8 +121,36 @@
 
     if (!image || !caption || !counter || !prev || !next || !close) return;
 
+    const lightboxTabs = [
+      ...dialog.querySelectorAll("[data-gallery-lightbox-tab]"),
+    ];
+
+    let packs = [];
+    let currentView = "";
     let items = [];
     let index = 0;
+    const positions = new Map();
+
+    const slidesIn = (panel) =>
+      [...panel.querySelectorAll("[data-gallery-slide]")].map(
+        (slide) => {
+          const slideImage = slide.querySelector("img");
+          const slideCaption = slide.querySelector("figcaption");
+          return {
+            src: slideImage?.currentSrc || slideImage?.src || "",
+            alt: slideImage?.alt || "",
+            caption: slideCaption?.textContent?.trim() || "",
+          };
+        },
+      ).filter((item) => item.src !== "");
+
+    const updateTabs = () => {
+      for (const tab of lightboxTabs) {
+        const selected = tab.getAttribute("data-gallery-lightbox-tab") ===
+          currentView;
+        tab.setAttribute("aria-pressed", String(selected));
+      }
+    };
 
     const render = () => {
       const item = items[index];
@@ -142,6 +170,22 @@
       next.hidden = single;
     };
 
+    const selectPack = (view) => {
+      if (view === currentView) return;
+      const pack = packs.find((candidate) => candidate.view === view);
+      if (pack === undefined) return;
+      if (currentView !== "") positions.set(currentView, index);
+      currentView = view;
+      items = pack.items;
+      index = Math.min(positions.get(view) ?? 0, items.length - 1);
+      render();
+      updateTabs();
+      const pageTab = gallery.querySelector(
+        '[data-gallery-tab="' + view + '"]',
+      );
+      if (pageTab !== null) pageTab.click();
+    };
+
     const step = (delta) => {
       if (items.length === 0) return;
       index = (index + delta + items.length) % items.length;
@@ -150,20 +194,24 @@
 
     const open = (panel, start) => {
       if (dialog.open) return;
-      items = [...panel.querySelectorAll("[data-gallery-slide]")].map(
-        (slide) => {
-          const slideImage = slide.querySelector("img");
-          const slideCaption = slide.querySelector("figcaption");
-          return {
-            src: slideImage?.currentSrc || slideImage?.src || "",
-            alt: slideImage?.alt || "",
-            caption: slideCaption?.textContent?.trim() || "",
-          };
-        },
-      ).filter((item) => item.src !== "");
-      if (items.length === 0) return;
+      packs = [...gallery.querySelectorAll("[data-gallery-panel]")].map(
+        (candidate) => ({
+          view: candidate.getAttribute("data-gallery-view") || "",
+          items: slidesIn(candidate),
+        }),
+      ).filter((pack) => pack.items.length > 0);
+      const selectedPack =
+        packs.find((pack) =>
+          pack.view === panel.getAttribute("data-gallery-view")
+        ) ?? packs[0];
+      if (selectedPack === undefined) return;
+      currentView = selectedPack.view;
+      items = selectedPack.items;
       index = Math.min(Math.max(start, 0), items.length - 1);
+      positions.clear();
+      positions.set(currentView, index);
       render();
+      updateTabs();
       dialog.showModal();
       document.documentElement.classList.add("has-lightbox");
     };
@@ -192,6 +240,12 @@
     next.addEventListener("click", () => step(1));
     close.addEventListener("click", closeViewer);
 
+    for (const tab of lightboxTabs) {
+      tab.addEventListener("click", () => {
+        selectPack(tab.getAttribute("data-gallery-lightbox-tab") || "");
+      });
+    }
+
     dialog.addEventListener("keydown", (event) => {
       if (event.key === "ArrowLeft") {
         event.preventDefault();
@@ -213,6 +267,9 @@
       caption.textContent = "";
       caption.hidden = true;
       items = [];
+      packs = [];
+      currentView = "";
+      positions.clear();
     });
   };
 

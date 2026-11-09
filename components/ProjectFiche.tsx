@@ -275,11 +275,32 @@ function ProjectGallery(
         />
       ))}
       <dialog
-        class="gallery-lightbox"
+        class={"gallery-lightbox" +
+          (hasTabs ? " gallery-lightbox--with-switcher" : "")}
         data-gallery-lightbox
         aria-label={"Vista ampliada de capturas de " + projectName}
       >
         <div class="gallery-lightbox-frame">
+          {hasTabs && (
+            <div
+              class="gallery-lightbox-switcher"
+              data-gallery-lightbox-switcher
+              role="group"
+              aria-label={viewLabel}
+            >
+              {packs.map((group, index) => (
+                <button
+                  class="gallery-tab gallery-lightbox-tab"
+                  type="button"
+                  data-gallery-lightbox-tab={group.view}
+                  aria-pressed={index === 0 ? "true" : "false"}
+                  key={group.view}
+                >
+                  {group.label}
+                </button>
+              ))}
+            </div>
+          )}
           <button
             class="gallery-lightbox-close"
             type="button"

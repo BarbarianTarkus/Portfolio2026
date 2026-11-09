@@ -1490,6 +1490,31 @@ html.js .project-gallery.is-ready .gallery-switcher {
   }
 }
 
+/* The same Web/Mobile choice is available inside the viewer; it is a pressed
+   toggle group because the dialog shows one image, not two tab panels. */
+.gallery-lightbox-switcher {
+  display: flex;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  justify-self: center;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.gallery-lightbox-tab {
+  min-height: 2rem;
+  padding: 0.25rem 0.8rem;
+}
+
+.gallery-lightbox-tab[aria-pressed="true"] {
+  background: var(--text-strong);
+  color: var(--bg);
+}
+
 .gallery-lightbox-frame {
   position: relative;
   display: grid;
@@ -1594,6 +1619,24 @@ html.js .project-gallery.is-ready .gallery-switcher {
   text-align: center;
 }
 
+.gallery-lightbox--with-switcher .gallery-lightbox-frame {
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.gallery-lightbox--with-switcher .gallery-lightbox-media,
+.gallery-lightbox--with-switcher .gallery-lightbox-prev,
+.gallery-lightbox--with-switcher .gallery-lightbox-next {
+  grid-row: 2;
+}
+
+.gallery-lightbox--with-switcher .gallery-lightbox-counter {
+  grid-row: 3;
+}
+
+.gallery-lightbox--with-switcher .gallery-lightbox-media img {
+  max-height: min(78vh, calc(94vh - 7rem));
+}
+
 .gallery-lightbox-button[hidden] {
   display: none;
 }
@@ -1628,6 +1671,23 @@ html.has-lightbox {
 
   .gallery-lightbox-counter {
     grid-row: 3;
+  }
+
+  .gallery-lightbox--with-switcher .gallery-lightbox-frame {
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+  }
+
+  .gallery-lightbox--with-switcher .gallery-lightbox-media {
+    grid-row: 2;
+  }
+
+  .gallery-lightbox--with-switcher .gallery-lightbox-prev,
+  .gallery-lightbox--with-switcher .gallery-lightbox-next {
+    grid-row: 3;
+  }
+
+  .gallery-lightbox--with-switcher .gallery-lightbox-counter {
+    grid-row: 4;
   }
 }
 
