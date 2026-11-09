@@ -37,8 +37,11 @@ projects:
     links:
       - label: Repositorio de Phenomorph
         href: 'https://github.com/BarbarianTarkus/phenomorph'
+        kind: repo
       - label: Preview
         href: 'https://phenomorph.verduguez.com'
+        kind: demo
+        icon: /projects/phenomorph/favicon.png
     problem: >-
       La cartelera del cine vive repartida entre la web, la compra de entradas y el calendario:
       saber qué se puede ver hoy, cuántas butacas quedan y cuándo encaja una sesión obliga a saltar
@@ -127,8 +130,11 @@ projects:
     links:
       - label: BarbarianTarkus/Mixology-Luismi
         href: 'https://github.com/BarbarianTarkus/Mixology-Luismi'
+        kind: repo
       - label: Demo
         href: 'https://mixology-luismi.ricardoverduguez.workers.dev/'
+        kind: demo
+        icon: /projects/mixology/favicon.png
     problem: >-
       Un amigo empezaba con un servicio de coctelería y necesitaba presencia web con presupuesto
       casi nulo: dominio barato, hosting gratuito y capacidad de cambiar textos y fotos sin
@@ -176,6 +182,7 @@ projects:
     links:
       - label: moodle-local_plugincompatibility (develop)
         href: 'https://github.com/BarbarianTarkus/moodle-local_plugincompatibility/tree/develop'
+        kind: repo
     problem: >-
       Moodle no avisa de si los plugins de terceros seguirán funcionando al subir de versión: la
       respuesta está repartida por las fichas de moodle.org, así que preparar una actualización
@@ -224,6 +231,7 @@ projects:
     links:
       - label: BarbarianTarkus/rebost-api
         href: 'https://github.com/BarbarianTarkus/rebost-api'
+        kind: repo
     problem: >-
       Quería una API para una app de la compra sin montar un servidor de base de datos, y comprobar
       si Deno KV servía para algo más que un ejemplo de la documentación.
@@ -254,6 +262,7 @@ projects:
     links:
       - label: BarbarianTarkus/Password-Manager
         href: 'https://github.com/BarbarianTarkus/Password-Manager'
+        kind: repo
     problem: >-
       La asignatura pedía administrar una base de datos de verdad: justificar la configuración, los
       permisos y las consultas sobre datos que crecen, no un CRUD de juguete.
@@ -285,6 +294,7 @@ projects:
     links:
       - label: AMEP-UPC/PetSalut
         href: 'https://github.com/AMEP-UPC/PetSalut'
+        kind: repo
     problem: >-
       El equipo tenía que entregar un sistema con tres actores (clínicas, propietarios y mascotas) y
       hacerlo con un flujo de trabajo real —ramas, pull requests y CI—, no con un ZIP al final del
@@ -302,4 +312,5 @@ projects:
 detailsLabel: Mostrar más detalles
 detailsCloseLabel: Ocultar detalles
 galleryViewLabel: Vista de las capturas
+visitLabel: Echar un vistazo
 ---

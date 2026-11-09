@@ -1,5 +1,9 @@
 import type { ComponentChildren } from "preact";
-import type { Project, ProjectsContent } from "../../lib/content.ts";
+import type {
+  Project,
+  ProjectLink,
+  ProjectsContent,
+} from "../../lib/content.ts";
 import { ProseField } from "../../lib/markdown.tsx";
 import { GitHubIcon } from "../Icons.tsx";
 import { TechStack } from "../TechTags.tsx";
@@ -74,6 +78,35 @@ function ProjectMedia(
   );
 }
 
+interface LinkIconProps {
+  link: ProjectLink;
+  basePath: string;
+}
+
+/**
+ * Icon shown inside the card's call to action: the linked page's own favicon
+ * when the content provides one, the GitHub glyph for repositories, and an
+ * arrow for any other site.
+ */
+function LinkIcon({ link, basePath }: LinkIconProps) {
+  if (link.icon !== undefined) {
+    return (
+      <img
+        class="project-link-favicon"
+        src={basePath + link.icon}
+        alt=""
+        width="18"
+        height="18"
+        loading="lazy"
+      />
+    );
+  }
+  if (link.href.includes("github.com")) {
+    return <GitHubIcon class="project-link-icon" />;
+  }
+  return <span class="project-link-glyph" aria-hidden="true">↗</span>;
+}
+
 interface ProjectCardProps {
   project: Project;
   kindLabels: KindLabels;
@@ -81,6 +114,7 @@ interface ProjectCardProps {
   detailsLabel: string;
   detailsCloseLabel: string;
   galleryViewLabel: string;
+  visitLabel: string;
   basePath: string;
   sourcePath: string;
   inlineEditing: boolean;
@@ -106,6 +140,7 @@ export function ProjectCard(
     detailsLabel,
     detailsCloseLabel,
     galleryViewLabel,
+    visitLabel,
     basePath,
     sourcePath,
     inlineEditing,
@@ -115,6 +150,20 @@ export function ProjectCard(
 ) {
   const kindLabel = kindLabels[project.kind as keyof KindLabels] ??
     project.kind;
+  const demoLink = project.links.find((link) => link.kind === "demo");
+  const repoLink = project.links.find((link) =>
+    link.kind === "repo" || link.href.includes("github.com")
+  );
+  const ctaLink = demoLink ?? repoLink ?? project.links[0];
+  const secondaryLinks = project.links.filter((link) => link !== ctaLink);
+  const titleField = (
+    <ProseField
+      text={project.name}
+      path={`projects.${projectIndex}.name`}
+      sourcePath={sourcePath}
+      editing={inlineEditing}
+    />
+  );
 
   return (
     <article
@@ -133,12 +182,19 @@ export function ProjectCard(
       <div class="project-card-body">
         <p class="fiche-kind">{kindLabel}</p>
         <h2 class="project-card-title" id={project.slug + "-title"}>
-          <ProseField
-            text={project.name}
-            path={`projects.${projectIndex}.name`}
-            sourcePath={sourcePath}
-            editing={inlineEditing}
-          />
+          {demoLink !== undefined && !inlineEditing
+            ? (
+              <a
+                class="project-card-title-link"
+                href={demoLink.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={demoLink.label}
+              >
+                {titleField}
+              </a>
+            )
+            : titleField}
         </h2>
         <p class="fiche-meta">
           <span>
@@ -173,9 +229,19 @@ export function ProjectCard(
 
         <TechStack tags={project.tags} />
 
-        {project.links.length > 0 && (
+        {ctaLink !== undefined && (
           <p class="project-card-links">
-            {project.links.map((link) => {
+            <a
+              class="button project-link-cta"
+              href={ctaLink.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={ctaLink.label}
+            >
+              <LinkIcon link={ctaLink} basePath={basePath} />
+              {visitLabel}
+            </a>
+            {secondaryLinks.map((link) => {
               const isRepo = link.href.includes("github.com");
               return (
                 <a

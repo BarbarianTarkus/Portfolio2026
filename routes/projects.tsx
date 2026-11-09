@@ -67,6 +67,7 @@ export function ProjectsPage(
             detailsLabel={page.detailsLabel}
             detailsCloseLabel={page.detailsCloseLabel}
             galleryViewLabel={page.galleryViewLabel}
+            visitLabel={page.visitLabel}
             basePath={basePath}
             sourcePath={sourcePath}
             inlineEditing={inlineEditing}

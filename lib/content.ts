@@ -22,6 +22,7 @@ import type {
   Project,
   ProjectGalleryGroup,
   ProjectKindLabels,
+  ProjectLink,
   ProjectsContent,
   SiteContent,
 } from "./content-types.ts";
@@ -36,6 +37,7 @@ export type {
   Project,
   ProjectGalleryGroup,
   ProjectKindLabels,
+  ProjectLink,
   ProjectsContent,
   SiteContent,
 };

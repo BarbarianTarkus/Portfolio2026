@@ -230,6 +230,17 @@ export interface FicheLabels {
 export interface ProjectLink {
   label: string;
   href: string;
+  /**
+   * Optional role. `demo` marks the live site: the card links the project
+   * name there and builds its call to action from that URL.
+   */
+  kind?: "demo" | "repo";
+  /**
+   * Optional site-root-relative icon of the linked page, e.g.
+   * `/projects/phenomorph/favicon.png`. Without one, repositories get the
+   * GitHub glyph and other sites an arrow.
+   */
+  icon?: string;
 }
 
 /** One screenshot of a project gallery. */
@@ -288,5 +299,10 @@ export interface ProjectsContent {
   detailsCloseLabel: string;
   /** Accessible name of the Web/Mobile gallery selector. */
   galleryViewLabel: string;
+  /**
+   * Call to action on every card. It opens the project's demo when there is
+   * one, or its repository otherwise.
+   */
+  visitLabel: string;
   projects: Project[];
 }

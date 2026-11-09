@@ -125,6 +125,41 @@
   letter-spacing: -0.015em;
 }
 
+/* A project with a live preview links its name straight to it. The arrow and
+   the underline on hover mark the jump without adding another control. */
+.project-card-title-link {
+  color: inherit;
+  text-decoration: underline transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  transition:
+    color var(--transition),
+    text-decoration-color var(--transition);
+}
+
+.project-card-title-link::after {
+  content: "↗";
+  display: inline-block;
+  margin-left: 0.3em;
+  color: var(--accent-dim);
+  font-size: 0.68em;
+  transition:
+    color var(--transition),
+    transform var(--transition);
+}
+
+.project-card-title-link:hover,
+.project-card-title-link:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+.project-card-title-link:hover::after,
+.project-card-title-link:focus-visible::after {
+  color: var(--accent);
+  transform: translate(1px, -1px);
+}
+
 .fiche-meta {
   display: flex;
   flex-wrap: wrap;
@@ -146,11 +181,12 @@
 .project-card-links {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.25rem 1.25rem;
   margin-top: 0.9rem;
 }
 
-.project-card-links a {
+.project-card-links .project-link {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -162,9 +198,28 @@
   text-decoration: none;
 }
 
-.project-card-links a:hover {
+.project-card-links .project-link:hover {
   border-bottom-color: var(--accent);
   color: var(--accent);
+}
+
+/* One prominent action per card, with the same verb everywhere: the live
+   demo when there is one, its repository otherwise. */
+.project-card-links .project-link-cta {
+  padding: 0.6rem 1rem;
+  letter-spacing: 0.04em;
+}
+
+.project-link-favicon {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 2px;
+  object-fit: contain;
+}
+
+.project-link-glyph {
+  font-size: 1rem;
+  line-height: 1;
 }
 
 /* Repository links are a GitHub glyph, not a long owner/name string: the
