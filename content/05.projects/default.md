@@ -161,46 +161,52 @@ projects:
             alt: Vista previa del sitio dentro de TinaCMS.
             caption: 'TinaCMS en acción: vista previa'
   - slug: moodle
-    name: moodle_langer-script
+    name: local_plugincompatibility
     kind: propio
-    year: 2023–26
+    year: '2026'
     summary: >-
-      Script propio para traducir ficheros de idioma de Moodle y colaboración en la rama `develop`
-      de `local_plugincompatibility`, que comprueba qué plugins instalados siguen siendo compatibles
-      con cada versión de Moodle.
+      Plugin local de Moodle que cruza los plugins instalados con el catálogo oficial y responde,
+      para la versión a la que quieres actualizar, cuáles siguen siendo compatibles, cuáles no y
+      cuáles ni siquiera están publicados en moodle.org.
     tags:
-      - Python
       - PHP
       - Moodle
-      - PyInstaller
-    period: octubre 2023 — marzo 2026
-    work: 7 commits + 19 en develop
+    period: febrero — marzo 2026
+    work: 19 commits en develop
     links:
-      - label: moodle_langer-script
-        href: 'https://github.com/BarbarianTarkus/moodle_langer-script'
-      - label: local_plugincompatibility (develop)
+      - label: moodle-local_plugincompatibility (develop)
         href: 'https://github.com/BarbarianTarkus/moodle-local_plugincompatibility/tree/develop'
     problem: >-
-      Moodle no avisa de si los plugins de terceros seguirán funcionando al subir de versión, y
-      traducir a mano los ficheros de idioma de un plugin es lento y repetitivo.
+      Moodle no avisa de si los plugins de terceros seguirán funcionando al subir de versión: la
+      respuesta está repartida por las fichas de moodle.org, así que preparar una actualización
+      obliga a comprobar plugin por plugin cuáles tienen una release para la versión de destino.
+      Quería esa respuesta en una sola tabla, dentro del propio sitio y para cualquier versión
+      futura.
     decisions:
       - >-
-        El script lee el fichero `lang/en` original y genera `lang/es` conservando la estructura de
-        carpetas de Moodle, con una caché en JSON para no pagar dos veces la misma traducción.
+        Partí del plugin de 2020 de Raúl Martínez, que lanzaba una petición HTML a moodle.org y una
+        regex por cada plugin instalado, y lo reescribí sobre la API oficial del pluglist
+        (`download.moodle.org/api/1.3/pluglist.php`): la compatibilidad se deriva de
+        `supportedmoodles` y la respuesta se cachea una hora, guardando el JSON en bruto (~15 MB)
+        para no serializar el árbol entero.
       - >-
-        En la rama `develop` de `local_plugincompatibility` trabajé sobre la tabla que cruza los
-        plugins instalados con el pluglist oficial: cada uno queda como compatible, no compatible o
-        no encontrado para la versión elegida.
+        Reescribí el informe como una clase propia que extiende `flexible_table`, con dependencias,
+        versión instalada, compatibilidad y última release, ordenación por columnas, filtros por
+        texto y estado, y exportación a CSV/Excel con `core\dataformat`.
       - >-
-        La compatibilidad se deriva de la API `download.moodle.org/api/1.3/pluglist.php` con caché
-        de una hora, en vez de raspar HTML; la tabla usa `flexible_table` y se puede exportar a CSV.
+        Lo integré en la administración de Moodle 4.1+ (registro en `settings.php`, capacidad
+        `moodle/site:config`), con cadenas en inglés y español y provider de privacidad: el plugin
+        no guarda datos personales, solo consume datos públicos de moodle.org.
+      - >-
+        Normalicé las versiones a `major.minor` (5.1, no 5.1.0) y corregí el crash de instalación
+        por `normalize_version()` sin cargar, que rompía la instalación.
     gallery:
       - view: web
         label: Web
         images:
           - src: /projects/moodle/plugin-compat.webp
-            alt: Tabla de compatibilidad de plugins de Moodle con la versión objetivo seleccionada.
-            caption: Tabla de compatibilidad de local_plugincompatibility
+            alt: Informe de compatibilidad de plugins con la versión 5.1 de Moodle seleccionada.
+            caption: Informe de local_plugincompatibility para Moodle 5.1
   - slug: rebost-api
     name: rebost-api
     kind: propio
