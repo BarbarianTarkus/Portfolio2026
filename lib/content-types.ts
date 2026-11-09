@@ -220,12 +220,10 @@ export interface ProjectKindLabels {
   propio: string;
 }
 
-/** Labels of the blocks in a project fiche. */
+/** Labels of the expanded project blocks. */
 export interface FicheLabels {
   problem: string;
   decisions: string;
-  broke: string;
-  next: string;
 }
 
 /** One link (repository, demo, ...) attached to a project. */
@@ -234,7 +232,7 @@ export interface ProjectLink {
   href: string;
 }
 
-/** One screenshot of the project gallery in a fiche. */
+/** One screenshot of a project gallery. */
 export interface ProjectImage {
   /** Root-relative path under `static/`, e.g. `/projects/slug/shot.webp`. */
   src: string;
@@ -242,7 +240,21 @@ export interface ProjectImage {
   caption?: string;
 }
 
-/** One project fiche. */
+/** Viewport a gallery pack was captured for: desktop web or phone. */
+export type ProjectGalleryView = "web" | "mobile";
+
+/**
+ * One pack of screenshots for a viewport. A project can have a web pack, a
+ * mobile pack or both; the card shows a selector only when there is more than
+ * one pack.
+ */
+export interface ProjectGalleryGroup {
+  view: ProjectGalleryView;
+  label: string;
+  images: ProjectImage[];
+}
+
+/** One project card and the content of its collapsed detail block. */
 export interface Project {
   slug: string;
   name: string;
@@ -254,24 +266,27 @@ export interface Project {
   /** Verified work count, e.g. "69 commits" or "12 PRs mergeados". */
   work?: string;
   links: ProjectLink[];
-  /** Screenshots rendered as a gallery in the fiche, in source order. */
-  images?: ProjectImage[];
+  /**
+   * Screenshot packs in source order. The first image of the first pack is
+   * the card's cover; the rest live inside the collapsible detail block.
+   */
+  gallery?: ProjectGalleryGroup[];
   problem: string;
   decisions: string[];
-  /** What broke while building it, when the project has such a story. */
-  broke?: string;
-  /** What the author would do differently next time. */
-  next?: string;
 }
 
-/** Projects page copy: intro, index/fiche labels and the project list. */
+/** Projects page copy: intro, card labels and the project list. */
 export interface ProjectsContent {
   meta: PageMeta;
   title: string;
   lede: string;
   kindLabels: ProjectKindLabels;
-  indexAriaLabel: string;
-  fichesEyebrow: string;
   ficheLabels: FicheLabels;
+  /** Label of the closed `<details>` summary. */
+  detailsLabel: string;
+  /** Label shown while the detail block is open. */
+  detailsCloseLabel: string;
+  /** Accessible name of the Web/Mobile gallery selector. */
+  galleryViewLabel: string;
   projects: Project[];
 }

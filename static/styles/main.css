@@ -988,72 +988,232 @@ html:not(.js) .menu-button {
 }
 
 /* ==========================================================================
-   14. Projects — index, rail and fiches
+   14. Projects — two-column cards and collapsible details
    ========================================================================== */
 
-.fiche-layout {
+.project-grid {
   display: grid;
-  /* The screenshot track is a scroll container with very wide content. The
-     explicit minmax(0, 1fr) stops its intrinsic width from widening the whole
-     page on phones; the rail restores the two-column template at 64rem. */
   grid-template-columns: minmax(0, 1fr);
-  gap: 0;
-}
-
-.fiche-rail {
-  display: none;
+  align-items: start;
+  gap: 1.25rem;
+  margin-top: 2.25rem;
 }
 
 @media (min-width: 64rem) {
-  .fiche-layout {
-    grid-template-columns: 13rem minmax(0, 1fr);
-    gap: 4rem;
-    align-items: start;
-  }
-
-  .fiche-rail {
-    position: sticky;
-    top: 2rem;
-    display: block;
-  }
-
-  .fiche-rail p {
-    margin-bottom: 0.75rem;
-  }
-
-  .fiche-rail ol {
-    list-style: none;
-  }
-
-  .fiche-rail a {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    padding: 0.35rem 0 0.35rem 0.9rem;
-    border-left: 1px solid var(--line);
-    color: var(--muted);
-    font-size: var(--text-small);
-    text-decoration: none;
-    transition:
-      color var(--transition),
-      border-color var(--transition);
-  }
-
-  .fiche-rail a:hover,
-  .fiche-rail a:focus-visible {
-    border-left-color: var(--accent);
-    color: var(--text-strong);
+  .project-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
   }
 }
 
-.fiche {
-  padding: 2.5rem 0;
-  border-top: 1px solid var(--line);
+/* A card is a cover, a short pitch and a disclosure. It is a real border, not
+   a shadow: the page already uses rules as its hierarchy device. */
+.project-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  transition: border-color var(--transition);
 }
 
-.fiche:first-of-type {
-  padding-top: 1rem;
-  border-top: 0;
+.project-card:hover,
+.project-card:focus-within {
+  border-color: var(--line-strong);
+}
+
+/* An expanded card takes the whole row: a 1700px-tall detail column next to a
+   700px card would leave a large dead gutter on the other side of the grid. */
+@media (min-width: 64rem) {
+  .project-card:has(.project-details[open]) {
+    grid-column: 1 / -1;
+  }
+
+  /* Keep the impact image as a banner when the card spans both columns; a
+     full-width 16:10 cover would push the expanded detail below the fold. */
+  .project-card:has(.project-details[open]) .project-cover,
+  .project-card:has(.project-details[open]) .project-gallery--cover .gallery-media {
+    height: clamp(18rem, 32vw, 26rem);
+    aspect-ratio: auto;
+  }
+}
+
+.project-cover {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  margin: 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+.project-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 300ms ease-out;
+}
+
+.project-card:hover .project-cover img {
+  transform: scale(1.015);
+}
+
+/* Projects without screenshots get a typographic panel, not a broken image. */
+.project-cover--empty {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.project-cover--empty::before {
+  position: absolute;
+  content: attr(data-initial);
+  color: var(--surface-2);
+  font-family: var(--font-display);
+  font-size: clamp(7rem, 14vw, 12rem);
+  font-weight: 700;
+  line-height: 0.8;
+  transform: translate(-0.1em, -0.08em);
+}
+
+.project-cover--empty span {
+  position: relative;
+  color: var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* The card's first-impact area is the slider itself. The controls sit over the
+   image so the media reads as one block, not as a widget stacked above it. */
+.project-media {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+.project-gallery--cover {
+  position: relative;
+  margin-top: 0;
+}
+
+.project-gallery--cover .gallery-track {
+  border: 0;
+  border-radius: 0;
+}
+
+.project-gallery--cover .gallery-slide {
+  justify-content: center;
+}
+
+/* The image is absolutely positioned inside a fixed-ratio frame: as a normal
+   grid item its intrinsic height would override the frame and break the
+   slider's crop. */
+.project-gallery--cover .gallery-media {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--surface-2);
+}
+
+.project-gallery--cover .gallery-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+  object-fit: cover;
+}
+
+/* A phone capture gets a portrait frame and is letterboxed rather than cropped:
+   stretching it to the desktop ratio would cut the interface or leave it
+   unreadably small. */
+.project-gallery--cover .gallery-panel[data-gallery-view="mobile"] .gallery-media {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  border: 0;
+}
+
+.project-gallery--cover .gallery-panel[data-gallery-view="mobile"] .gallery-media img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  border: 0;
+  object-fit: contain;
+  object-position: center;
+}
+
+.project-gallery--cover .gallery-slide figcaption {
+  display: none;
+}
+
+.project-gallery--cover .gallery-switcher {
+  position: absolute;
+  top: 0.65rem;
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+  margin: 0;
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(12, 12, 12, 0.62);
+  backdrop-filter: blur(6px);
+}
+
+.project-gallery--cover .gallery-tab {
+  min-height: 34px;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.project-gallery--cover .gallery-tab[aria-selected="true"] {
+  background: var(--text-strong);
+  color: var(--bg);
+}
+
+.project-gallery--cover .gallery-controls {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.65rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.62), transparent);
+}
+
+.project-gallery--cover .gallery-button {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(12, 12, 12, 0.55);
+  color: #fff;
+}
+
+.project-gallery--cover .gallery-button:hover:not(:disabled),
+.project-gallery--cover .gallery-button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.project-gallery--cover .gallery-counter {
+  color: #fff;
+}
+
+.project-card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1.25rem 1.25rem 1rem;
 }
 
 .fiche-kind {
@@ -1065,8 +1225,8 @@ html:not(.js) .menu-button {
   text-transform: uppercase;
 }
 
-.fiche-title {
-  font-size: clamp(1.5rem, 3vw, 2rem);
+.project-card-title {
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
   letter-spacing: -0.015em;
 }
 
@@ -1081,11 +1241,10 @@ html:not(.js) .menu-button {
   letter-spacing: 0.02em;
 }
 
-.fiche-summary {
-  max-width: var(--measure);
-  margin-top: 0.9rem;
+.project-card-summary {
+  margin-top: 0.7rem;
   color: var(--text);
-  font-size: 1.0625rem;
+  font-size: var(--text-small);
   line-height: 1.6;
 }
 
@@ -1109,8 +1268,8 @@ html:not(.js) .menu-button {
 
 /* Project stacks are glyph tiles: a 16-image fiche already carries a lot of
    visual weight, so the technology line stays a compact row instead of a
-   paragraph of pills. Each tile keeps its name in the tooltip and in the
-   screen-reader-only text. */
+   paragraph of pills. The brand tone is carried by the glyph and the monogram;
+   the tooltip and the screen-reader label keep the full name. */
 .tag--tech {
   display: inline-flex;
   align-items: center;
@@ -1118,6 +1277,21 @@ html:not(.js) .menu-button {
   width: 1.75rem;
   height: 1.75rem;
   padding: 0;
+  color: var(--tech-color, var(--muted));
+  border-color: color-mix(
+    in srgb,
+    var(--tech-color, var(--line)) 38%,
+    var(--line)
+  );
+  background: color-mix(
+    in srgb,
+    var(--tech-color, transparent) 8%,
+    transparent
+  );
+}
+
+.tag--tech:hover {
+  border-color: var(--tech-color, var(--line-strong));
 }
 
 .tag--tech svg {
@@ -1127,18 +1301,338 @@ html:not(.js) .menu-button {
 }
 
 .tag-monogram {
+  color: var(--tech-color, var(--muted));
   font-size: 0.5625rem;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
 
-/* Screenshots are a one-at-a-time slider. The frame has a fixed height so the
-   long fiches stop growing with every capture; the track is a native horizontal
-   scroller, which keeps the whole gallery usable without JavaScript. */
-.fiche-gallery {
+.project-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin-top: 0.9rem;
+}
+
+.project-card-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  text-decoration: none;
+}
+
+.project-card-links a:hover {
+  border-bottom-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Repository links are a GitHub glyph, not a long owner/name string: the
+   accessible name and tooltip keep the full label. */
+.project-card-links .project-link--icon {
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.project-card-links .project-link--icon:hover {
+  border-color: var(--accent);
+}
+
+.project-link-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: currentColor;
+}
+
+.project-details {
+  margin-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.project-details > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.06em;
+  list-style: none;
+  text-transform: uppercase;
+}
+
+.project-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.project-details > summary::after {
+  content: "+";
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.project-details[open] > summary::after {
+  content: "−";
+}
+
+.project-details[open] .details-closed,
+.project-details:not([open]) .details-open {
+  display: none;
+}
+
+.project-details-body {
+  max-width: 52rem;
+  padding-top: 0.35rem;
+}
+
+/* Screenshots are a one-at-a-time slider inside the open card. The track is a
+   native horizontal scroller, so the pack is readable without JavaScript. */
+.project-gallery {
   min-width: 0;
-  max-width: var(--measure);
   margin-top: 1.5rem;
+}
+
+.gallery-switcher {
+  display: none;
+  width: max-content;
+  max-width: 100%;
+  margin-bottom: 0.6rem;
+  padding: 0.2rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+html.js .project-gallery.is-ready .gallery-switcher {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.gallery-tab {
+  min-height: 40px;
+  padding: 0.35rem 0.8rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.gallery-tab[aria-selected="true"] {
+  background: var(--text-strong);
+  color: var(--bg);
+}
+
+.gallery-panel {
+  min-width: 0;
+}
+
+/* Switching packs replaces a display:none panel, so the new one fades in while
+   the wrapper's height is animated from gallery.js. */
+@keyframes gallery-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gallery-panel.is-active {
+  animation: gallery-panel-in 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* Fullscreen capture viewer opened by the magnifier button. */
+.gallery-lightbox {
+  width: fit-content;
+  max-width: 94vw;
+  max-height: 94vh;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  overflow: visible;
+}
+
+.gallery-lightbox::backdrop {
+  background: rgba(4, 6, 8, 0.94);
+  backdrop-filter: blur(8px);
+}
+
+.gallery-lightbox[open] {
+  animation: gallery-lightbox-in 180ms ease-out;
+}
+
+@keyframes gallery-lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.gallery-lightbox-frame {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.35rem 0.9rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg);
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.55);
+}
+
+.gallery-lightbox-media {
+  display: grid;
+  grid-column: 2;
+  grid-row: 1;
+  place-items: center;
+  min-width: 0;
+  margin: 0;
+}
+
+.gallery-lightbox-media img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 78vh;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.gallery-lightbox-media figcaption {
+  max-width: 62rem;
+  margin-top: 0.65rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  text-align: center;
+}
+
+.gallery-lightbox-button,
+.gallery-lightbox-close {
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: rgba(12, 12, 12, 0.72);
+  color: var(--text-strong);
+  font-size: 1.1rem;
+  line-height: 1;
+  transition:
+    border-color 160ms ease,
+    background 160ms ease;
+}
+
+.gallery-lightbox-button:hover,
+.gallery-lightbox-button:focus-visible,
+.gallery-lightbox-close:hover,
+.gallery-lightbox-close:focus-visible {
+  border-color: var(--text);
+  background: var(--surface-2);
+}
+
+.gallery-lightbox-button:disabled {
+  opacity: 0.28;
+  cursor: default;
+}
+
+.gallery-lightbox-prev {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.gallery-lightbox-next {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.gallery-lightbox-close {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  z-index: 2;
+  width: 2.35rem;
+  height: 2.35rem;
+  font-size: 1.35rem;
+}
+
+.gallery-lightbox-counter {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin: 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.gallery-lightbox-button[hidden] {
+  display: none;
+}
+
+html.has-lightbox {
+  overflow: hidden;
+}
+
+@media (max-width: 48rem) {
+  .gallery-lightbox-frame {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    padding: 0.75rem;
+  }
+
+  .gallery-lightbox-media {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  .gallery-lightbox-prev {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+  }
+
+  .gallery-lightbox-next {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+  }
+
+  .gallery-lightbox-counter {
+    grid-row: 3;
+  }
+}
+
+html.js .project-gallery.is-ready .gallery-panel:not(.is-active) {
+  display: none;
 }
 
 .gallery-track {
@@ -1168,11 +1662,47 @@ html:not(.js) .menu-button {
 }
 
 .gallery-media {
+  position: relative;
   display: grid;
   place-items: center;
-  height: clamp(16rem, 52vw, 28rem);
+  aspect-ratio: 16 / 10;
   padding: 0.75rem;
   border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+/* Magnifier button over every capture: with JavaScript it opens the lightbox,
+   without it the same anchor opens the full-size image in a new tab. */
+.gallery-zoom {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  z-index: 2;
+  display: inline-grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 50%;
+  background: rgba(12, 12, 12, 0.66);
+  color: #fff;
+  backdrop-filter: blur(6px);
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.gallery-zoom:hover,
+.gallery-zoom:focus-visible {
+  border-color: rgba(255, 255, 255, 0.72);
+  background: rgba(12, 12, 12, 0.86);
+  transform: scale(1.05);
+}
+
+.gallery-zoom svg {
+  width: 1.05rem;
+  height: 1.05rem;
 }
 
 .gallery-media img {
@@ -1184,6 +1714,17 @@ html:not(.js) .menu-button {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--bg);
+}
+
+/* Phone captures keep a phone-shaped frame; stretching a 390x844 screenshot
+   to the desktop frame would crop the interface or leave it tiny. */
+.gallery-panel[data-gallery-view="mobile"] .gallery-media {
+  width: auto;
+  height: clamp(22rem, 40vw, 28rem);
+  aspect-ratio: 390 / 844;
+  margin: 0.75rem auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
 }
 
 .gallery-slide figcaption {
@@ -1202,7 +1743,7 @@ html:not(.js) .menu-button {
   margin-top: 0.55rem;
 }
 
-.fiche-gallery.is-ready .gallery-controls {
+.project-gallery.is-ready .gallery-controls {
   display: grid;
 }
 
@@ -1252,15 +1793,8 @@ html:not(.js) .menu-button {
   cursor: default;
 }
 
-@media (max-width: 48rem) {
-  .gallery-media {
-    height: clamp(20rem, 112vw, 32rem);
-  }
-}
-
 .fiche-block {
-  max-width: var(--measure);
-  margin-top: 1.9rem;
+  margin-top: 1.5rem;
 }
 
 .fiche-block h3 {
@@ -1287,55 +1821,6 @@ html:not(.js) .menu-button {
 
 .fiche-list li + li {
   margin-top: 0.5rem;
-}
-
-/* "Qué se rompió" is the most valuable paragraph in each fiche: it gets a
-   quote rule instead of another uppercase label. */
-.fiche-quote {
-  max-width: var(--measure);
-  margin: 2rem 0 0;
-  padding: 0.15rem 0 0.15rem 1.25rem;
-  border-left: 2px solid var(--accent);
-}
-
-.fiche-quote h3 {
-  margin-bottom: 0.4rem;
-  color: var(--text-strong);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.fiche-quote p {
-  color: var(--text);
-  font-size: var(--text-small);
-  line-height: 1.65;
-}
-
-.fiche-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1.75rem;
-  margin-top: 1.75rem;
-}
-
-.fiche-links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-height: 44px;
-  border-bottom: 1px solid var(--line);
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  text-decoration: none;
-}
-
-.fiche-links a:hover {
-  border-bottom-color: var(--accent);
-  color: var(--accent);
 }
 
 /* ==========================================================================
@@ -1598,7 +2083,6 @@ html:not(.js) .menu-button {
   .skip-to-content-link,
   .hero-actions,
   .footer-social,
-  .fiche-rail,
   .section-link {
     display: none !important;
   }
@@ -1617,7 +2101,7 @@ html:not(.js) .menu-button {
   }
 
   .job,
-  .fiche,
+  .project-card,
   .work-row {
     break-inside: avoid;
   }
@@ -1630,8 +2114,16 @@ html:not(.js) .menu-button {
     white-space: normal;
   }
 
-  .fiche:not(:first-of-type) {
-    break-before: page;
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-details > summary,
+  .gallery-switcher,
+  .gallery-controls,
+  .gallery-zoom,
+  .gallery-lightbox {
+    display: none !important;
   }
 
   a[href^="http"]::after {

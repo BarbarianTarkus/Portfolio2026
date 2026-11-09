@@ -17,6 +17,8 @@ import type {
   ContactContent,
   ExperienceContent,
   HomeContent,
+  Project,
+  ProjectGalleryGroup,
   ProjectsContent,
   SiteContent,
 } from "./content-types.ts";
@@ -26,6 +28,8 @@ export type {
   ContactContent,
   ExperienceContent,
   HomeContent,
+  Project,
+  ProjectGalleryGroup,
   ProjectsContent,
   SiteContent,
 };

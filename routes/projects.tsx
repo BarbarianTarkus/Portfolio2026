@@ -1,16 +1,15 @@
 import { Head } from "fresh/runtime";
 import { ProseField } from "../lib/markdown.tsx";
-import { ProjectFiche } from "../components/ProjectFiche.tsx";
-import { TechStack } from "../components/TechTags.tsx";
+import { ProjectCard } from "../components/ProjectFiche.tsx";
 import type { ProjectsContent, SiteContent } from "../lib/content.ts";
 import { loadProjectsPage } from "../lib/content.ts";
 import { define } from "../utils.ts";
 
 /**
  * Public repositories, deliberately separated from work history: nothing here
- * is an employment record, and the page says so before the first fiche. The
- * route owns the index table and the sticky rail; the fiche markup lives in
- * components/ProjectFiche.tsx.
+ * is an employment record. The page is a two-column card grid, newest first:
+ * each card shows an impact image and a short summary, and the problem,
+ * decisions and screenshots stay behind a native "show more" disclosure.
  */
 export const handler = define.handlers({
   async GET(ctx) {
@@ -66,76 +65,23 @@ export function ProjectsPage(
         />
       </p>
 
-      <ol class="work-index">
-        {page.projects.map((project) => (
-          <li key={project.slug}>
-            <a
-              class="work-row"
-              href={"#" + project.slug}
-              aria-label={project.name + " — " +
-                kindLabels[project.kind as keyof typeof kindLabels]}
-            >
-              <span class="work-year">
-                {project.year}
-              </span>
-              <span>
-                <span class="work-title">
-                  <span class="work-name">{project.name}</span>
-                  <span class="kind">
-                    {kindLabels[project.kind as keyof typeof kindLabels]}
-                  </span>
-                </span>
-                <span class="work-summary">
-                  {project.summary}
-                </span>
-              </span>
-              <TechStack tags={project.tags} class="work-stack" />
-              <span class="work-arrow" aria-hidden="true">→</span>
-            </a>
-          </li>
+      <div class="project-grid">
+        {page.projects.map((project, index) => (
+          <ProjectCard
+            project={project}
+            kindLabels={kindLabels}
+            ficheLabels={page.ficheLabels}
+            detailsLabel={page.detailsLabel}
+            detailsCloseLabel={page.detailsCloseLabel}
+            galleryViewLabel={page.galleryViewLabel}
+            basePath={basePath}
+            sourcePath={sourcePath}
+            inlineEditing={inlineEditing}
+            projectIndex={index}
+            eagerCover={index < 2}
+            key={project.slug}
+          />
         ))}
-      </ol>
-
-      <div class="fiche-layout">
-        <nav
-          class="fiche-rail"
-          aria-label={page.indexAriaLabel}
-        >
-          <p class="eyebrow">
-            <ProseField
-              text={page.fichesEyebrow}
-              path="fichesEyebrow"
-              sourcePath={sourcePath}
-              editing={inlineEditing}
-            />
-          </p>
-          <ol>
-            {page.projects.map((project, index) => (
-              <li key={project.slug}>
-                <a
-                  href={"#" + project.slug}
-                >
-                  {String(index + 1).padStart(2, "0")} · {project.name}
-                </a>
-              </li>
-            ))}
-          </ol>
-        </nav>
-
-        <div>
-          {page.projects.map((project, index) => (
-            <ProjectFiche
-              project={project}
-              kindLabels={kindLabels}
-              ficheLabels={page.ficheLabels}
-              basePath={basePath}
-              sourcePath={sourcePath}
-              inlineEditing={inlineEditing}
-              projectIndex={index}
-              key={project.slug}
-            />
-          ))}
-        </div>
       </div>
     </>
   );

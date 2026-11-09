@@ -1,4 +1,4 @@
-import { techIconForTag } from "../lib/tech-icons.ts";
+import { techColorForTag, techIconForTag } from "../lib/tech-icons.ts";
 
 /**
  * Short labels for the stacks that have no official Simple Icons glyph. They
@@ -38,7 +38,12 @@ function GlyphContent({ tag }: { tag: string }) {
 /** One technology tile for an unordered list (fiche stacks). */
 export function TechTag({ tag }: { tag: string }) {
   return (
-    <li class="tag tag--tech" title={tag}>
+    <li
+      class="tag tag--tech"
+      title={tag}
+      data-tech={tag}
+      style={"--tech-color:" + techColorForTag(tag)}
+    >
       <GlyphContent tag={tag} />
       <span class="sr-only">{tag}</span>
     </li>
@@ -48,7 +53,12 @@ export function TechTag({ tag }: { tag: string }) {
 /** One technology tile for inline runs of text (index rows, metadata). */
 export function TechGlyph({ tag }: { tag: string }) {
   return (
-    <span class="tag tag--tech" title={tag}>
+    <span
+      class="tag tag--tech"
+      title={tag}
+      data-tech={tag}
+      style={"--tech-color:" + techColorForTag(tag)}
+    >
       <GlyphContent tag={tag} />
       <span class="sr-only">{tag}</span>
     </span>

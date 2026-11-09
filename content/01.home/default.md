@@ -15,7 +15,7 @@ experienceSection:
 projectsSection:
   num: "02"
   title: Proyectos
-  linkLabel: Los 5 proyectos
+  linkLabel: Los 6 proyectos
   linkRoute: /projects
   note: "Repositorios públicos: trabajo para cliente, proyectos de la carrera y herramientas propias. El trabajo en producción está en la experiencia, arriba."
 focus:
