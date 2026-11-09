@@ -199,6 +199,26 @@ export function ProjectFiche(
         ))}
       </ul>
 
+      {project.images !== undefined && project.images.length > 0 && (
+        <div class="fiche-gallery">
+          {project.images.map((image) => (
+            <figure key={image.src}>
+              <img
+                src={image.src.startsWith("http")
+                  ? image.src
+                  : basePath + image.src}
+                alt={image.alt}
+                loading="lazy"
+                decoding="async"
+              />
+              {image.caption !== undefined && (
+                <figcaption>{image.caption}</figcaption>
+              )}
+            </figure>
+          ))}
+        </div>
+      )}
+
       {blocks}
 
       <p class="fiche-links">

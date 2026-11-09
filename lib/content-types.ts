@@ -234,6 +234,14 @@ export interface ProjectLink {
   href: string;
 }
 
+/** One screenshot of the project gallery in a fiche. */
+export interface ProjectImage {
+  /** Root-relative path under `static/`, e.g. `/projects/slug/shot.webp`. */
+  src: string;
+  alt: string;
+  caption?: string;
+}
+
 /** One project fiche. */
 export interface Project {
   slug: string;
@@ -246,6 +254,8 @@ export interface Project {
   /** Verified work count, e.g. "69 commits" or "12 PRs mergeados". */
   work?: string;
   links: ProjectLink[];
+  /** Screenshots rendered as a gallery in the fiche, in source order. */
+  images?: ProjectImage[];
   problem: string;
   decisions: string[];
   /** What broke while building it, when the project has such a story. */
