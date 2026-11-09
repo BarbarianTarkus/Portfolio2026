@@ -4,6 +4,7 @@ import { loadAboutPage } from "../lib/content.ts";
 import { PageHeader } from "../components/PageHeader.tsx";
 import { PageMeta } from "../components/PageMeta.tsx";
 import { SectionHead } from "../components/SectionHead.tsx";
+import { TechStack } from "../components/TechTags.tsx";
 import { define } from "../utils.ts";
 
 /**
@@ -93,13 +94,7 @@ export function AboutPage(
         />
       </p>
 
-      <ul class="tag-list">
-        {site.homelabStack.map((item) => (
-          <li class="tag" key={item}>
-            {item}
-          </li>
-        ))}
-      </ul>
+      <TechStack tags={site.homelabStack} class="homelab-stack" labeled />
 
       <SectionHead
         num={page.followSection.num}

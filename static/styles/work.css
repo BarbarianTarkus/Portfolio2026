@@ -53,13 +53,10 @@
   margin-top: 0.4rem;
 }
 
-.job-stack {
+/* The stack is a TechStack list now, so only its rhythm lives here; the
+   higher-specificity selector wins over the shared .tag-list margin. */
+.job-stack.tag-list {
   margin-top: 0.9rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  line-height: 1.7;
-  letter-spacing: 0.02em;
 }
 
 @media (min-width: 48rem) {

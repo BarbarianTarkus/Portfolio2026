@@ -34,6 +34,21 @@ const TECH_LINKS: Record<string, string> = {
   "C++": "https://isocpp.org/",
   "Azure Functions": "https://learn.microsoft.com/azure/azure-functions/",
 
+  // Work history and homelab stacks.
+  jQuery: "https://jquery.com/",
+  Git: "https://git-scm.com/",
+  Bitbucket: "https://bitbucket.org/",
+  Jira: "https://www.atlassian.com/software/jira",
+  Angular: "https://angular.dev/",
+  "Google APIs": "https://cloud.google.com/apis/docs/overview",
+  "Microsoft Graph": "https://learn.microsoft.com/graph/",
+  Linux: "https://www.kernel.org/",
+  Windows: "https://www.microsoft.com/windows/",
+  "Active Directory":
+    "https://learn.microsoft.com/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+  OpenGnsys: "https://opengnsys.es/",
+  "Raspberry Pi": "https://www.raspberrypi.com/",
+
   // Home stack and homelab chips.
   JavaScript: "https://developer.mozilla.org/docs/Web/JavaScript",
   Rust: "https://www.rust-lang.org/",

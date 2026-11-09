@@ -13,6 +13,11 @@ const TAG_MONOGRAMS: Record<string, string> = {
   "Oak": "Oak",
   "PostgREST": "REST",
   "Azure Functions": "Fn",
+  "Active Directory": "AD",
+  "OpenGnsys": "OG",
+  "IMAP / POP / SMTP": "MAIL",
+  "NFS / SMB": "NFS",
+  "Rsync": "RSY",
 };
 
 function GlyphContent({ tag }: { tag: string }) {
@@ -41,23 +46,34 @@ function techLinkLabel(tag: string): string {
   return tag + ", web oficial (se abre en una pestaña nueva)";
 }
 
+interface TechTagProps {
+  tag: string;
+  linked?: boolean;
+  /** Show the technology name next to the glyph (work history, homelab). */
+  labeled?: boolean;
+}
+
 /** One technology tile for an unordered list (fiche stacks). */
 export function TechTag(
-  { tag, linked = true }: { tag: string; linked?: boolean },
+  { tag, linked = true, labeled = false }: TechTagProps,
 ) {
   const href = linked ? techLinkForTag(tag) : undefined;
   const style = "--tech-color:" + techColorForTag(tag);
+  const classes = labeled ? "tag tag--tech tag--tech-labeled" : "tag tag--tech";
+  const label = labeled
+    ? <span class="tag-label">{tag}</span>
+    : <span class="sr-only">{tag}</span>;
 
   if (href === undefined) {
     return (
       <li
-        class="tag tag--tech"
+        class={classes}
         title={tag}
         data-tech={tag}
         style={style}
       >
         <GlyphContent tag={tag} />
-        <span class="sr-only">{tag}</span>
+        {label}
       </li>
     );
   }
@@ -65,7 +81,7 @@ export function TechTag(
   return (
     <li class="tag-list-item" data-tech={tag} style={style}>
       <a
-        class="tag tag--tech"
+        class={classes}
         href={href}
         target="_blank"
         rel="noopener noreferrer"
@@ -74,7 +90,7 @@ export function TechTag(
         data-tech-link={tag}
       >
         <GlyphContent tag={tag} />
-        <span class="sr-only">{tag}</span>
+        {label}
       </a>
     </li>
   );
@@ -126,6 +142,8 @@ interface TechStackProps {
    * avoid nested anchors.
    */
   linked?: boolean;
+  /** Show the technology name next to each glyph (work history, homelab). */
+  labeled?: boolean;
 }
 
 /**
@@ -134,14 +152,16 @@ interface TechStackProps {
  * places instead of falling back to a line of text.
  */
 export function TechStack(
-  { tags, class: className, linked = true }: TechStackProps,
+  { tags, class: className, linked = true, labeled = false }: TechStackProps,
 ) {
   const classes = className === undefined
     ? "tag-list"
     : "tag-list " + className;
   return (
     <ul class={classes}>
-      {tags.map((tag) => <TechTag tag={tag} linked={linked} key={tag} />)}
+      {tags.map((tag) => (
+        <TechTag tag={tag} linked={linked} labeled={labeled} key={tag} />
+      ))}
     </ul>
   );
 }

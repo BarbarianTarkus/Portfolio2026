@@ -1,6 +1,7 @@
 import type { ComponentChildren } from "preact";
 import type { JobEntry } from "../lib/content.ts";
 import { ProseField } from "../lib/markdown.tsx";
+import { TechStack } from "./TechTags.tsx";
 
 interface JobListEdit {
   sourcePath: string;
@@ -69,7 +70,7 @@ export function JobList({ jobs, maxBullets, edit }: JobListProps) {
                   </li>
                 ))}
             </ul>
-            <p class="job-stack">{job.stack.join(" · ")}</p>
+            <TechStack tags={job.stack} class="job-stack" labeled />
           </div>
         </li>
       ))}
