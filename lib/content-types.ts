@@ -172,6 +172,12 @@ export interface ContactContent {
 export interface JobEntry {
   role: string;
   company: string;
+  /** Official site of the company; the brand mark links here. */
+  url?: string;
+  /** Square brand mark under static/, e.g. /companies/3ipunt.svg. */
+  logo?: string;
+  /** One brief paragraph on what the company does; inline Markdown. */
+  summary?: string;
   period: string;
   place: string;
   stack: string[];

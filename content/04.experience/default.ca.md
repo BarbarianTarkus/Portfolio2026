@@ -17,6 +17,13 @@ jobsSection:
 jobs:
   - role: Junior Web Developer
     company: 3iPunt
+    url: https://tresipunt.com/es/
+    logo: /companies/3ipunt.svg
+    summary: >-
+      Consultora d'e-learning especialitzada en Moodle: plataformes LMS a mida,
+      Moodle Workplace, continguts i desenvolupament web. **Primer Moodle
+      Premium Partner d'Espanya** (2024) i partner des del 2017; els seus
+      campus donen servei a milers d'alumnes.
     period: octubre 2023 — maig 2026
     place: Barcelona
     stack:
@@ -38,6 +45,12 @@ jobs:
         desenvolupament a mida.
   - role: Desenvolupador backend PHP
     company: 4DMOVIN Business / Namastech
+    url: https://4dmovin.com/
+    logo: /companies/4dmovin.webp
+    summary: >-
+      Programari de gestió immobiliària: digitalitza l'operativa d'una
+      immobiliària sense necessitat de ser un expert en tecnologia. També
+      desenvolupa mòduls per a hotels i restaurants i programari a mida.
     period: juny 2022 — setembre 2022
     place: Castelldefels
     stack:
@@ -57,6 +70,12 @@ jobs:
         feeds).
   - role: Suport TIC (becari)
     company: EPSEVG — Universitat Politècnica de Catalunya
+    url: https://www.upc.edu/es
+    logo: /companies/upc.svg
+    summary: >-
+      Universitat pública de recerca i educació superior en arquitectura,
+      enginyeria, ciències i tecnologia, i una de les millors d'Europa als
+      rànquings internacionals.
     period: novembre 2020 — gener 2022
     place: Barcelona
     stack:

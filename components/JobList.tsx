@@ -47,13 +47,39 @@ export function JobList(
         />
       );
 
+  // The logo is a plain asset path, so the deployment prefix comes from
+  // whichever caller knows it: the edit wiring on /experience, the prop on the
+  // read-only home preview.
+  const assetPrefix = edit?.basePath ?? basePath;
+
   return (
     <ol class="job-list">
       {jobs.map((job, index) => (
         <li class="job" key={job.company + "-" + job.period}>
-          <p class="job-period">
-            {field(job.period, "jobs." + index + ".period")}
-          </p>
+          <div class="job-aside">
+            <p class="job-period">
+              {field(job.period, "jobs." + index + ".period")}
+            </p>
+            {job.logo !== undefined && (
+              <a
+                class="job-brand"
+                href={job.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={job.company}
+                title={job.company}
+              >
+                <img
+                  src={assetPrefix + job.logo}
+                  alt=""
+                  width="48"
+                  height="48"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </a>
+            )}
+          </div>
           <div>
             <h3 class="job-role">
               {field(job.role, "jobs." + index + ".role")}
@@ -63,6 +89,11 @@ export function JobList(
               {" · "}
               <span>{field(job.place, "jobs." + index + ".place")}</span>
             </p>
+            {job.summary !== undefined && (
+              <p class="job-summary">
+                {field(job.summary, "jobs." + index + ".summary", true)}
+              </p>
+            )}
             <ul class="job-points">
               {(maxBullets === undefined
                 ? job.bullets

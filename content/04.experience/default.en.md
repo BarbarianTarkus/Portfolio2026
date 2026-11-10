@@ -17,6 +17,13 @@ jobsSection:
 jobs:
   - role: Junior Web Developer
     company: 3iPunt
+    url: https://tresipunt.com/es/
+    logo: /companies/3ipunt.svg
+    summary: >-
+      E-learning consultancy specialised in Moodle: custom LMS platforms,
+      Moodle Workplace, content and web development. **Spain's first Moodle
+      Premium Partner** (2024) and a partner since 2017; its campuses serve
+      thousands of students.
     period: October 2023 — May 2026
     place: Barcelona
     stack:
@@ -38,6 +45,12 @@ jobs:
         development environment.
   - role: PHP backend developer
     company: 4DMOVIN Business / Namastech
+    url: https://4dmovin.com/
+    logo: /companies/4dmovin.webp
+    summary: >-
+      Real-estate management software: it digitises an agency's operations
+      without needing to be a technology expert. It also builds modules for
+      hotels and restaurants, plus custom software.
     period: June 2022 — September 2022
     place: Castelldefels
     stack:
@@ -55,6 +68,12 @@ jobs:
         **Social media management and automation dashboard** (posts and feeds).
   - role: IT support (intern)
     company: EPSEVG — Universitat Politècnica de Catalunya
+    url: https://www.upc.edu/es
+    logo: /companies/upc.svg
+    summary: >-
+      Public research and higher-education university in architecture,
+      engineering, science and technology, and one of Europe's leading
+      universities in international rankings.
     period: November 2020 — January 2022
     place: Barcelona
     stack:
