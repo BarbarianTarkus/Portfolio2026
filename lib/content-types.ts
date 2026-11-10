@@ -297,6 +297,16 @@ export interface ProjectGalleryGroup {
   images: ProjectImage[];
 }
 
+/** A demo video embedded in the card's first-impact area. */
+export interface ProjectVideo {
+  /** Player URL, already in its embed/preview form. */
+  embed: string;
+  /** Accessible name for the player. */
+  label: string;
+  /** Optional link to the video itself, for embeds that refuse to load. */
+  href?: string;
+}
+
 /** One project card and the content of its collapsed detail block. */
 export interface Project {
   slug: string;
@@ -316,6 +326,11 @@ export interface Project {
    * example), opened from its own ghost button on the card.
    */
   diagram?: ProjectLink;
+  /**
+   * Demo video. It takes over the card's cover and is loaded lazily, so a
+   * player is only fetched when the card approaches the viewport.
+   */
+  video?: ProjectVideo;
   /**
    * Screenshot packs in source order. The first image of the first pack is
    * the card's cover; the rest live inside the collapsible detail block.

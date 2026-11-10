@@ -25,7 +25,8 @@
   .skip-to-content-link,
   .hero-actions,
   .footer-social,
-  .section-link {
+  .section-link,
+  .project-cover--video {
     display: none !important;
   }
 

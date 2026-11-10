@@ -51,6 +51,21 @@ function ProjectMedia(
     pack.images.length > 0
   );
 
+  if (project.video !== undefined) {
+    return (
+      <div class="project-cover project-cover--video">
+        <iframe
+          src={project.video.embed}
+          title={project.video.label}
+          loading="lazy"
+          allowFullScreen
+          allow="encrypted-media; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"
+        />
+      </div>
+    );
+  }
+
   if (packs.length === 0) {
     return (
       <div
@@ -156,6 +171,9 @@ export function ProjectCard(
   );
   const ctaLink = demoLink ?? repoLink ?? project.links[0];
   const secondaryLinks = project.links.filter((link) => link !== ctaLink);
+  const packs = (project.gallery ?? []).filter((pack) =>
+    pack.images.length > 0
+  );
   const titleField = (
     <ProseField
       text={project.name}
@@ -314,6 +332,22 @@ export function ProjectCard(
                 ))}
               </ul>
             </FicheBlock>
+
+            {
+              /* When a video takes the cover, the captures have no slider to
+                live in: they move here, inside the detail block. */
+            }
+            {project.video !== undefined && packs.length > 0 && (
+              <div class="project-details-gallery">
+                <ProjectGallery
+                  groups={packs}
+                  projectSlug={project.slug}
+                  projectName={project.name}
+                  basePath={basePath}
+                  viewLabel={galleryViewLabel}
+                />
+              </div>
+            )}
           </div>
         </details>
       </div>
