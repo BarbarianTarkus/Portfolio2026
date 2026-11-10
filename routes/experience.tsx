@@ -145,6 +145,34 @@ export function ExperiencePage(
                 />
               </p>
             )}
+            {page.education.bullets !== undefined &&
+              page.education.bullets.length > 0 && (
+              <>
+                {page.education.bulletsLabel !== undefined && (
+                  <p class="job-points-label">
+                    <ProseField
+                      text={page.education.bulletsLabel}
+                      path="education.bulletsLabel"
+                      sourcePath={sourcePath}
+                      editing={inlineEditing}
+                    />
+                  </p>
+                )}
+                <ul class="job-points">
+                  {page.education.bullets.map((bullet, index) => (
+                    <li key={bullet}>
+                      <ProseField
+                        text={bullet}
+                        basePath={basePath}
+                        path={"education.bullets." + index}
+                        sourcePath={sourcePath}
+                        editing={inlineEditing}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
             {page.education.stack !== undefined &&
               page.education.stack.length > 0 && (
               <TechStack

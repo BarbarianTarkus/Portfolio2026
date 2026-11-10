@@ -48,6 +48,17 @@
   line-height: 1.65;
 }
 
+/* Lead-in over the degree bullets, e.g. "Aprendizaje que destaco". */
+.job-points-label {
+  max-width: var(--measure);
+  margin-top: 1.1rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .job-points {
   max-width: var(--measure);
   margin-top: 0.85rem;

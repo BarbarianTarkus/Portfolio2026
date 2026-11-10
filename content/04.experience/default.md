@@ -92,6 +92,20 @@ education:
     (PetSalut) se llevó con Pull Requests, revisión de código y CI en GitHub
     Actions hasta Azure Functions; en redes inalámbricas e IoT trabajé con
     Bluetooth LE y con la seguridad de puntos de acceso usando aircrack-ng.
+  bulletsLabel: Aprendizaje que destaco
+  bullets:
+    - >-
+      **Entorno virtual con VirtualBox**: redes con DMZ, clientes y servidores
+      (Nagios, DNS).
+    - '**Servicios de red**: DHCP con bind9, y SSH, SFTP y OpenVPN.'
+    - >-
+      **Scripts en Bash**: información del sistema operativo y escaneo de redes
+      con Nmap y Aircrack-ng.
+    - >-
+      **Front-end con Django**: aplicación full-stack en equipo, con
+      metodologías ágiles (Scrum).
+    - '**Bases de datos**: administración de MySQL, PostgreSQL y MongoDB.'
+    - '**Estructuras de datos**.'
   stack:
     - C++
     - Java

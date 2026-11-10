@@ -188,6 +188,10 @@ export interface EducationEntry {
    * Optional so an entry can stay a bare period/role/company line.
    */
   summary?: string;
+  /** Lead-in over the coursework bullets ("Aprendizaje que destaco"). */
+  bulletsLabel?: string;
+  /** What the coursework taught, one bullet per skill; inline Markdown. */
+  bullets?: string[];
   /** Technologies used in the coursework, rendered as labeled tiles. */
   stack?: string[];
 }
