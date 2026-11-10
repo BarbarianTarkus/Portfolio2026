@@ -105,6 +105,27 @@ export async function createApp(): Promise<{
   // File-system based routes (everything in ./routes).
   app.fsRoutes();
 
+  // Fresh matches /projects/<slug> exactly, so the trailing-slash form that a
+  // static host serves (…/projects/<slug>/) matches no route and would 404
+  // before the handler runs. Render it against the slash-free URL instead, so
+  // the link and its directory-index twin show the same page. Only nested
+  // paths are re-dispatched: section routes and the home page already match
+  // with or without the slash.
+  app.use(async (ctx) => {
+    if (ctx.req.method !== "GET") return ctx.next();
+    const pathname = ctx.url.pathname;
+    const relative = basePath ? pathname.slice(basePath.length) : pathname;
+    const segments = relative.split("/").filter(Boolean);
+    if (!pathname.endsWith("/") || segments.length < 2) return ctx.next();
+
+    const target = new URL(ctx.url);
+    target.pathname = pathname.replace(/\/+$/, "");
+    const response = await app.handler()(
+      new Request(target, { method: "GET", headers: ctx.req.headers }),
+    );
+    return response.status === 404 ? ctx.next() : response;
+  });
+
   return { app, dune };
 }
 
