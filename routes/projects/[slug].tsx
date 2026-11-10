@@ -4,6 +4,7 @@ import { ProjectArticle } from "../../components/projects/ProjectArticle.tsx";
 import type { ProjectsContent, SiteContent } from "../../lib/content.ts";
 import { loadProjectPage, loadSite } from "../../lib/content.ts";
 import type { Project } from "../../lib/content-types.ts";
+import { plainText } from "../../lib/plain-text.ts";
 import { define } from "../../utils.ts";
 
 /**
@@ -45,14 +46,6 @@ interface ProjectPageProps {
   sourcePath: string;
   basePath: string;
   inlineEditing: boolean;
-}
-
-/** Strip the Markdown emphasis and link syntax a summary may carry. */
-function plainText(markdown: string): string {
-  return markdown
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-    .replace(/\*\*/g, "")
-    .replace(/\*/g, "");
 }
 
 export function ProjectPage(

@@ -1,6 +1,7 @@
 import type { ComponentChildren } from "preact";
 import type { JobEntry } from "../lib/content.ts";
 import { Markdown, ProseField } from "../lib/markdown.tsx";
+import { JobProjects } from "./JobProjects.tsx";
 import { TechStack } from "./TechTags.tsx";
 
 interface JobListEdit {
@@ -110,6 +111,33 @@ export function JobList(
                   </li>
                 ))}
             </ul>
+            {
+              /* Work projects get their own article under
+                 /experience/<company>/<project>/, so they are listed here
+                 rather than in /projects. The home preview keeps the teaser
+                 shape and lists only the bullets. */
+            }
+            {maxBullets === undefined && job.projects !== undefined &&
+              job.projects.length > 0 && job.slug !== undefined && (
+              <>
+                {job.projectsLabel !== undefined && (
+                  <p class="job-points-label">
+                    {field(
+                      job.projectsLabel,
+                      "jobs." + index + ".projectsLabel",
+                    )}
+                  </p>
+                )}
+                <JobProjects
+                  projects={job.projects}
+                  company={job.slug}
+                  basePath={assetPrefix}
+                  sourcePath={edit?.sourcePath}
+                  jobIndex={index}
+                  editing={edit?.editing}
+                />
+              </>
+            )}
             <TechStack tags={job.stack} class="job-stack" labeled />
           </div>
         </li>

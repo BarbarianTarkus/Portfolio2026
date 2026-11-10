@@ -205,7 +205,12 @@ The numeric prefix controls order and is stripped from the route:
   focus blocks, stack chips, project note.
 - `content/02.about/default.md` — About page (`/about`).
 - `content/03.contact/default.md` — Contact page (`/contact`).
-- `content/04.experience/default.md` — Experience page (`/experience`).
+- `content/04.experience/default.md` — Experience page (`/experience`),
+  including each job's optional `projects`: products built there that get their
+  own article at `/experience/<company>/<project>/` (FRESK, FUNDAE and SMATX
+  under 3iPunt). Those articles reuse the project-page layout but are
+  deliberately not `/projects` entries: `/projects` holds coursework and
+  personal builds.
 - `content/05.projects/default.md` — Projects page (`/projects`): one fiche per
   project, with `problem`, `decisions` and optional verified `broke`/`next`
   lines.
@@ -277,10 +282,11 @@ stay usable without JavaScript as plain links.
 
 The static export renders every combination: [`scripts/ssg.ts`](scripts/ssg.ts)
 expands `routes/[lang]/…` into `/en` and `/ca` (Spanish keeps the canonical
-URLs) and `[slug]` into one page per project and language. GitHub Pages serves a
-single `dist/404.html`, so the not-found page is the Spanish one; it links to
-the home page of each language, drops the canonical/`hreflang` links (they would
-point at the address that was not found) and is marked `noindex`.
+URLs), `routes/experience/[company]/[slug].tsx` into one page per job project
+and language, and `[slug]` into one page per project and language. GitHub Pages
+serves a single `dist/404.html`, so the not-found page is the Spanish one; it
+links to the home page of each language, drops the canonical/`hreflang` links
+(they would point at the address that was not found) and is marked `noindex`.
 
 Translations are edited like any other page: in the admin, or with the ✎ handles
 while viewing `/en/…` or `/ca/…` (those write to the variant file that is being

@@ -1,28 +1,13 @@
-import type { ComponentChildren } from "preact";
 import type { Project, ProjectsContent } from "../../lib/content.ts";
 import { localizedHref, useLanguage } from "../../lib/i18n.tsx";
 import { ProseField } from "../../lib/markdown.tsx";
+import { FicheBlock } from "../FicheBlock.tsx";
 import { TechStack } from "../TechTags.tsx";
 import { ProjectGallery } from "./ProjectGallery.tsx";
 import { ProjectLinks } from "./ProjectLinks.tsx";
 
 type KindLabels = ProjectsContent["kindLabels"];
 type FicheLabels = ProjectsContent["ficheLabels"];
-
-interface FicheBlockProps {
-  title: string;
-  children: ComponentChildren;
-}
-
-/** One titled prose block of the case study: the problem, the decisions. */
-function FicheBlock({ title, children }: FicheBlockProps) {
-  return (
-    <div class="fiche-block">
-      <h3>{title}</h3>
-      {children}
-    </div>
-  );
-}
 
 interface ProjectArticleProps {
   project: Project;

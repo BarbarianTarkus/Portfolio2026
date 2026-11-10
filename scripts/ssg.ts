@@ -85,6 +85,14 @@ const LANG_PLACEHOLDER = /^\/\[lang\](?=\/|$)/;
 /** `route/[slug]` placeholder of the project fiche, optionally prefixed. */
 const SLUG_PLACEHOLDER = /\[slug\]/;
 
+/**
+ * `/experience/[company]/[slug]`: the two-segment placeholder of a project he
+ * built on a job. It is expanded before `SLUG_PLACEHOLDER`, which would
+ * otherwise swallow the `[slug]` half and emit every project slug under every
+ * company.
+ */
+const WORK_PROJECT_PLACEHOLDER = /\[company\]\/\[slug\]/;
+
 /** Language of a discovered route ("/en/about" → "en", everything else → "es"). */
 function routeLanguage(route: string): Language {
   const first = route.split("/")[1];
@@ -124,10 +132,52 @@ async function projectSlugs(language: Language): Promise<string[]> {
 }
 
 /**
- * `routes/[lang]/…` and `routes/projects/[slug].tsx` answer several URLs at
- * request time, but a static export needs a concrete page for each. This adds
- * one route per non-default language (the default language keeps its canonical
- * URLs) and one route per project slug, per language.
+ * `<company>/<project>` pairs of the job projects, read from the language
+ * variant of the experience page — the same file the route loads at request
+ * time. Projects may rename a slug per language, so the list is per language.
+ */
+async function workProjectPaths(language: Language): Promise<string[]> {
+  const variants = language === DEFAULT_LANGUAGE
+    ? ["default.md"]
+    : [`default.${language}.md`, "default.md"];
+
+  for (const variant of variants) {
+    let source: string;
+    try {
+      source = await Deno.readTextFile(
+        join(CONTENT_DIR, "04.experience", variant),
+      );
+    } catch (error) {
+      if (error instanceof Deno.errors.NotFound) continue;
+      throw error;
+    }
+
+    const { data } = matter(source);
+    const jobs = (data as {
+      jobs?: {
+        slug?: unknown;
+        projects?: { slug?: unknown }[];
+      }[];
+    }).jobs ?? [];
+
+    return jobs.flatMap((job) => {
+      if (typeof job.slug !== "string") return [];
+      return (job.projects ?? [])
+        .map((project) => project.slug)
+        .filter((slug): slug is string => typeof slug === "string")
+        .map((slug) => `${job.slug}/${slug}`);
+    });
+  }
+
+  return [];
+}
+
+/**
+ * `routes/[lang]/…`, `routes/experience/[company]/[slug].tsx` and
+ * `routes/projects/[slug].tsx` answer several URLs at request time, but a
+ * static export needs a concrete page for each. This adds one route per
+ * non-default language (the default language keeps its canonical URLs), one
+ * route per job project, and one route per project slug, per language.
  */
 async function expandDynamicRoutes(routes: string[]): Promise<string[]> {
   const localized = routes.flatMap((route) => {
@@ -136,8 +186,25 @@ async function expandDynamicRoutes(routes: string[]): Promise<string[]> {
     return LOCALIZED_LANGUAGES.map((language) => pathFor(language, rest));
   });
 
-  const slugRoutes = localized.filter((route) => SLUG_PLACEHOLDER.test(route));
-  if (slugRoutes.length === 0) return localized;
+  const workRoutes = localized.filter((route) =>
+    WORK_PROJECT_PLACEHOLDER.test(route)
+  );
+  const workPairsByLanguage = new Map<Language, string[]>();
+  for (const language of new Set(workRoutes.map(routeLanguage))) {
+    workPairsByLanguage.set(language, await workProjectPaths(language));
+  }
+  for (const [language, pairs] of workPairsByLanguage) {
+    log(`${pairs.length} job project page(s) discovered for "${language}"`);
+  }
+
+  const expanded = localized.flatMap((route) => {
+    if (!WORK_PROJECT_PLACEHOLDER.test(route)) return [route];
+    const pairs = workPairsByLanguage.get(routeLanguage(route)) ?? [];
+    return pairs.map((pair) => route.replace(WORK_PROJECT_PLACEHOLDER, pair));
+  });
+
+  const slugRoutes = expanded.filter((route) => SLUG_PLACEHOLDER.test(route));
+  if (slugRoutes.length === 0) return expanded;
 
   const languages = new Set(slugRoutes.map(routeLanguage));
   const slugsByLanguage = new Map<Language, string[]>();
@@ -149,7 +216,7 @@ async function expandDynamicRoutes(routes: string[]): Promise<string[]> {
     log(`${slugs.length} project page(s) discovered for "${language}"`);
   }
 
-  return localized.flatMap((route) => {
+  return expanded.flatMap((route) => {
     if (!SLUG_PLACEHOLDER.test(route)) return [route];
     const slugs = slugsByLanguage.get(routeLanguage(route)) ?? [];
     return slugs.map((slug) => route.replace(SLUG_PLACEHOLDER, slug));

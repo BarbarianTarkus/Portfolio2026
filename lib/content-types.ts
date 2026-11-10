@@ -168,10 +168,44 @@ export interface ContactContent {
 /* content/04.experience/default.md                                          */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * One project of a job: a product or client build the job delivered, with its
+ * own article under `/experience/<company>/<project>/`.
+ *
+ * It is deliberately not a `/projects` entry: those are coursework and
+ * personal builds, read on their own, while a work project is always read as
+ * part of the job that produced it.
+ */
+export interface WorkProject {
+  /** URL segment of the article; unique within the company. */
+  slug: string;
+  name: string;
+  /** One-sentence pitch: the article lede. */
+  summary: string;
+  /**
+   * Short row label for the timeline ("Suite visual y analítica sobre Moodle"),
+   * one line on desktop. Optional: the row falls back to `summary`.
+   */
+  teaser?: string;
+  /** What the product does, in a short paragraph; inline Markdown. */
+  description: string;
+  /** What he did on it, one bullet per contribution; inline Markdown. */
+  participation: string[];
+  /** Technologies used, rendered as labeled tiles. */
+  tags: string[];
+  /** Public page of the product: the article's call to action. */
+  links?: ProjectLink[];
+}
+
 /** One job entry of the experience timeline. */
 export interface JobEntry {
   role: string;
   company: string;
+  /**
+   * URL segment of the company, used by `/experience/<company>/<project>/`.
+   * Only jobs with linked projects need one.
+   */
+  slug?: string;
   /** Official site of the company; the brand mark links here. */
   url?: string;
   /** Square brand mark under static/, e.g. /companies/3ipunt.svg. */
@@ -182,6 +216,10 @@ export interface JobEntry {
   place: string;
   stack: string[];
   bullets: string[];
+  /** Lead-in over the job's project list ("Proyectos en los que he trabajado"). */
+  projectsLabel?: string;
+  /** Projects of this job that have their own `/experience` article. */
+  projects?: WorkProject[];
 }
 
 /** One education entry of the experience page. */
@@ -208,6 +246,18 @@ export interface EducationEntry {
   stack?: string[];
 }
 
+/** Labels of the work-project articles linked from the jobs timeline. */
+export interface WorkProjectLabels {
+  /** Heading over the block that explains what the product does. */
+  description: string;
+  /** Heading over the block with his contribution. */
+  participation: string;
+  /** Call to action of the article: opens the product's public page. */
+  visit: string;
+  /** Back link at the top and bottom of the article. */
+  back: string;
+}
+
 /** Experience page copy: jobs timeline, education and closing note. */
 export interface ExperienceContent {
   meta: PageMeta;
@@ -216,6 +266,8 @@ export interface ExperienceContent {
   linkedinLabel: string;
   jobsSection: SectionHeading;
   jobs: JobEntry[];
+  /** Labels shared by the work-project articles opened from the timeline. */
+  workProjectLabels: WorkProjectLabels;
   educationSection: SectionHeading;
   education: EducationEntry;
   outroSection: SectionHeading;

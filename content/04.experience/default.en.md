@@ -17,6 +17,7 @@ jobsSection:
 jobs:
   - role: Junior Web Developer
     company: 3iPunt
+    slug: 3ipunt
     url: https://tresipunt.com/es/
     logo: /companies/3ipunt.svg
     summary: >-
@@ -43,6 +44,98 @@ jobs:
       - >-
         **Collaboration with the technical team** in a consulting and custom
         development environment.
+    projectsLabel: Products I worked on
+    projects:
+      - slug: fresk
+        name: FRESK
+        teaser: Visual, analytics-driven Moodle suite
+        summary: >-
+          Suite that turns Moodle into a more visual, automated and data-driven
+          platform: content, analytics and notifications in a single product.
+        description: >-
+          **Not a theme and not a plugin, but a complete suite** installed on
+          top of Moodle and Moodle Workplace. It adds a visual content builder
+          with AI-suggested images, role-specific analytics dashboards, smart
+          notifications with inactivity tracking and, in Workplace, the
+          learning paths with their progress. It runs on the supported Moodle
+          and Workplace versions.
+        participation:
+          - >-
+            **Development of the suite's theme**, mainly on the front end:
+            layout and styling of the platform's visual elements.
+          - >-
+            **Rewrite of the theme layout**, moving from positioning with
+            `calc()` to flex, grid and `grid-columns`, far easier to maintain.
+          - >-
+            **Adaptation to new Moodle versions**, reviewing what core changes
+            broke in the theme.
+        tags:
+          - Moodle
+          - PHP
+          - JavaScript
+          - jQuery
+          - CSS
+        links:
+          - label: FRESK on tresipunt.com
+            href: https://tresipunt.com/en/suite-fresk-moodle/
+      - slug: fundae
+        name: Fundae
+        teaser: FUNDAE training-bonus plugin for Moodle
+        summary: >-
+          Native Moodle plugin that automates the management of FUNDAE's
+          state-funded training bonus.
+        description: >-
+          Subsidised training requires detailed reports, evidence of
+          participation and platform access for inspections. This plugin brings
+          that management **inside the campus itself**: it generates the
+          reports, produces the participation and completion evidence, allows
+          inspection access and keeps what is declared consistent with what
+          actually happens in the course.
+        participation:
+          - >-
+            **Back-end development of the plugin**: generating the structured
+            reports and the evidence FUNDAE asks for.
+          - >-
+            **Handling of course data** so that what is declared and what
+            happens on the platform match.
+        tags:
+          - Moodle
+          - PHP
+          - SQL
+        links:
+          - label: FUNDAE plugin on tresipunt.com
+            href: https://tresipunt.com/es/fundae-moodle-plugin-bonificacion/
+      - slug: smatx
+        name: SMATX
+        teaser: Moodle and WordPress integration
+        summary: >-
+          Moodle ↔ WordPress/WooCommerce integration to sell training and grant
+          automatic access to the campus.
+        description: >-
+          It connects the store with the campus: you can **sell courses, ebooks
+          and video training** from WordPress with its payment gateways,
+          discounts and coupons; it provides **single sign-on** between
+          WordPress and Moodle; it enrols automatically after purchase and
+          synchronises the courses; and it supports purchases for third parties
+          or for several learners at once. It requires a supported Moodle or
+          Moodle Workplace and an up-to-date WordPress.
+        participation:
+          - >-
+            **Development of the plugin on both ends** of the integration: the
+            Moodle side and the WordPress side.
+          - >-
+            **Work with the databases of both systems** to carry data from one
+            side to the other.
+          - '**Enrolment and course synchronisation** after purchase.'
+        tags:
+          - Moodle
+          - WordPress
+          - WooCommerce
+          - PHP
+          - MySQL
+        links:
+          - label: SMATX on tresipunt.com
+            href: https://tresipunt.com/es/integracion-moodle-wordpress-smatx/
   - role: PHP backend developer
     company: 4DMOVIN Business / Namastech
     url: https://4dmovin.com/
@@ -92,6 +185,11 @@ jobs:
       - >-
         **Rollout of the university Digital Signage**: Linux operating system
         and Raspberry hardware.
+workProjectLabels:
+  description: What it is
+  participation: What I did
+  visit: Visit the product
+  back: Back to experience
 educationSection:
   num: '02'
   title: Education

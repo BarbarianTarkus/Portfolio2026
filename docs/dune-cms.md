@@ -46,8 +46,8 @@ app.fsRoutes();
   and loaders see it through Fresh's typed `Context<State>`.
 - `app.fsRoutes()` registers the portfolio's own file-system routes after the
   Dune plugins. Headless Dune does not serve content pages, so `/`, `/about`,
-  `/contact`, `/experience` and `/projects` always come from
-  [`routes/`](../routes).
+  `/contact`, `/experience`, `/experience/<company>/<project>` and `/projects`
+  always come from [`routes/`](../routes).
 
 No database or external service is involved: Dune keeps runtime state in the
 local filesystem (see the two directories below).
@@ -68,14 +68,14 @@ frontmatter holds all structured copy. The Markdown body is empty for every page
 in this site — the routes only read `frontmatter`, which Dune's content API
 returns as typed data.
 
-| Page                               | Route              | Frontmatter holds                                                                                         |
-| ---------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------- |
-| `content/01.home/default.md`       | `/`                | hero eyebrow and CTAs, section headings and links, focus blocks, stack chips, project note                |
-| `content/02.about/default.md`      | `/about`           | meta, title, lede, biography paragraphs, stack section, closing links                                     |
-| `content/03.contact/default.md`    | `/contact`         | meta, title, lede, row labels and hints                                                                   |
-| `content/04.experience/default.md` | `/experience`      | meta, title, lede, jobs (role/company/period/place/stack/bullets), education, closing prose               |
-| `content/05.projects/default.md`   | `/projects`        | meta, title, lede, homelab hero, kind labels, fiche labels and the five project fiches                    |
-| `content/06.site/default.md`       | `/site` (internal) | identity, navigation, evidence strip, homelab stack, social links, footer labels, 404 copy and UI strings |
+| Page                               | Route              | Frontmatter holds                                                                                                                         |
+| ---------------------------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `content/01.home/default.md`       | `/`                | hero eyebrow and CTAs, section headings and links, focus blocks, stack chips, project note                                                |
+| `content/02.about/default.md`      | `/about`           | meta, title, lede, biography paragraphs, stack section, closing links                                                                     |
+| `content/03.contact/default.md`    | `/contact`         | meta, title, lede, row labels and hints                                                                                                   |
+| `content/04.experience/default.md` | `/experience`      | meta, title, lede, jobs (role/company/period/place/stack/bullets and the optional `slug` + `projects` articles), education, closing prose |
+| `content/05.projects/default.md`   | `/projects`        | meta, title, lede, homelab hero, kind labels, fiche labels and the five project fiches                                                    |
+| `content/06.site/default.md`       | `/site` (internal) | identity, navigation, evidence strip, homelab stack, social links, footer labels, 404 copy and UI strings                                 |
 
 Notes on editing the files by hand:
 
@@ -88,6 +88,10 @@ Notes on editing the files by hand:
   `template`); Dune injects them with defaults. Page-specific fields such as
   `kind`, `work`, `broke` and `next` are described by
   [`lib/content-types.ts`](../lib/content-types.ts).
+- A job's projects live in that job's frontmatter, and their slugs are URL
+  segments: `/experience/<job slug>/<project slug>/`. `deno task ssg` reads them
+  from the page to emit one static page each, so renaming a slug moves the
+  article — update any link to it in the same commit.
 - A translation is a sibling page in the same folder, named `default.<lang>.md`
   (`default.en.md`, `default.ca.md`). Dune indexes it under the same canonical
   route with its `language` tag, so `lib/content.ts` picks the variant for
@@ -125,7 +129,8 @@ Dune's allowlist (scripts, event handlers and style attributes are dropped), and
 root-relative links are prefixed with the deployment `basePath`.
 
 Markdown is supported in: the About `lede`, `paragraphs` and `follow`; Contact
-`lede` and channel hints; Experience `lede`, job bullets and `outro`; Projects
+`lede` and channel hints; Experience `lede`, job bullets, the job-project row
+`teaser` and its `summary`/`description`/`participation`, and `outro`; Projects
 `lede`, the homelab `title`/`note`, each project's `summary`, `problem`,
 `decisions`, `broke` and `next`; the home hero intro, section note, focus
 blocks, job preview bullets and work-index summaries; and the 404 `lede`. Inside

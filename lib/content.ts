@@ -30,6 +30,8 @@ import type {
   ProjectLink,
   ProjectsContent,
   SiteContent,
+  WorkProject,
+  WorkProjectLabels,
 } from "./content-types.ts";
 
 export type {
@@ -47,6 +49,8 @@ export type {
   ProjectLink,
   ProjectsContent,
   SiteContent,
+  WorkProject,
+  WorkProjectLabels,
 };
 
 /**
@@ -214,6 +218,37 @@ export async function loadProjectsPage(ctx: Context<State>) {
     loadPage<ProjectsContent>(ctx, "/projects"),
   ]);
   return { site, page: page.frontmatter, sourcePath: page.sourcePath };
+}
+
+/**
+ * One project of a job ("/experience/<company>/<project>"), resolved by the
+ * company slug and the project slug. Returns `null` when either does not
+ * match, so the route can answer with the 404 page instead of rendering an
+ * empty article.
+ */
+export async function loadWorkProjectPage(
+  ctx: Context<State>,
+  company: string,
+  slug: string,
+) {
+  const { site, page, sourcePath } = await loadExperiencePage(ctx);
+  const jobIndex = page.jobs.findIndex((job) => job.slug === company);
+  if (jobIndex === -1) return null;
+
+  const job = page.jobs[jobIndex];
+  const projects = job.projects ?? [];
+  const projectIndex = projects.findIndex((project) => project.slug === slug);
+  if (projectIndex === -1) return null;
+
+  return {
+    site,
+    page,
+    job,
+    jobIndex,
+    project: projects[projectIndex],
+    projectIndex,
+    sourcePath,
+  };
 }
 
 /**

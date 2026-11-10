@@ -17,6 +17,7 @@ jobsSection:
 jobs:
   - role: Junior Web Developer
     company: 3iPunt
+    slug: 3ipunt
     url: https://tresipunt.com/es/
     logo: /companies/3ipunt.svg
     summary: >-
@@ -43,6 +44,101 @@ jobs:
       - >-
         **Col·laboració amb l'equip tècnic** en un entorn de consultoria i
         desenvolupament a mida.
+    projectsLabel: Productes en què he treballat
+    projects:
+      - slug: fresk
+        name: FRESK
+        teaser: Suite visual i analítica sobre Moodle
+        summary: >-
+          Suite que converteix Moodle en una plataforma més visual,
+          automatitzada i basada en dades: contingut, analítica i notificacions
+          en un sol producte.
+        description: >-
+          **No és un tema ni un connector, sinó una suite completa** que
+          s'instal·la sobre Moodle i Moodle Workplace. Afegeix un constructor
+          visual de continguts amb suggeriments d'imatges per IA, panells
+          d'analítica per rol, notificacions intel·ligents amb seguiment
+          d'inactivitat i, a Workplace, la visualització dels itineraris
+          formatius amb el seu progrés. Funciona sobre les versions suportades
+          de Moodle i Workplace.
+        participation:
+          - >-
+            **Desenvolupament del tema de la suite**, sobretot al frontend:
+            maquetació i estils dels elements visuals de la plataforma.
+          - >-
+            **Reescriptura del layout del tema**, passant de posicionar amb
+            `calc()` a flex, grid i `grid-columns`, molt més mantenible.
+          - >-
+            **Adaptació a noves versions de Moodle**, revisant el que trencaven
+            els canvis del core al tema.
+        tags:
+          - Moodle
+          - PHP
+          - JavaScript
+          - jQuery
+          - CSS
+        links:
+          - label: FRESK a tresipunt.com
+            href: https://tresipunt.com/en/suite-fresk-moodle/
+      - slug: fundae
+        name: Fundae
+        teaser: Plugin de bonificació FUNDAE per a Moodle
+        summary: >-
+          Connector natiu de Moodle que automatitza la gestió de la bonificació
+          FUNDAE de la formació.
+        description: >-
+          La formació bonificada exigeix informes detallats, evidències de
+          participació i accés a la plataforma per a les inspeccions. Aquest
+          connector porta aquesta gestió **dins del mateix campus**: genera els
+          informes, produeix les evidències de participació i finalització,
+          permet l'accés per a la inspecció i manté coherent el que es declara
+          amb el que passa de veritat al curs.
+        participation:
+          - >-
+            **Desenvolupament del backend del connector**: generació dels
+            informes estructurats i de les evidències que demana FUNDAE.
+          - >-
+            **Tractament de les dades del curs** perquè el que es declara i el
+            que passa a la plataforma coincideixin.
+        tags:
+          - Moodle
+          - PHP
+          - SQL
+        links:
+          - label: Connector FUNDAE a tresipunt.com
+            href: https://tresipunt.com/es/fundae-moodle-plugin-bonificacion/
+      - slug: smatx
+        name: SMATX
+        teaser: Integració de Moodle amb WordPress
+        summary: >-
+          Integració entre Moodle i WordPress/WooCommerce per vendre formació i
+          donar accés automàtic al campus.
+        description: >-
+          Connecta la botiga amb el campus: permet **vendre cursos, ebooks i
+          formació en vídeo** des de WordPress amb les seves passarel·les de
+          pagament, descomptes i cupons; dona **accés únic (SSO)** entre
+          WordPress i Moodle; matricula automàticament després de la compra i
+          sincronitza els cursos; i admet compres per a tercers o per a diversos
+          alumnes alhora. Requereix Moodle o Moodle Workplace suportat i un
+          WordPress actualitzat.
+        participation:
+          - >-
+            **Desenvolupament del connector als dos extrems** de la integració:
+            el costat de Moodle i el de WordPress.
+          - >-
+            **Treball amb les bases de dades dels dos sistemes** per portar les
+            dades d'un costat a l'altre.
+          - >-
+            **Matriculació i sincronització** de cursos després de la compra.
+        tags:
+          - Moodle
+          - WordPress
+          - WooCommerce
+          - PHP
+          - MySQL
+        links:
+          - label: SMATX a tresipunt.com
+            href: https://tresipunt.com/es/integracion-moodle-wordpress-smatx/
   - role: Desenvolupador backend PHP
     company: 4DMOVIN Business / Namastech
     url: https://4dmovin.com/
@@ -95,6 +191,11 @@ jobs:
       - >-
         **Posada en marxa del Digital Signage de la universitat**: sistema
         operatiu Linux i maquinari Raspberry.
+workProjectLabels:
+  description: Què és
+  participation: Què hi vaig fer
+  visit: Veure el producte
+  back: Tornar a l'experiència
 educationSection:
   num: '02'
   title: Formació
