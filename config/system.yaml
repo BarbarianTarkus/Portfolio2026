@@ -5,3 +5,11 @@
 content:
   dir: content
 debug: false
+
+# Multilingual content: page variants live next to the default file, distinguished
+# by a language suffix (content/02.about/default.en.md). The default language
+# keeps unprefixed URLs (/about); the rest are served under /<lang>/ (/en/about).
+languages:
+  supported: [es, en, ca]
+  default: es
+  include_default_in_url: false

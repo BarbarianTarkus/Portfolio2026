@@ -1,4 +1,6 @@
 import type { ProjectGalleryGroup } from "../../lib/content.ts";
+import { useLanguage } from "../../lib/i18n.tsx";
+import { uiStrings } from "../../lib/ui-strings.ts";
 
 interface ProjectLightboxProps {
   packs: ProjectGalleryGroup[];
@@ -14,12 +16,14 @@ interface ProjectLightboxProps {
 export function ProjectLightbox(
   { packs, projectName, viewLabel, hasTabs }: ProjectLightboxProps,
 ) {
+  const strings = uiStrings(useLanguage());
+
   return (
     <dialog
       class={"gallery-lightbox" +
         (hasTabs ? " gallery-lightbox--with-switcher" : "")}
       data-gallery-lightbox
-      aria-label={"Vista ampliada de capturas de " + projectName}
+      aria-label={strings.gallery.lightbox(projectName)}
     >
       <div class="gallery-lightbox-frame">
         {hasTabs && (
@@ -46,7 +50,7 @@ export function ProjectLightbox(
           class="gallery-lightbox-close"
           type="button"
           data-gallery-lightbox-close
-          aria-label="Cerrar vista ampliada"
+          aria-label={strings.gallery.close}
           autofocus
         >
           <span aria-hidden="true">×</span>
@@ -55,7 +59,7 @@ export function ProjectLightbox(
           class="gallery-lightbox-button gallery-lightbox-prev"
           type="button"
           data-gallery-lightbox-prev
-          aria-label="Captura anterior"
+          aria-label={strings.gallery.previous}
         >
           <span aria-hidden="true">←</span>
         </button>
@@ -67,7 +71,7 @@ export function ProjectLightbox(
           class="gallery-lightbox-button gallery-lightbox-next"
           type="button"
           data-gallery-lightbox-next
-          aria-label="Captura siguiente"
+          aria-label={strings.gallery.next}
         >
           <span aria-hidden="true">→</span>
         </button>

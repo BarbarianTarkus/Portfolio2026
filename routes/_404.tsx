@@ -13,6 +13,9 @@ import { define } from "../utils.ts";
 export const handler = define.handlers({
   async GET(ctx) {
     const site = await loadSite(ctx);
+    // The layout omits canonical/hreflang links for this page: they would point
+    // at the URL that was not found.
+    ctx.state.notFound = true;
     return ctx.render(
       <NotFoundPage basePath={ctx.config.basePath} site={site} />,
       { status: 404 },

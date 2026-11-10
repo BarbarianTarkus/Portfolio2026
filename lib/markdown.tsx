@@ -16,6 +16,7 @@
 
 import { sanitizeHtml } from "@dune/core/security";
 import { marked } from "marked";
+import { DEFAULT_LANGUAGE, useLanguage } from "./i18n.tsx";
 
 interface MarkdownProps {
   /** Markdown source; inline syntax only (no block elements inside a <p>). */
@@ -40,6 +41,7 @@ function escapeRegExp(value: string): string {
 export function Markdown(
   { text, basePath = "", class: cls, links = true }: MarkdownProps,
 ) {
+  const lang = useLanguage();
   const raw = marked.parseInline(text ?? "") as string;
   let html = sanitizeHtml(raw);
 
@@ -47,18 +49,25 @@ export function Markdown(
     html = html.replace(/<a\b[^>]*>([\s\S]*?)<\/a>/g, "$1");
   }
 
-  if (basePath !== "") {
-    const prefix = basePath.replace(/\/+$/, "");
-    // Links and inline images both become root-relative URLs; prefix both so
-    // the site keeps working under BASE_PATH (GitHub Pages project sites).
-    // The lookahead runs after the quote's slash, so it matches the prefix
-    // without one: URLs that are already prefixed must stay untouched.
+  const prefix = basePath.replace(/\/+$/, "");
+  const langPrefix = lang === DEFAULT_LANGUAGE ? "" : "/" + lang;
+
+  if (prefix !== "" || langPrefix !== "") {
+    // Content links are always written as canonical routes ("/about"), so both
+    // the deployment base path and the language prefix are added here — and
+    // never twice: the lookahead leaves URLs that already carry the base path
+    // alone. Inline images are static files shared by every language, so they
+    // only take the base path.
     const bare = prefix.replace(/^\/+/, "");
-    const pattern = new RegExp(
-      `(href|src)="/(?!${escapeRegExp(bare)}(?:/|"))`,
-      "g",
+    const guard = prefix === "" ? "" : `(?!${escapeRegExp(bare)}(?:/|"))`;
+    html = html.replace(
+      new RegExp(`href="/${guard}`, "g"),
+      `href="${prefix}${langPrefix}/`,
     );
-    html = html.replace(pattern, `$1="${prefix}/`);
+    html = html.replace(
+      new RegExp(`src="/${guard}`, "g"),
+      `src="${prefix}/`,
+    );
   }
 
   // The HTML is produced by marked and then passed through Dune's allowlist

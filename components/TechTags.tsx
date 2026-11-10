@@ -1,5 +1,7 @@
 import { techColorForTag, techIconForTag } from "../lib/tech-icons.ts";
 import { techLinkForTag } from "../lib/tech-links.ts";
+import { useLanguage } from "../lib/i18n.tsx";
+import { uiStrings } from "../lib/ui-strings.ts";
 
 /**
  * Short labels for the stacks that have no official Simple Icons glyph. They
@@ -52,11 +54,6 @@ function GlyphContent({ tag }: { tag: string }) {
   );
 }
 
-/** Screen-reader label and tooltip text for a linked technology tile. */
-function techLinkLabel(tag: string): string {
-  return tag + ", web oficial (se abre en una pestaña nueva)";
-}
-
 interface TechTagProps {
   tag: string;
   linked?: boolean;
@@ -68,6 +65,8 @@ interface TechTagProps {
 export function TechTag(
   { tag, linked = true, labeled = false }: TechTagProps,
 ) {
+  const lang = useLanguage();
+  const strings = uiStrings(lang);
   const href = linked ? techLinkForTag(tag) : undefined;
   const style = "--tech-color:" + techColorForTag(tag);
   const classes = labeled ? "tag tag--tech tag--tech-labeled" : "tag tag--tech";
@@ -96,8 +95,8 @@ export function TechTag(
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        title={"Web oficial de " + tag + " (se abre en una pestaña nueva)"}
-        aria-label={techLinkLabel(tag)}
+        title={strings.tech.officialSite(tag)}
+        aria-label={strings.tech.linkLabel(tag)}
         data-tech-link={tag}
       >
         <GlyphContent tag={tag} />
@@ -111,6 +110,8 @@ export function TechTag(
 export function TechGlyph(
   { tag, linked = true }: { tag: string; linked?: boolean },
 ) {
+  const lang = useLanguage();
+  const strings = uiStrings(lang);
   const href = linked ? techLinkForTag(tag) : undefined;
   const style = "--tech-color:" + techColorForTag(tag);
   const glyph = (
@@ -134,8 +135,8 @@ export function TechGlyph(
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      title={"Web oficial de " + tag + " (se abre en una pestaña nueva)"}
-      aria-label={techLinkLabel(tag)}
+      title={strings.tech.officialSite(tag)}
+      aria-label={strings.tech.linkLabel(tag)}
       data-tech-link={tag}
       style={style}
     >

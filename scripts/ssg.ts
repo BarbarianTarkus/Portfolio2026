@@ -26,6 +26,13 @@ import { join, relative } from "@std/path";
 import matter from "gray-matter";
 import { DEFAULT_BASE_PATH, normalizeBasePath } from "../config.ts";
 import {
+  DEFAULT_LANGUAGE,
+  isLanguage,
+  type Language,
+  LOCALIZED_LANGUAGES,
+  pathFor,
+} from "../lib/languages.ts";
+import {
   copyDirectory,
   directorySize,
   isBuildArtifact,
@@ -72,31 +79,81 @@ function log(message: string): void {
   console.log(`  ${message}`);
 }
 
+/** `/[lang]` → the localized routes, expanded once per non-default language. */
+const LANG_PLACEHOLDER = /^\/\[lang\](?=\/|$)/;
+
+/** `route/[slug]` placeholder of the project fiche, optionally prefixed. */
+const SLUG_PLACEHOLDER = /\[slug\]/;
+
+/** Language of a discovered route ("/en/about" → "en", everything else → "es"). */
+function routeLanguage(route: string): Language {
+  const first = route.split("/")[1];
+  return isLanguage(first) ? first : DEFAULT_LANGUAGE;
+}
+
 /**
- * `routes/projects/[slug].tsx` answers one URL per project at request time,
- * but a static export needs a concrete page for each. Read the slugs from the
- * content source and expand the placeholder; every other route passes through
- * untouched.
+ * Project slugs, read from the language variant of the projects page. A
+ * translation that has not renamed a slug yet falls back to the default file,
+ * which is also where the list comes from for the default language.
+ */
+async function projectSlugs(language: Language): Promise<string[]> {
+  const variants = language === DEFAULT_LANGUAGE
+    ? ["default.md"]
+    : [`default.${language}.md`, "default.md"];
+
+  for (const variant of variants) {
+    let source: string;
+    try {
+      source = await Deno.readTextFile(
+        join(CONTENT_DIR, "05.projects", variant),
+      );
+    } catch (error) {
+      if (error instanceof Deno.errors.NotFound) continue;
+      throw error;
+    }
+
+    const { data } = matter(source);
+    const projects = (data as { projects?: { slug?: unknown }[] }).projects ??
+      [];
+    return projects
+      .map((project) => project.slug)
+      .filter((slug): slug is string => typeof slug === "string");
+  }
+
+  return [];
+}
+
+/**
+ * `routes/[lang]/…` and `routes/projects/[slug].tsx` answer several URLs at
+ * request time, but a static export needs a concrete page for each. This adds
+ * one route per non-default language (the default language keeps its canonical
+ * URLs) and one route per project slug, per language.
  */
 async function expandDynamicRoutes(routes: string[]): Promise<string[]> {
-  if (!routes.includes("/projects/[slug]")) return routes;
+  const localized = routes.flatMap((route) => {
+    if (!LANG_PLACEHOLDER.test(route)) return [route];
+    const rest = route.replace(LANG_PLACEHOLDER, "") || "/";
+    return LOCALIZED_LANGUAGES.map((language) => pathFor(language, rest));
+  });
 
-  const source = await Deno.readTextFile(
-    join(CONTENT_DIR, "05.projects", "default.md"),
-  );
-  const { data } = matter(source);
-  const projects = (data as { projects?: { slug?: unknown }[] }).projects ?? [];
-  const slugs = projects
-    .map((project) => project.slug)
-    .filter((slug): slug is string => typeof slug === "string");
+  const slugRoutes = localized.filter((route) => SLUG_PLACEHOLDER.test(route));
+  if (slugRoutes.length === 0) return localized;
 
-  log(`${slugs.length} project page(s) discovered`);
+  const languages = new Set(slugRoutes.map(routeLanguage));
+  const slugsByLanguage = new Map<Language, string[]>();
+  for (const language of languages) {
+    slugsByLanguage.set(language, await projectSlugs(language));
+  }
 
-  return routes.flatMap((route) =>
-    route === "/projects/[slug]"
-      ? slugs.map((slug) => `/projects/${slug}`)
-      : [route]
-  );
+  for (const [language, slugs] of slugsByLanguage) {
+    log(`${slugs.length} project page(s) discovered for "${language}"`);
+  }
+
+  return localized.flatMap((route) => {
+    if (!SLUG_PLACEHOLDER.test(route)) return [route];
+    const slugs = slugsByLanguage.get(routeLanguage(route)) ?? [];
+    return slugs.map((slug) => route.replace(SLUG_PLACEHOLDER, slug));
+  });
 }
 
 /** Print a step in the pipeline. */

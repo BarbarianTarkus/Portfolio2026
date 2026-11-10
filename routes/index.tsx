@@ -13,6 +13,7 @@ import { WorkIndex } from "../components/home/WorkIndex.tsx";
 import { JobList } from "../components/JobList.tsx";
 import { PageMeta } from "../components/PageMeta.tsx";
 import { SectionHead } from "../components/SectionHead.tsx";
+import { localizedHref, useLanguage } from "../lib/i18n.tsx";
 import { define } from "../utils.ts";
 
 /**
@@ -63,6 +64,7 @@ export function HomePage(
   }: HomePageProps,
 ) {
   const kindLabels = projects.kindLabels;
+  const lang = useLanguage();
 
   return (
     <>
@@ -90,7 +92,7 @@ export function HomePage(
           />
         }
         link={{
-          href: basePath + page.experienceSection.linkRoute,
+          href: localizedHref(basePath, lang, page.experienceSection.linkRoute),
           label: page.experienceSection.linkLabel,
         }}
       />
@@ -112,7 +114,7 @@ export function HomePage(
           />
         }
         link={{
-          href: basePath + page.projectsSection.linkRoute,
+          href: localizedHref(basePath, lang, page.projectsSection.linkRoute),
           label: page.projectsSection.linkLabel,
         }}
       />
@@ -144,7 +146,7 @@ export function HomePage(
           />
         }
         link={{
-          href: basePath + page.stackSection.linkRoute,
+          href: localizedHref(basePath, lang, page.stackSection.linkRoute),
           label: page.stackSection.linkLabel,
         }}
       />

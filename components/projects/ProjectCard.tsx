@@ -1,4 +1,5 @@
 import type { Project, ProjectsContent } from "../../lib/content.ts";
+import { localizedHref, useLanguage } from "../../lib/i18n.tsx";
 import { ProseField } from "../../lib/markdown.tsx";
 import { TechStack } from "../TechTags.tsx";
 import { ProjectGallery } from "./ProjectGallery.tsx";
@@ -105,6 +106,7 @@ export function ProjectCard(
     eagerCover,
   }: ProjectCardProps,
 ) {
+  const lang = useLanguage();
   const kindLabel = kindLabels[project.kind as keyof KindLabels] ??
     project.kind;
   const demoLink = project.links.find((link) => link.kind === "demo");
@@ -191,7 +193,11 @@ export function ProjectCard(
 
         <a
           class="project-more"
-          href={basePath + "/projects/" + project.slug + "/"}
+          href={localizedHref(
+            basePath,
+            lang,
+            "/projects/" + project.slug + "/",
+          )}
         >
           {detailsLabel}
           <span aria-hidden="true">→</span>
