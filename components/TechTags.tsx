@@ -18,6 +18,13 @@ const TAG_MONOGRAMS: Record<string, string> = {
   "IMAP / POP / SMTP": "MAIL",
   "NFS / SMB": "NFS",
   "Rsync": "RSY",
+  "Claude Code": "CC",
+  "Gemini CLI": "GC",
+  "Pi": "π",
+  "Gentle Shell": "GS",
+  "MCP": "MCP",
+  "Skills": "SK",
+  "Ollama": "OL",
 };
 
 function GlyphContent({ tag }: { tag: string }) {

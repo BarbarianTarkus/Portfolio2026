@@ -110,6 +110,29 @@
   letter-spacing: 0.08em;
 }
 
+/* Backend and infrastructure are read as sub-scopes, so their rows align to
+   the top instead of centering the code against a tall tag block. */
+.stack-layer--grouped {
+  align-items: start;
+}
+
+.stack-subrow {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.stack-subrow + .stack-subrow {
+  margin-top: 0.9rem;
+}
+
+.stack-subrow-title {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 @media (min-width: 48rem) {
   .stack-focus {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -140,6 +163,14 @@
   .stack-layer-tags {
     grid-column: 2 / -1;
     grid-row: 2;
+  }
+
+  .stack-subrow {
+    gap: 0.35rem;
+  }
+
+  .stack-subrow + .stack-subrow {
+    margin-top: 0.9rem;
   }
 }
 

@@ -71,10 +71,10 @@ returns as typed data.
 | Page                               | Route              | Frontmatter holds                                                                                         |
 | ---------------------------------- | ------------------ | --------------------------------------------------------------------------------------------------------- |
 | `content/01.home/default.md`       | `/`                | hero eyebrow and CTAs, section headings and links, focus blocks, stack chips, project note                |
-| `content/02.about/default.md`      | `/about`           | meta, title, lede, biography paragraphs, homelab section, closing links                                   |
+| `content/02.about/default.md`      | `/about`           | meta, title, lede, biography paragraphs, stack section, closing links                                     |
 | `content/03.contact/default.md`    | `/contact`         | meta, title, lede, row labels and hints                                                                   |
 | `content/04.experience/default.md` | `/experience`      | meta, title, lede, jobs (role/company/period/place/stack/bullets), education, closing prose               |
-| `content/05.projects/default.md`   | `/projects`        | meta, title, lede, kind labels, fiche labels and the five project fiches                                  |
+| `content/05.projects/default.md`   | `/projects`        | meta, title, lede, homelab hero, kind labels, fiche labels and the five project fiches                    |
 | `content/06.site/default.md`       | `/site` (internal) | identity, navigation, evidence strip, homelab stack, social links, footer labels, 404 copy and UI strings |
 
 Notes on editing the files by hand:
@@ -118,12 +118,12 @@ code (between backticks) and `[label](/route)` links. The HTML is sanitized with
 Dune's allowlist (scripts, event handlers and style attributes are dropped), and
 root-relative links are prefixed with the deployment `basePath`.
 
-Markdown is supported in: the About `lede`, `paragraphs`, `homelabNote` and
-`follow`; Contact `lede` and channel hints; Experience `lede`, job bullets and
-`outro`; Projects `lede`, each project's `summary`, `problem`, `decisions`,
-`broke` and `next`; the home hero intro, section note, focus blocks, job preview
-bullets and work-index summaries; and the 404 `lede`. Inside links the
-surrounding anchors win, so nested `<a>` markup is dropped.
+Markdown is supported in: the About `lede`, `paragraphs` and `follow`; Contact
+`lede` and channel hints; Experience `lede`, job bullets and `outro`; Projects
+`lede`, the homelab `title`/`note`, each project's `summary`, `problem`,
+`decisions`, `broke` and `next`; the home hero intro, section note, focus
+blocks, job preview bullets and work-index summaries; and the 404 `lede`. Inside
+links the surrounding anchors win, so nested `<a>` markup is dropped.
 
 A value that begins with `**` must be quoted or written as a folded block
 (`>-\n  text`) in YAML: a leading asterisk is parsed as an alias, not as text.

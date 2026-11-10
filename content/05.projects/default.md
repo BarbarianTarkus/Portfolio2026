@@ -9,6 +9,21 @@ lede: >-
   Proyectos seleccionados, **no historial laboral**. Los dos más recientes encabezan la página; cada
   tarjeta resume el proyecto y despliega el problema, las decisiones y las capturas cuando quieras
   ver más.
+homelab:
+  eyebrow: Homelab
+  title: Más de dos años de infraestructura propia
+  note: >-
+    Un **Synology NAS** y varias máquinas sirven multimedia, almacenamiento, VPN y un Git propio.
+    **Jellyfin** separa el cómputo (una Orange Pi) del almacenamiento (el NAS), conectados por NFS y
+    SMB. Las migraciones entre dispositivos se automatizan con **Ansible y Rsync**, y la publicación
+    al exterior va por túnel de Cloudflare, sin abrir puertos en el router.
+  facts:
+    - value: '2+'
+      label: años en marcha
+    - value: '0'
+      label: puertos abiertos
+    - value: '24/7'
+      label: disponibilidad
 kindLabels:
   cliente: Cliente
   académico: Académico
@@ -32,6 +47,7 @@ projects:
       - SQLite
       - Tailwind
       - Python
+      - DeepSeek Harness
     period: 27 octubre — 1 noviembre 2026
     work: 45 commits
     links:
@@ -125,6 +141,7 @@ projects:
       - TinaCMS
       - Cloudflare
       - GitHub Actions
+      - OpenCode
     period: enero — octubre 2026
     work: 69 commits
     links:
@@ -166,6 +183,21 @@ projects:
           - src: /projects/mixology/tina-preview.webp
             alt: Vista previa del sitio dentro de TinaCMS.
             caption: 'TinaCMS en acción: vista previa'
+      - view: mobile
+        label: Móvil
+        images:
+          - src: /projects/mixology/mobile-portada.webp
+            alt: 'Portada móvil con el reclamo de coctelería a domicilio y el botón de WhatsApp.'
+            caption: Portada en móvil
+          - src: /projects/mixology/mobile-servicios.webp
+            alt: 'Servicios en móvil: alquiler de barras, bodas y consultoría de carta.'
+            caption: Servicios en móvil
+          - src: /projects/mixology/mobile-cocteles.webp
+            alt: Top 3 de cócteles en móvil con Bloody Mary y Citrus Fizz.
+            caption: Cócteles en móvil
+          - src: /projects/mixology/mobile-contacto.webp
+            alt: 'Página de contacto en móvil con teléfono, WhatsApp y horario.'
+            caption: Contacto en móvil
   - slug: moodle
     name: local_plugincompatibility
     kind: propio

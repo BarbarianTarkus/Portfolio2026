@@ -31,20 +31,7 @@ stackSection:
   num: "03"
   title: Stack y enfoque
   linkLabel: El homelab
-  linkRoute: /about#homelab
+  linkRoute: /projects#homelab
   stackLabel: Stack
   infrastructureLabel: Infraestructura
-stack:
-  - PHP
-  - JavaScript
-  - TypeScript
-  - Moodle
-  - Svelte
-  - Astro
-  - Python
-  - Rust
-  - Deno
-  - C++
-  - PostgreSQL
-  - Docker
 ---

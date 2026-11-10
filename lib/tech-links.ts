@@ -61,6 +61,18 @@ const TECH_LINKS: Record<string, string> = {
   SonarQube: "https://www.sonarsource.com/products/sonarqube/",
   "Cloudflare Tunnel":
     "https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/",
+
+  // Agentic AI. OpenCode, Claude Code and Gemini CLI are not in the current
+  // stack but stay ready for a future project fiche.
+  "DeepSeek Harness": "https://www.deepseek.com/en/harness/",
+  OpenCode: "https://opencode.ai/",
+  "Claude Code": "https://claude.com/product/claude-code",
+  "Gemini CLI": "https://github.com/google-gemini/gemini-cli",
+  Pi: "https://pi.dev/",
+  "Gentle Shell": "https://gentlemanprogramming.com/gentle-shell/",
+  MCP: "https://modelcontextprotocol.io/",
+  Skills: "https://agentskills.io/home",
+  Ollama: "https://ollama.com/",
 };
 
 /** Official page for a technology tag, when one exists. */

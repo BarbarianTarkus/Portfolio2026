@@ -3,6 +3,7 @@ import type { ProjectsContent, SiteContent } from "../lib/content.ts";
 import { loadProjectsPage } from "../lib/content.ts";
 import { PageHeader } from "../components/PageHeader.tsx";
 import { PageMeta } from "../components/PageMeta.tsx";
+import { HomelabHero } from "../components/projects/HomelabHero.tsx";
 import { ProjectCard } from "../components/projects/ProjectCard.tsx";
 import { define } from "../utils.ts";
 
@@ -56,6 +57,14 @@ export function ProjectsPage(
             editing={inlineEditing}
           />
         }
+      />
+
+      <HomelabHero
+        content={page.homelab}
+        tags={site.homelabStack}
+        basePath={basePath}
+        sourcePath={sourcePath}
+        inlineEditing={inlineEditing}
       />
 
       <div class="project-grid">

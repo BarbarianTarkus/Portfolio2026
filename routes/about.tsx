@@ -4,13 +4,13 @@ import { loadAboutPage } from "../lib/content.ts";
 import { PageHeader } from "../components/PageHeader.tsx";
 import { PageMeta } from "../components/PageMeta.tsx";
 import { SectionHead } from "../components/SectionHead.tsx";
-import { TechStack } from "../components/TechTags.tsx";
+import { buildStackGroups, StackMap } from "../components/StackMap.tsx";
 import { define } from "../utils.ts";
 
 /**
- * Biography and the homelab. Work history moved to /experience so this page
+ * Biography and the stack. Work history moved to /experience so this page
  * stops competing with the CV: a recruiter lands on experience, a curious
- * reader lands here.
+ * reader lands here. The homelab lives on the projects page.
  */
 export const handler = define.handlers({
   async GET(ctx) {
@@ -72,29 +72,22 @@ export function AboutPage(
       </div>
 
       <SectionHead
-        num={page.homelabSection.num}
-        id="homelab"
+        num={page.stackSection.num}
+        id="stack"
         title={
           <ProseField
-            text={page.homelabSection.title}
-            path="homelabSection.title"
+            text={page.stackSection.title}
+            path="stackSection.title"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
         }
       />
 
-      <p class="section-note">
-        <ProseField
-          text={page.homelabNote}
-          basePath={basePath}
-          path="homelabNote"
-          sourcePath={sourcePath}
-          editing={inlineEditing}
-        />
-      </p>
-
-      <TechStack tags={site.homelabStack} class="homelab-stack" labeled />
+      <StackMap
+        groups={buildStackGroups(site.stack, site.homelabStack)}
+        label={page.stackSection.title}
+      />
 
       <SectionHead
         num={page.followSection.num}

@@ -24,6 +24,24 @@ homelabStack:
   - Gitea
   - SonarQube
   - Cloudflare Tunnel
+stack:
+  - PHP
+  - JavaScript
+  - TypeScript
+  - Svelte
+  - Astro
+  - Python
+  - Rust
+  - Deno
+  - C++
+  - PostgreSQL
+  - Docker
+  - DeepSeek Harness
+  - Pi
+  - Gentle Shell
+  - MCP
+  - Skills
+  - Ollama
 github: https://github.com/BarbarianTarkus
 linkedin: https://www.linkedin.com/in/ricardverdclar/
 githubHandle: "@BarbarianTarkus"

@@ -84,6 +84,7 @@ export interface SiteContent {
   intro: string;
   evidence: EvidenceItem[];
   homelabStack: string[];
+  stack: string[];
   github: string;
   linkedin: string;
   githubHandle: string;
@@ -126,21 +127,19 @@ export interface HomeContent {
   projectsSection: ProjectsSectionHeading;
   focus: FocusItem[];
   stackSection: StackSectionHeading;
-  stack: string[];
 }
 
 /* -------------------------------------------------------------------------- */
 /* content/02.about/default.md                                                */
 /* -------------------------------------------------------------------------- */
 
-/** About page copy: lede, story paragraphs, homelab and "where to follow". */
+/** About page copy: lede, story paragraphs, stack and "where to follow". */
 export interface AboutContent {
   meta: PageMeta;
   title: string;
   lede: string;
   paragraphs: string[];
-  homelabSection: SectionHeading;
-  homelabNote: string;
+  stackSection: SectionHeading;
   followSection: SectionHeading;
   follow: string;
 }
@@ -226,6 +225,20 @@ export interface FicheLabels {
   decisions: string;
 }
 
+/** One headline metric of the homelab hero. */
+export interface HomelabFact {
+  value: string;
+  label: string;
+}
+
+/** Featured homelab block that opens the projects page. */
+export interface HomelabHero {
+  eyebrow: string;
+  title: string;
+  note: string;
+  facts: HomelabFact[];
+}
+
 /** One link (repository, demo, ...) attached to a project. */
 export interface ProjectLink {
   label: string;
@@ -291,6 +304,7 @@ export interface ProjectsContent {
   meta: PageMeta;
   title: string;
   lede: string;
+  homelab: HomelabHero;
   kindLabels: ProjectKindLabels;
   ficheLabels: FicheLabels;
   /** Label of the closed `<details>` summary. */
