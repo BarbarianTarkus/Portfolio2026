@@ -547,7 +547,7 @@
     padding-left: clamp(1.5rem, 3vw, 2.25rem);
     border-top: 0;
     border-left: 1px solid var(--line);
-    align-content: space-between;
+    align-content: normal;
   }
 
   .homelab-hero-fact {
