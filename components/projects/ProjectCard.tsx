@@ -180,6 +180,41 @@ export function ProjectCard(
       />
 
       <div class="project-card-body">
+        {ctaLink !== undefined && (
+          <p class="project-card-links">
+            <a
+              class="button project-link-cta"
+              href={ctaLink.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={ctaLink.label}
+            >
+              <LinkIcon link={ctaLink} basePath={basePath} />
+              {visitLabel}
+            </a>
+            {secondaryLinks.map((link) => {
+              const isRepo = link.href.includes("github.com");
+              return (
+                <a
+                  class={"project-link" + (isRepo ? " project-link--icon" : "")}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={isRepo ? link.label : undefined}
+                  title={link.label}
+                  key={link.href}
+                >
+                  {isRepo ? <GitHubIcon class="project-link-icon" /> : (
+                    <>
+                      {link.label} <span aria-hidden="true">→</span>
+                    </>
+                  )}
+                </a>
+              );
+            })}
+          </p>
+        )}
+
         <p class="fiche-kind">{kindLabel}</p>
         <h2 class="project-card-title" id={project.slug + "-title"}>
           {demoLink !== undefined && !inlineEditing
@@ -228,41 +263,6 @@ export function ProjectCard(
         </p>
 
         <TechStack tags={project.tags} />
-
-        {ctaLink !== undefined && (
-          <p class="project-card-links">
-            <a
-              class="button project-link-cta"
-              href={ctaLink.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={ctaLink.label}
-            >
-              <LinkIcon link={ctaLink} basePath={basePath} />
-              {visitLabel}
-            </a>
-            {secondaryLinks.map((link) => {
-              const isRepo = link.href.includes("github.com");
-              return (
-                <a
-                  class={"project-link" + (isRepo ? " project-link--icon" : "")}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={isRepo ? link.label : undefined}
-                  title={link.label}
-                  key={link.href}
-                >
-                  {isRepo ? <GitHubIcon class="project-link-icon" /> : (
-                    <>
-                      {link.label} <span aria-hidden="true">→</span>
-                    </>
-                  )}
-                </a>
-              );
-            })}
-          </p>
-        )}
 
         <details class="project-details">
           <summary>
