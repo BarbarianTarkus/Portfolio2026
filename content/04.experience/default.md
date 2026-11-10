@@ -88,16 +88,11 @@ education:
     y, más tarde, con el trabajo en 3iPunt.
   projectsLabel: Proyectos realizados durante los estudios
   projects:
+    - '[Red segmentada en Linux](/projects#red-segmentada)'
     - '[PetSalut](/projects#petsalut)'
     - '[Password-Manager](/projects#password-manager)'
   bulletsLabel: Aprendizaje que destaco
   bullets:
-    - >-
-      **Red segmentada en Linux**: troncal, DMZ, clientes y servidores en
-      máquinas virtuales con dos routers Linux; seguridad perimetral con
-      nftables, DNS maestro/esclavo con BIND9, DHCP con reservas y DDNS por
-      TSIG; y monitorización con Nagios Core + NRPE, validada de extremo a
-      extremo con SSH.
     - >-
       **Front-end con Django**: aplicación full-stack en equipo, con
       metodologías ágiles (Scrum).
