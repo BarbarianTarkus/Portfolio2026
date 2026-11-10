@@ -348,10 +348,12 @@ export interface ProjectsContent {
   homelab: HomelabHero;
   kindLabels: ProjectKindLabels;
   ficheLabels: FicheLabels;
-  /** Label of the closed `<details>` summary. */
+  /** Link at the foot of every card that opens its own project page. */
   detailsLabel: string;
-  /** Label shown while the detail block is open. */
-  detailsCloseLabel: string;
+  /** Heading over the capture gallery of a project page. */
+  galleryTitle: string;
+  /** Back link at the top and bottom of a project page. */
+  backLabel: string;
   /** Accessible name of the Web/Mobile gallery selector. */
   galleryViewLabel: string;
   /**

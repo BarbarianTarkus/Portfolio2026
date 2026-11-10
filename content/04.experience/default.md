@@ -88,10 +88,10 @@ education:
     y, más tarde, con el trabajo en 3iPunt.
   projectsLabel: Proyectos realizados durante los estudios
   projects:
-    - '[Teleoperación de un brazo robótico](/projects#brazo-robotico)'
-    - '[Red segmentada en Linux](/projects#red-segmentada)'
-    - '[PetSalut](/projects#petsalut)'
-    - '[Password-Manager](/projects#password-manager)'
+    - '[Teleoperación de un brazo robótico](/projects/brazo-robotico/)'
+    - '[Red segmentada en Linux](/projects/red-segmentada/)'
+    - '[PetSalut](/projects/petsalut/)'
+    - '[Password-Manager](/projects/password-manager/)'
   bulletsLabel: Aprendizaje que destaco
   bullets:
     - >-

@@ -1,35 +1,10 @@
-import type { ComponentChildren } from "preact";
-import type {
-  Project,
-  ProjectLink,
-  ProjectsContent,
-} from "../../lib/content.ts";
+import type { Project, ProjectsContent } from "../../lib/content.ts";
 import { ProseField } from "../../lib/markdown.tsx";
-import { GitHubIcon } from "../Icons.tsx";
 import { TechStack } from "../TechTags.tsx";
 import { ProjectGallery } from "./ProjectGallery.tsx";
+import { ProjectLinks } from "./ProjectLinks.tsx";
 
 type KindLabels = ProjectsContent["kindLabels"];
-type FicheLabels = ProjectsContent["ficheLabels"];
-
-interface FicheBlockProps {
-  /** Heading rendered as the block's h3. */
-  title: string;
-  children: ComponentChildren;
-}
-
-/**
- * One titled section of a project's expanded details. The problem and the
- * decisions list share this wrapper, so the block markup is written once.
- */
-function FicheBlock({ title, children }: FicheBlockProps) {
-  return (
-    <div class="fiche-block">
-      <h3>{title}</h3>
-      {children}
-    </div>
-  );
-}
 
 interface ProjectMediaProps {
   project: Project;
@@ -93,41 +68,10 @@ function ProjectMedia(
   );
 }
 
-interface LinkIconProps {
-  link: ProjectLink;
-  basePath: string;
-}
-
-/**
- * Icon shown inside the card's call to action: the linked page's own favicon
- * when the content provides one, the GitHub glyph for repositories, and an
- * arrow for any other site.
- */
-function LinkIcon({ link, basePath }: LinkIconProps) {
-  if (link.icon !== undefined) {
-    return (
-      <img
-        class="project-link-favicon"
-        src={basePath + link.icon}
-        alt=""
-        width="18"
-        height="18"
-        loading="lazy"
-      />
-    );
-  }
-  if (link.href.includes("github.com")) {
-    return <GitHubIcon class="project-link-icon" />;
-  }
-  return <span class="project-link-glyph" aria-hidden="true">↗</span>;
-}
-
 interface ProjectCardProps {
   project: Project;
   kindLabels: KindLabels;
-  ficheLabels: FicheLabels;
   detailsLabel: string;
-  detailsCloseLabel: string;
   galleryViewLabel: string;
   visitLabel: string;
   basePath: string;
@@ -138,10 +82,10 @@ interface ProjectCardProps {
 }
 
 /**
- * One project card. The cover, name, short description and stack stay
- * visible; the problem, technical decisions and screenshot packs live inside a
- * native `<details>`, so the page stays a two-column grid until the reader asks
- * for more.
+ * One project card: the impact image, the name, a short description and the
+ * stack. The problem, the technical decisions and the captures live on the
+ * project's own page, so the grid stays a scanning surface and every card
+ * ends with the same link into its article.
  *
  * The route passes a key to this component (list identity) and the article
  * repeats it: Fresh turns an element's key into its data-frsh-key attribute,
@@ -151,9 +95,7 @@ export function ProjectCard(
   {
     project,
     kindLabels,
-    ficheLabels,
     detailsLabel,
-    detailsCloseLabel,
     galleryViewLabel,
     visitLabel,
     basePath,
@@ -166,14 +108,6 @@ export function ProjectCard(
   const kindLabel = kindLabels[project.kind as keyof KindLabels] ??
     project.kind;
   const demoLink = project.links.find((link) => link.kind === "demo");
-  const repoLink = project.links.find((link) =>
-    link.kind === "repo" || link.href.includes("github.com")
-  );
-  const ctaLink = demoLink ?? repoLink ?? project.links[0];
-  const secondaryLinks = project.links.filter((link) => link !== ctaLink);
-  const packs = (project.gallery ?? []).filter((pack) =>
-    pack.images.length > 0
-  );
   const titleField = (
     <ProseField
       text={project.name}
@@ -200,55 +134,11 @@ export function ProjectCard(
       />
 
       <div class="project-card-body">
-        {(ctaLink !== undefined || project.diagram !== undefined) && (
-          <p class="project-card-links">
-            {ctaLink !== undefined && (
-              <a
-                class="button project-link-cta"
-                href={ctaLink.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={ctaLink.label}
-              >
-                <LinkIcon link={ctaLink} basePath={basePath} />
-                {visitLabel}
-              </a>
-            )}
-            {project.diagram !== undefined && (
-              <a
-                class="button button-ghost project-link-diagram"
-                href={project.diagram.href.startsWith("http")
-                  ? project.diagram.href
-                  : basePath + project.diagram.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                title={project.diagram.label}
-              >
-                {project.diagram.label}
-              </a>
-            )}
-            {secondaryLinks.map((link) => {
-              const isRepo = link.href.includes("github.com");
-              return (
-                <a
-                  class={"project-link" + (isRepo ? " project-link--icon" : "")}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={isRepo ? link.label : undefined}
-                  title={link.label}
-                  key={link.href}
-                >
-                  {isRepo ? <GitHubIcon class="project-link-icon" /> : (
-                    <>
-                      {link.label} <span aria-hidden="true">→</span>
-                    </>
-                  )}
-                </a>
-              );
-            })}
-          </p>
-        )}
+        <ProjectLinks
+          project={project}
+          basePath={basePath}
+          visitLabel={visitLabel}
+        />
 
         <p class="fiche-kind">{kindLabel}</p>
         <h2 class="project-card-title" id={project.slug + "-title"}>
@@ -299,57 +189,13 @@ export function ProjectCard(
 
         <TechStack tags={project.tags} />
 
-        <details class="project-details">
-          <summary>
-            <span class="details-closed">{detailsLabel}</span>
-            <span class="details-open">{detailsCloseLabel}</span>
-          </summary>
-          <div class="project-details-body">
-            <FicheBlock title={ficheLabels.problem}>
-              <p>
-                <ProseField
-                  text={project.problem}
-                  basePath={basePath}
-                  path={`projects.${projectIndex}.problem`}
-                  sourcePath={sourcePath}
-                  editing={inlineEditing}
-                />
-              </p>
-            </FicheBlock>
-
-            <FicheBlock title={ficheLabels.decisions}>
-              <ul class="fiche-list">
-                {project.decisions.map((decision, decisionIndex) => (
-                  <li key={decision}>
-                    <ProseField
-                      text={decision}
-                      basePath={basePath}
-                      path={`projects.${projectIndex}.decisions.${decisionIndex}`}
-                      sourcePath={sourcePath}
-                      editing={inlineEditing}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </FicheBlock>
-
-            {
-              /* When a video takes the cover, the captures have no slider to
-                live in: they move here, inside the detail block. */
-            }
-            {project.video !== undefined && packs.length > 0 && (
-              <div class="project-details-gallery">
-                <ProjectGallery
-                  groups={packs}
-                  projectSlug={project.slug}
-                  projectName={project.name}
-                  basePath={basePath}
-                  viewLabel={galleryViewLabel}
-                />
-              </div>
-            )}
-          </div>
-        </details>
+        <a
+          class="project-more"
+          href={basePath + "/projects/" + project.slug + "/"}
+        >
+          {detailsLabel}
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
     </article>
   );

@@ -63,7 +63,7 @@
     grid-template-columns: 1fr;
   }
 
-  .project-details > summary,
+  .project-more span,
   .gallery-switcher,
   .gallery-controls,
   .gallery-zoom,

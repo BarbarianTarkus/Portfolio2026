@@ -171,3 +171,15 @@ export async function loadProjectsPage(ctx: Context<State>) {
   ]);
   return { site, page: page.frontmatter, sourcePath: sourcePathOf(api, page) };
 }
+
+/**
+ * One project of the projects page, resolved by slug. Returns `null` when no
+ * project matches, so the route can answer with the 404 page instead of
+ * rendering an empty article.
+ */
+export async function loadProjectPage(ctx: Context<State>, slug: string) {
+  const { site, page, sourcePath } = await loadProjectsPage(ctx);
+  const index = page.projects.findIndex((project) => project.slug === slug);
+  if (index === -1) return null;
+  return { site, page, project: page.projects[index], index, sourcePath };
+}

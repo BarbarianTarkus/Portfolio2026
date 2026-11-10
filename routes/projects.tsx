@@ -10,8 +10,8 @@ import { define } from "../utils.ts";
 /**
  * Public repositories, deliberately separated from work history: nothing here
  * is an employment record. The page is a two-column card grid, newest first:
- * each card shows an impact image and a short summary, and the problem,
- * decisions and screenshots stay behind a native "show more" disclosure.
+ * each card shows an impact image and a short summary, and its own link opens
+ * the full article with the problem, the decisions and the captures.
  */
 export const handler = define.handlers({
   async GET(ctx) {
@@ -72,9 +72,7 @@ export function ProjectsPage(
           <ProjectCard
             project={project}
             kindLabels={kindLabels}
-            ficheLabels={page.ficheLabels}
             detailsLabel={page.detailsLabel}
-            detailsCloseLabel={page.detailsCloseLabel}
             galleryViewLabel={page.galleryViewLabel}
             visitLabel={page.visitLabel}
             basePath={basePath}

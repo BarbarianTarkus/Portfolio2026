@@ -7,8 +7,8 @@ meta:
 title: Proyectos
 lede: >-
   Proyectos seleccionados, **no historial laboral**. Los dos más recientes encabezan la página; cada
-  tarjeta resume el proyecto y despliega el problema, las decisiones y las capturas cuando quieras
-  ver más.
+  tarjeta resume el proyecto y abre su ficha completa, con el problema, las decisiones y las
+  capturas.
 homelab:
   eyebrow: Homelab
   title: Más de dos años de infraestructura propia
@@ -462,8 +462,9 @@ projects:
       - >-
         **Fijamos primero el esquema de base de datos** y las historias de usuario; cada cambio de
         esquema obligaba a reescribir las historias antes de seguir con la interfaz.
-detailsLabel: Mostrar más detalles
-detailsCloseLabel: Ocultar detalles
+detailsLabel: Ver el proyecto completo
+galleryTitle: Capturas
+backLabel: Proyectos
 galleryViewLabel: Vista de las capturas
 visitLabel: Echar un vistazo
 ---

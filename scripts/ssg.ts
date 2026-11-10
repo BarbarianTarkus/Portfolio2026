@@ -23,6 +23,7 @@
  */
 
 import { join, relative } from "@std/path";
+import matter from "gray-matter";
 import { DEFAULT_BASE_PATH, normalizeBasePath } from "../config.ts";
 import {
   copyDirectory,
@@ -71,6 +72,33 @@ function log(message: string): void {
   console.log(`  ${message}`);
 }
 
+/**
+ * `routes/projects/[slug].tsx` answers one URL per project at request time,
+ * but a static export needs a concrete page for each. Read the slugs from the
+ * content source and expand the placeholder; every other route passes through
+ * untouched.
+ */
+async function expandDynamicRoutes(routes: string[]): Promise<string[]> {
+  if (!routes.includes("/projects/[slug]")) return routes;
+
+  const source = await Deno.readTextFile(
+    join(CONTENT_DIR, "05.projects", "default.md"),
+  );
+  const { data } = matter(source);
+  const projects = (data as { projects?: { slug?: unknown }[] }).projects ?? [];
+  const slugs = projects
+    .map((project) => project.slug)
+    .filter((slug): slug is string => typeof slug === "string");
+
+  log(`${slugs.length} project page(s) discovered`);
+
+  return routes.flatMap((route) =>
+    route === "/projects/[slug]"
+      ? slugs.map((slug) => `/projects/${slug}`)
+      : [route]
+  );
+}
+
 /** Print a step in the pipeline. */
 function heading(message: string): void {
   console.log(`\n▸ ${message}`);
@@ -110,7 +138,7 @@ async function main(): Promise<void> {
   heading("Building the app");
   await runTask("build");
 
-  const routes = await discoverRoutes(ROUTES_DIR);
+  const routes = await expandDynamicRoutes(await discoverRoutes(ROUTES_DIR));
   const server = await startServer(basePath);
 
   try {
