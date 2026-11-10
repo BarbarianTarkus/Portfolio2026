@@ -7,9 +7,8 @@ meta:
     Informática.
 title: Experiencia
 lede: >-
-  **Tres etapas**, en orden inverso al calendario: **desarrollo full-stack en
-  producción**, backend sobre un ERP en PHP y, antes, soporte TIC en la
-  universidad. Es donde he aprendido lo que sé.
+  Desarrollo Full-Stack en entornos de producción, principalmente sobre Moodle y WordPress, con PHP y JavaScript.
+  Soporte TIC en la universidad. Es donde he aprendido lo que sé.
 linkedinLabel: LinkedIn
 jobsSection:
   num: '01'

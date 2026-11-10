@@ -7,9 +7,9 @@ meta:
     Engineering.
 title: Experience
 lede: >-
-  **Three stages**, in reverse calendar order: **full-stack development in
-  production**, backend work on a PHP ERP and, before that, IT support at the
-  university. This is where I learned what I know.
+  Full-stack development in production environments, mainly on Moodle and
+  WordPress, with PHP and JavaScript. IT support at the university. That's where
+  I learned what I know.
 linkedinLabel: LinkedIn
 jobsSection:
   num: '01'
