@@ -86,12 +86,11 @@ education:
   summary: >-
     Estudios en la EPSEVG, compaginados desde 2020 con el soporte TIC del campus
     y, más tarde, con el trabajo en 3iPunt. Las prácticas de las asignaturas
-    están publicadas en GitHub: C++ y Java en las de programación, un proyecto
-    en ReScript, desarrollo web con JavaScript y Svelte, y administración de
-    bases de datos con PostgreSQL 14 y PostgREST. El proyecto en equipo de 2024
-    (PetSalut) se llevó con Pull Requests, revisión de código y CI en GitHub
-    Actions hasta Azure Functions; en redes inalámbricas e IoT trabajé con
-    Bluetooth LE y con la seguridad de puntos de acceso usando aircrack-ng.
+    están publicadas en GitHub, y dos de ellas tienen ficha propia: el [gestor de
+    contraseñas](/projects#password-manager) de la asignatura de bases de datos
+    y [PetSalut](/projects#petsalut), el proyecto en equipo de 2024. En redes
+    inalámbricas e IoT trabajé con Bluetooth LE y con la seguridad de puntos de
+    acceso usando Aircrack-ng.
   bulletsLabel: Aprendizaje que destaco
   bullets:
     - >-
