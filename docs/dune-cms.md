@@ -91,6 +91,25 @@ Notes on editing the files by hand:
 - The copy is Spanish (`<html lang="es">`); labels, accents and typographic
   quotes are part of the content, not the code.
 
+## Uploaded media (co-located files)
+
+The admin media library uploads files next to the page's Markdown
+(`content/06.site/og.png`) and advertises the public URL `/site/og.png`. Stock
+Dune serves that URL from a catch-all mounted by `createDuneApp()`; this site
+boots Dune headless, so the handler is registered explicitly:
+
+- [`lib/media.ts`](../lib/media.ts) mounts `installContentMedia()` right after
+  `staticFiles()`. It serves GET/HEAD for media owned by an indexed page only
+  (`_drafts` and module folders never leak), with the same content-type, cache
+  and sandbox headers as Dune. Without it every upload 404s on the site while
+  the admin keeps showing a broken thumbnail.
+- [`scripts/lib/content-media.ts`](../scripts/lib/content-media.ts) copies those
+  files into `dist/` during `deno task ssg`, at the URL path Dune advertises
+  (`content/06.site/og.png` → `dist/site/og.png`). GitHub Pages has no server,
+  so the export must ship the bytes themselves.
+- Markdown images (`![alt](/site/og.png)`) get the `BASE_PATH` prefix from
+  `lib/markdown.tsx`, like links do.
+
 ## Markdown in prose fields
 
 Prose fields are rendered through [`lib/markdown.tsx`](../lib/markdown.tsx):
@@ -100,9 +119,14 @@ Dune's allowlist (scripts, event handlers and style attributes are dropped), and
 root-relative links are prefixed with the deployment `basePath`.
 
 Markdown is supported in: the About `lede`, `paragraphs`, `homelabNote` and
-`follow`; Contact `lede`; Experience `lede`, job bullets and `outro`; Projects
-`lede`, each project's `summary`, `problem`, `decisions`, `broke` and `next`;
-and the home hero intro, section note and focus blocks.
+`follow`; Contact `lede` and channel hints; Experience `lede`, job bullets and
+`outro`; Projects `lede`, each project's `summary`, `problem`, `decisions`,
+`broke` and `next`; the home hero intro, section note, focus blocks, job preview
+bullets and work-index summaries; and the 404 `lede`. Inside links the
+surrounding anchors win, so nested `<a>` markup is dropped.
+
+A value that begins with `**` must be quoted or written as a folded block
+(`>-\n  text`) in YAML: a leading asterisk is parsed as an alias, not as text.
 
 Field text is stored as plain YAML strings and rendered as sanitized Markdown
 for every visitor, editors included (the page never shows raw syntax). For
@@ -267,6 +291,9 @@ Consequences:
   and pushed: the deploy workflow re-exports `dist/` from `content/`.
 - The export is byte-for-byte files, so no login, database or KV store is needed
   on the host. The `BASE_PATH` prefix applies to the static site only.
+- Media uploaded through the admin is exported too: `deno task ssg` copies the
+  co-located files from `content/` to the URL path Dune advertises (see
+  [Uploaded media](#uploaded-media-co-located-files)).
 - The renderer sets `DUNE_STATIC=1`, which skips mounting the admin/plugin
   routes and the inline-edit runtime during the export (no user or session
   directories are created in CI), and the export scrubs any remaining

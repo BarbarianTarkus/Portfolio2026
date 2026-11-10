@@ -31,6 +31,7 @@ import {
   removeDir,
   walkFiles,
 } from "./lib/files.ts";
+import { copyContentMedia } from "./lib/content-media.ts";
 import { discoverRoutes } from "./lib/routes.ts";
 import { renderNotFound, renderRoute, startServer } from "./lib/render.ts";
 import { verifyOutput } from "./lib/verify.ts";
@@ -38,6 +39,7 @@ import { verifyOutput } from "./lib/verify.ts";
 const ROOT = join(import.meta.dirname!, "..");
 const DIST = join(ROOT, "dist");
 const ROUTES_DIR = join(ROOT, "routes");
+const CONTENT_DIR = join(ROOT, "content");
 const STATIC_DIR = join(ROOT, "static");
 const BUNDLED_ASSETS_DIR = join(ROOT, "_fresh", "static");
 
@@ -134,6 +136,13 @@ async function main(): Promise<void> {
       isBuildArtifact,
     );
     log(`${staticFiles} static files + ${bundleFiles} bundled assets copied`);
+
+    heading("Copying content media");
+    // Images uploaded through the admin live next to their page's Markdown
+    // (content/06.site/og.png → /site/og.png). The dev server serves them from
+    // lib/media.ts; the static host needs the files themselves.
+    const mediaFiles = await copyContentMedia(CONTENT_DIR, DIST);
+    log(`${mediaFiles} co-located content media file(s) copied`);
 
     heading("Scrubbing inline-edit markers");
     const scrubbed = await scrubInlineEditMarkers(DIST);

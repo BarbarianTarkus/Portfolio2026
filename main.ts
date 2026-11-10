@@ -3,6 +3,7 @@ import { bootstrap } from "@dune/core/bootstrap";
 import { mountPlugins } from "@dune/core/plugins";
 import type { BootstrapResult } from "@dune/core/bootstrap";
 import { normalizeBasePath } from "./config.ts";
+import { installContentMedia } from "./lib/media.ts";
 import {
   buildClientBundles,
   installInlineEditMiddleware,
@@ -32,6 +33,11 @@ export async function createApp(): Promise<{
   });
 
   app.use(staticFiles());
+
+  // Uploads made through the admin are stored next to the page Markdown
+  // (content/06.site/og.png → /site/og.png). Dune serves those URLs itself only
+  // in its own Fresh app, so mount the handler here before the page routes.
+  installContentMedia(app, dune, { basePath });
 
   // Inline-edit chrome: transform middleware must be registered before the
   // page routes so it can post-process their HTML responses.
