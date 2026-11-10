@@ -20,8 +20,6 @@ homelab:
   facts:
     - value: '2+'
       label: years running
-    - value: '0'
-      label: open ports
     - value: '24/7'
       label: availability
 kindLabels:
