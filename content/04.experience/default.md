@@ -94,12 +94,11 @@ education:
   bulletsLabel: Aprendizaje que destaco
   bullets:
     - >-
-      **Entorno virtual con VirtualBox**: redes con DMZ, clientes y servidores
-      (Nagios, DNS).
-    - '**Servicios de red**: DHCP con bind9, y SSH, SFTP y OpenVPN.'
-    - >-
-      **Scripts en Bash**: información del sistema operativo y escaneo de redes
-      con Nmap y Aircrack-ng.
+      **Red segmentada en Linux**: troncal, DMZ, clientes y servidores en
+      máquinas virtuales con dos routers Linux; seguridad perimetral con
+      nftables, DNS maestro/esclavo con BIND9, DHCP con reservas y DDNS por
+      TSIG; y monitorización con Nagios Core + NRPE, validada de extremo a
+      extremo con SSH.
     - >-
       **Front-end con Django**: aplicación full-stack en equipo, con
       metodologías ágiles (Scrum).
