@@ -87,3 +87,27 @@ Append to `projects` in `data/site.ts`:
 ```
 
 The route renders every fiche automatically; no markup changes needed.
+
+## Formación summary and stack (2026-11-10)
+
+The education entry on `/experience` gained two optional fields —
+`education.summary` (inline Markdown) and `education.stack` (chips) — typed in
+`lib/content-types.ts` and rendered by `routes/experience.tsx`.
+
+What the summary claims and where it comes from:
+
+| Claim                                                        | Source                                                       |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Degree, school, 2017 — 2026                                  | `career-ops/cv.md` (Education)                               |
+| Coursework repositories are public on GitHub                 | GitHub (2020–2025 academic repos: 20+ under BarbarianTarkus) |
+| C++, Java, ReScript, JavaScript, Svelte, Python, Bash        | GitHub API `languages` per repository                        |
+| PostgreSQL 14 + PostgREST, DynamoDB                          | handoff §5.2 (Password-Manager), `Dynode` README             |
+| Pull Requests, code review, GitHub Actions → Azure Functions | handoff §5.2 (PetSalut: 12 merged PRs)                       |
+| Bluetooth LE, IoT, aircrack-ng                               | `XASF_Lliurament_5`, `XASF_Projecte_IOT`, `ArmorPiercer`     |
+
+Deliberate omissions: career-ops has **no subject list**, so the summary
+describes technologies evidenced by the repositories instead of naming
+asignaturas; there is no TFG, grade or honours claim because none is recorded.
+TypeScript, Rust and Astro appear only in personal or work projects, so they
+stay out of the degree stack. If the owner supplies the real course list,
+replace the paragraph rather than layering a second one on top.

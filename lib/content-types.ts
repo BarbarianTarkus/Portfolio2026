@@ -183,6 +183,13 @@ export interface EducationEntry {
   period: string;
   role: string;
   company: string;
+  /**
+   * Inline Markdown paragraph under the degree: what the coursework covered.
+   * Optional so an entry can stay a bare period/role/company line.
+   */
+  summary?: string;
+  /** Technologies used in the coursework, rendered as labeled tiles. */
+  stack?: string[];
 }
 
 /** Experience page copy: jobs timeline, education and closing note. */

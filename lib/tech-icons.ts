@@ -279,6 +279,10 @@ const TAG_ICONS: Record<string, keyof typeof ICONS> = {
 
 /** Tones for stacks that have no official glyph, keyed by project tag. */
 const TAG_COLORS: Record<string, string> = {
+  "Java": "#E76F00",
+  "Bash": "#4EAA25",
+  "ReScript": "#E6484F",
+  "DynamoDB": "#4053D6",
   "PyInstaller": "#FFD166",
   "Deno KV": "#7CF0C0",
   "Oak": "#7ED0A8",

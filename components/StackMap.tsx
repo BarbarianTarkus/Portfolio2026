@@ -43,8 +43,6 @@ const TAG_DOMAIN: Record<string, string> = {
   "DeepSeek Harness": "ai",
   Pi: "ai",
   "Gentle Shell": "ai",
-  MCP: "ai",
-  Skills: "ai",
   Ollama: "ai",
   Docker: "infra",
   "Synology NAS": "infra",
@@ -77,7 +75,7 @@ const DOMAINS = [
     id: "ai",
     code: "IA",
     title: "IA agéntica",
-    note: "Agentes, MCP y skills",
+    note: "Uso de Arneses y Agentes",
   },
 ] as const;
 
@@ -167,7 +165,7 @@ export function buildStackGroups(
       id: "other",
       code: "OTROS",
       title: "Otros",
-      note: "Tecnologías complementarias",
+      note: "Tecnologías/Herramientas complementarias",
       items: otherTags,
     });
   }

@@ -8,6 +8,10 @@ import { techLinkForTag } from "../lib/tech-links.ts";
  * in the screen-reader-only label.
  */
 const TAG_MONOGRAMS: Record<string, string> = {
+  "Java": "JV",
+  "Bash": "SH",
+  "ReScript": "ReS",
+  "DynamoDB": "DDB",
   "PyInstaller": "PyI",
   "Deno KV": "KV",
   "Oak": "Oak",

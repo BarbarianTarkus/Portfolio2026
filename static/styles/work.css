@@ -39,6 +39,15 @@
   font-size: var(--text-small);
 }
 
+/* Degree summary: body size under the company line, at the reading measure. */
+.job-summary {
+  max-width: var(--measure);
+  margin-top: 0.6rem;
+  color: var(--text);
+  font-size: var(--text-body);
+  line-height: 1.65;
+}
+
 .job-points {
   max-width: var(--measure);
   margin-top: 0.85rem;

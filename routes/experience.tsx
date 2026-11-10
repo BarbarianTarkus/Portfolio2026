@@ -5,6 +5,7 @@ import { JobList } from "../components/JobList.tsx";
 import { PageHeader } from "../components/PageHeader.tsx";
 import { PageMeta } from "../components/PageMeta.tsx";
 import { SectionHead } from "../components/SectionHead.tsx";
+import { TechStack } from "../components/TechTags.tsx";
 import { define } from "../utils.ts";
 
 /**
@@ -133,6 +134,25 @@ export function ExperiencePage(
                 editing={inlineEditing}
               />
             </p>
+            {page.education.summary !== undefined && (
+              <p class="job-summary">
+                <ProseField
+                  text={page.education.summary}
+                  basePath={basePath}
+                  path="education.summary"
+                  sourcePath={sourcePath}
+                  editing={inlineEditing}
+                />
+              </p>
+            )}
+            {page.education.stack !== undefined &&
+              page.education.stack.length > 0 && (
+              <TechStack
+                tags={page.education.stack}
+                class="job-stack"
+                labeled
+              />
+            )}
           </div>
         </li>
       </ol>

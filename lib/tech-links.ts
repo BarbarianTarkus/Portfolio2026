@@ -32,6 +32,10 @@ const TECH_LINKS: Record<string, string> = {
   Svelte: "https://svelte.dev/",
   Docker: "https://www.docker.com/",
   "C++": "https://isocpp.org/",
+  Java: "https://dev.java/",
+  Bash: "https://www.gnu.org/software/bash/",
+  ReScript: "https://rescript-lang.org/",
+  DynamoDB: "https://aws.amazon.com/dynamodb/",
   "Azure Functions": "https://learn.microsoft.com/azure/azure-functions/",
 
   // Work history and homelab stacks.
