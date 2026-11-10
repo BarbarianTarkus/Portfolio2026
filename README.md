@@ -215,8 +215,8 @@ The numeric prefix controls order and is stripped from the route:
 The frontmatter is typed in [`lib/content-types.ts`](lib/content-types.ts) and
 loaded by [`lib/content.ts`](lib/content.ts), which passes it to the routes;
 routes only see plain data. Edit the frontmatter by hand or through the
-[admin](#editing-content). The site copy is written in Spanish
-(`<html lang="es">`); there is no English translation yet.
+[admin](#editing-content). The site is published in Spanish, English and
+Catalan; see [Languages](#languages).
 
 Colours, spacing and type are defined once as CSS custom properties in
 [`static/styles/tokens.css`](static/styles/tokens.css).
@@ -224,6 +224,76 @@ Colours, spacing and type are defined once as CSS custom properties in
 point: it loads one stylesheet per component in cascade order (base, layout,
 header, hero, work, projects, gallery, … print). Adding a component means
 creating its file and adding the import in the right layer.
+
+## Languages
+
+The site is published in Spanish (default), English and Catalan. Spanish keeps
+the clean URLs; the other two live under a language prefix:
+
+| Language | URLs                                  | Content file              |
+| -------- | ------------------------------------- | ------------------------- |
+| Spanish  | `/`, `/about`, `/projects/…`          | `content/*/default.md`    |
+| English  | `/en/`, `/en/about`, `/en/projects/…` | `content/*/default.en.md` |
+| Catalan  | `/ca/`, `/ca/about`, `/ca/projects/…` | `content/*/default.ca.md` |
+
+A translation is a second Dune page in the same folder, named
+`default.<lang>.md`. Dune indexes it under the same canonical route with its own
+`language` tag, so `lib/content.ts` resolves pages by (route, language) and
+falls back to Spanish when a translation is missing — a half-translated site
+still renders. `/es/…` redirects (308) to the unprefixed URL, and an unknown
+first segment (`/foo/about`) answers 404 instead of duplicating the Spanish page
+under a meaningless prefix.
+
+Everything that is not page copy lives in two files, so adding a language means
+touching three places:
+
+- [`config/system.yaml`](config/system.yaml) — `content.languages.supported`,
+  `default` and `include_default_in_url` (Dune's own language registry).
+- [`lib/languages.ts`](lib/languages.ts) — `LANGUAGES`, `DEFAULT_LANGUAGE`,
+  `languageMeta` (`htmlLang`, Open Graph locale, switcher label and name) and
+  the URL helpers (`pathFor`, `localizedHref`, `canonicalPath`,
+  `alternatesFor`).
+- [`lib/ui-strings.ts`](lib/ui-strings.ts) — the UI strings that are not
+  content: gallery/lightbox controls, technical-tag labels, stack-map headings.
+
+Routes keep one canonical handler per page (`routes/index.tsx`,
+`routes/about.tsx`, …). `routes/[lang]/…` only adds a language guard and reuses
+that handler; the active language reaches it through `ctx.state.lang`, which
+`main.ts` derives from the URL prefix. Fresh renders the page component in a
+pass of its own, so a context provider placed in `_app` never reaches it:
+`main.ts` wraps the vnode handed to `ctx.render` in `LanguageProvider` instead
+([`lib/language-render.tsx`](lib/language-render.tsx)), and that is what lets
+server components call `useLanguage()`. Islands render and hydrate outside that
+tree, so they take the language as an explicit prop. Every internal link goes
+through `localizedHref()`, and Markdown coming from content keeps canonical
+targets (`[proyectos](/projects)`) because
+[`lib/markdown.tsx`](lib/markdown.tsx) adds the language prefix while rendering.
+The layout emits `<html lang>`, `og:locale`, `og:locale:alternate`, canonical
+and `hreflang` alternates.
+
+The header's ES/EN/CA switcher points at the same page in each language. The
+mobile menu and the selector are part of the same navigation overlay, so they
+stay usable without JavaScript as plain links.
+
+The static export renders every combination: [`scripts/ssg.ts`](scripts/ssg.ts)
+expands `routes/[lang]/…` into `/en` and `/ca` (Spanish keeps the canonical
+URLs) and `[slug]` into one page per project and language. GitHub Pages serves a
+single `dist/404.html`, so the not-found page is the Spanish one; it links to
+the home page of each language, drops the canonical/`hreflang` links (they would
+point at the address that was not found) and is marked `noindex`.
+
+Translations are edited like any other page: in the admin, or with the ✎ handles
+while viewing `/en/…` or `/ca/…` (those write to the variant file that is being
+displayed). After editing run:
+
+```bash
+deno task i18n   # translations must keep the Spanish structure
+```
+
+It parses every `default.<lang>.md` against its `default.md` and fails on a
+missing/extra key, a changed type or list length, a translated slug, route, URL,
+e-mail or technology name (`stack`, `homelabStack`, `tags`), or a Markdown body
+(all copy belongs in the frontmatter).
 
 ## Design notes
 
@@ -270,6 +340,7 @@ git-ignored `data/` and `.dune/` runtime directories.
 
 ```bash
 deno task check   # deno fmt --check + deno lint + deno check
+deno task i18n    # translated content still matches the Spanish source
 ```
 
 The same command runs in CI and before every deployment, and only needs Deno.
