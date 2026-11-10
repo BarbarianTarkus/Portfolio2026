@@ -1,5 +1,6 @@
 import type { ComponentChildren } from "preact";
 import type { Project, ProjectsContent } from "../../lib/content.ts";
+import { localizedHref, useLanguage } from "../../lib/i18n.tsx";
 import { ProseField } from "../../lib/markdown.tsx";
 import { TechStack } from "../TechTags.tsx";
 import { ProjectGallery } from "./ProjectGallery.tsx";
@@ -58,13 +59,14 @@ export function ProjectArticle(
     inlineEditing,
   }: ProjectArticleProps,
 ) {
+  const lang = useLanguage();
   const kindLabel = kindLabels[project.kind as keyof KindLabels] ??
     project.kind;
   const packs = (project.gallery ?? []).filter((pack) =>
     pack.images.length > 0
   );
   const back = (
-    <a class="article-back" href={basePath + "/projects/"}>
+    <a class="article-back" href={localizedHref(basePath, lang, "/projects/")}>
       <span aria-hidden="true">←</span> {backLabel}
     </a>
   );

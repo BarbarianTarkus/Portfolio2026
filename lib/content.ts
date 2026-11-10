@@ -2,16 +2,19 @@
  * Typed view over the Dune-managed content pages in content/.
  *
  * Every page is a Dune flat-file page (`content/<nn>.<name>/default.md`) whose
- * YAML frontmatter holds the structured copy the routes render. This module is
- * the only place that talks to Dune's content API, so routes and components
- * stay independent of where the content lives.
+ * YAML frontmatter holds the structured copy the routes render. Translations
+ * live next to it as `default.<lang>.md` (`default.en.md`, `default.ca.md`):
+ * Dune serves them under the same canonical route, tagged with their language.
+ *
+ * This module is the only place that talks to Dune's content engine, so routes
+ * and components stay independent of where the content lives.
  *
  * @module
  */
 
-import type { ContentApi, ResolvedPage } from "@dune/core/content";
 import type { Context } from "fresh";
-import type { State } from "../utils.ts";
+import type { DuneEngine, State } from "../utils.ts";
+import { DEFAULT_LANGUAGE, type Language } from "./i18n.tsx";
 import type {
   AboutContent,
   ContactContent,
@@ -46,80 +49,125 @@ export type {
   SiteContent,
 };
 
-/** Return the request-scoped Dune content API. */
-function contentApi(ctx: Context<State>): ContentApi {
-  const api = ctx.state.contentApi;
-  if (api === undefined) {
+/**
+ * The subset of Dune's page index this module relies on: one row per
+ * (route, language) pair, pointing at the flat file that holds it.
+ */
+interface PageRef {
+  route: string;
+  language: string;
+  sourcePath: string;
+  parentPath: string | null;
+  order: number;
+}
+
+/** Raw frontmatter of one resolved page plus the file it was read from. */
+export interface LoadedPage<FM> {
+  frontmatter: FM;
+  sourcePath: string;
+}
+
+function engineOf(ctx: Context<State>): DuneEngine {
+  const engine = ctx.state.engine;
+  if (engine === undefined) {
     throw new Error(
-      "Dune content API missing from ctx.state. Is main.ts mounted correctly?",
+      "Dune engine missing from ctx.state. Is main.ts mounted correctly?",
     );
   }
-  return api;
+  return engine;
+}
+
+/** Language of the request being rendered (set by main.ts from the URL). */
+export function currentLanguage(ctx: Context<State>): Language {
+  return ctx.state.lang ?? DEFAULT_LANGUAGE;
+}
+
+function pageIndex(ctx: Context<State>): PageRef[] {
+  return (engineOf(ctx).pages ?? []) as unknown as PageRef[];
+}
+
+/** Dune addresses pages with a trailing slash ("/about/"). */
+function canonicalRoute(route: string): string {
+  if (route === "/" || route === "") return "/";
+  return `${route.replace(/\/+$/, "")}/`;
 }
 
 /**
- * Dune routes always end with a trailing slash ("/about/"), while Fresh routes
- * are declared without one ("/about"). Accept both when loading a page.
+ * The route of the site's home page.
+ *
+ * Every top-level folder of content/ yields a root page (the home page is the
+ * first one, by folder order), so "first root page of the requested language"
+ * is not stable: a translated site that only has `content/02.about/default.en.md`
+ * would resolve "/" to the English *about* page. The home page is therefore
+ * defined by the default language, and the variant for `lang` is resolved by
+ * route like any other page.
  */
-function routeCandidates(route: string): string[] {
-  if (route === "/") return [];
-  const withoutSlash = route.replace(/\/+$/, "");
-  return [`${withoutSlash}/`, withoutSlash];
-}
-
-/** The Dune page that serves as the site's home (first top-level folder). */
-function homeRoute(api: ContentApi): string {
-  const roots = api.pages().filter((page) => page.parentPath === null);
-  const home = [...roots].sort((a, b) => a.order - b.order)[0];
-  if (home === undefined) {
+function homeRoute(pages: PageRef[]): string {
+  const roots = pages.filter((page) => page.parentPath === null);
+  if (roots.length === 0) {
     throw new Error("No Dune content pages found in content/");
   }
-  return home.route;
+  const [home] = roots
+    .filter((page) => page.language === DEFAULT_LANGUAGE)
+    .sort((a, b) => a.order - b.order);
+  return (home ?? roots.sort((a, b) => a.order - b.order)[0]).route;
 }
 
-/** Load one page by Fresh-style route, returning its Dune page record. */
+/**
+ * Index entry serving `route` in `lang`. Untranslated pages fall back to the
+ * default-language variant, so a partly translated site still renders.
+ */
+function findPageRef(
+  ctx: Context<State>,
+  route: string,
+  lang: Language,
+): PageRef | undefined {
+  const pages = pageIndex(ctx);
+  const wanted = route === "/" ? homeRoute(pages) : canonicalRoute(route);
+  return pages.find((page) =>
+    page.route === wanted && page.language === lang
+  ) ??
+    pages.find((page) =>
+      page.route === wanted && page.language === DEFAULT_LANGUAGE
+    ) ??
+    pages.find((page) => page.route === wanted);
+}
+
+/** Load one page by canonical route, in the language of the request. */
 async function loadPage<FM>(
   ctx: Context<State>,
   route: string,
-): Promise<ResolvedPage<FM>> {
-  const api = contentApi(ctx);
-  const candidates = route === "/" ? [homeRoute(api)] : routeCandidates(route);
-
-  for (const candidate of candidates) {
-    const page = await api.page<FM>(candidate);
-    if (page !== null) return page;
+): Promise<LoadedPage<FM>> {
+  const lang = currentLanguage(ctx);
+  const ref = findPageRef(ctx, route, lang);
+  if (ref === undefined) {
+    throw new Error(
+      `Dune content page not found for route "${route}" (language "${lang}"). ` +
+        `Check content/ and the language variants (default.md, default.${lang}.md).`,
+    );
   }
 
-  throw new Error(
-    `Dune content page not found for route "${route}" ` +
-      `(tried: ${
-        candidates.join(", ")
-      }). Check content/ and content/*/default.md.`,
-  );
+  const page = await engineOf(ctx).loadPage(ref.sourcePath);
+  return {
+    frontmatter: (page as unknown as { frontmatter: FM }).frontmatter,
+    sourcePath: ref.sourcePath,
+  };
 }
 
 /**
  * Site globals (identity, nav, footer labels, 404 copy) plus the page shared by
  * every route. The result is cached on `ctx.state.site` for the app shell.
  */
-/** Source path of a resolved page (used by inline-edit field markers). */
-function sourcePathOf(api: ContentApi, page: ResolvedPage<unknown>): string {
-  return api.pages().find((candidate) => candidate.route === page.route)
-    ?.sourcePath ?? "";
-}
-
 export async function loadSite(ctx: Context<State>): Promise<SiteContent> {
-  const api = contentApi(ctx);
   const page = await loadPage<SiteContent>(ctx, "/site");
   ctx.state.site = page.frontmatter;
-  ctx.state.siteSourcePath = sourcePathOf(api, page);
+  ctx.state.siteSourcePath = page.sourcePath;
   return page.frontmatter;
 }
 
 /** Load one page document plus the site globals it renders inside. */
 export async function loadHomePage(ctx: Context<State>) {
   const site = await loadSite(ctx);
-  const api = contentApi(ctx);
   const [page, experience, projects] = await Promise.all([
     loadPage<HomeContent>(ctx, "/"),
     loadPage<ExperienceContent>(ctx, "/experience"),
@@ -131,45 +179,41 @@ export async function loadHomePage(ctx: Context<State>) {
     page: page.frontmatter,
     experience: experience.frontmatter,
     projects: projects.frontmatter,
-    sourcePath: sourcePathOf(api, page),
+    sourcePath: page.sourcePath,
     siteSourcePath: ctx.state.siteSourcePath ?? "",
   };
 }
 
 export async function loadAboutPage(ctx: Context<State>) {
-  const api = contentApi(ctx);
   const [site, page] = await Promise.all([
     loadSite(ctx),
     loadPage<AboutContent>(ctx, "/about"),
   ]);
-  return { site, page: page.frontmatter, sourcePath: sourcePathOf(api, page) };
+  return { site, page: page.frontmatter, sourcePath: page.sourcePath };
 }
 
 export async function loadContactPage(ctx: Context<State>) {
-  const api = contentApi(ctx);
   const [site, page] = await Promise.all([
     loadSite(ctx),
     loadPage<ContactContent>(ctx, "/contact"),
   ]);
-  return { site, page: page.frontmatter, sourcePath: sourcePathOf(api, page) };
+  return { site, page: page.frontmatter, sourcePath: page.sourcePath };
 }
 
 export async function loadExperiencePage(ctx: Context<State>) {
-  const api = contentApi(ctx);
   const [site, page] = await Promise.all([
     loadSite(ctx),
     loadPage<ExperienceContent>(ctx, "/experience"),
   ]);
-  return { site, page: page.frontmatter, sourcePath: sourcePathOf(api, page) };
+  return { site, page: page.frontmatter, sourcePath: page.sourcePath };
 }
 
 export async function loadProjectsPage(ctx: Context<State>) {
-  const api = contentApi(ctx);
   const [site, page] = await Promise.all([
     loadSite(ctx),
     loadPage<ProjectsContent>(ctx, "/projects"),
   ]);
-  return { site, page: page.frontmatter, sourcePath: sourcePathOf(api, page) };
+  return { site, page: page.frontmatter, sourcePath: page.sourcePath };
 }
 
 /**

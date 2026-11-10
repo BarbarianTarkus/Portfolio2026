@@ -1,4 +1,5 @@
 import type { SiteContent } from "../lib/content.ts";
+import { localizedHref, useLanguage } from "../lib/i18n.tsx";
 import { PageHeader } from "./PageHeader.tsx";
 import { Markdown } from "../lib/markdown.tsx";
 import { PageMeta } from "./PageMeta.tsx";
@@ -15,6 +16,7 @@ interface NotFoundPageProps {
  */
 export function NotFoundPage({ basePath, site }: NotFoundPageProps) {
   const notFound = site.notFound;
+  const lang = useLanguage();
   const metaTitle = notFound.metaTitle + " — " + site.author;
   return (
     <>
@@ -34,7 +36,7 @@ export function NotFoundPage({ basePath, site }: NotFoundPageProps) {
         }
         <a
           class="button"
-          href={basePath + "/"}
+          href={localizedHref(basePath, lang, "/")}
           aria-current="false"
         >
           {notFound.button}

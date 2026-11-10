@@ -5,6 +5,7 @@ import { PageHeader } from "../components/PageHeader.tsx";
 import { PageMeta } from "../components/PageMeta.tsx";
 import { SectionHead } from "../components/SectionHead.tsx";
 import { buildStackGroups, StackMap } from "../components/StackMap.tsx";
+import { useLanguage } from "../lib/i18n.tsx";
 import { define } from "../utils.ts";
 
 /**
@@ -85,7 +86,7 @@ export function AboutPage(
       />
 
       <StackMap
-        groups={buildStackGroups(site.stack, site.homelabStack)}
+        groups={buildStackGroups(site.stack, site.homelabStack, useLanguage())}
         label={page.stackSection.title}
       />
 

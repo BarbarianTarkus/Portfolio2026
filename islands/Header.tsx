@@ -3,6 +3,14 @@ import type { RefObject } from "preact";
 import { type Signal, useSignal } from "@preact/signals";
 import { CloseIcon, MenuIcon } from "../components/Icons.tsx";
 import type { SiteContent } from "../lib/content.ts";
+import {
+  canonicalPath,
+  type Language,
+  languageMeta,
+  LANGUAGES,
+  localizedHref,
+} from "../lib/i18n.tsx";
+import { uiStrings } from "../lib/ui-strings.ts";
 
 type Labels = SiteContent["labels"];
 
@@ -13,6 +21,8 @@ interface HeaderProps {
   basePath: string;
   /** Current request path, used only to mark the logo when it is the page. */
   path: string;
+  /** Language of the current page, used to build links and the switcher. */
+  lang: Language;
 }
 
 interface MenuToggleProps {
@@ -124,21 +134,24 @@ function MenuToggle({ open, onToggle, buttonRef, labels }: MenuToggleProps) {
  * Active-link state is not computed here: Fresh annotates matching anchors with
  * aria-current, which the stylesheet uses for the active nav indicator.
  */
-export default function Header({ site, basePath, path }: HeaderProps) {
+export default function Header(
+  { site, basePath, path, lang }: HeaderProps,
+) {
   const open = useSignal(false);
   // The active state is owned here on purpose: Fresh annotates the matching
   // anchor during SSR, but hydration re-renders this island from site.nav
   // and the attribute would be lost. data-current is what the client router
   // reads to keep intercepting links, so both are rendered together.
   const normalise = (value: string) => value.replace(/\/+$/, "") || "/";
-  const route = normalise(
-    path.startsWith(basePath) ? path.slice(basePath.length) : path,
-  );
+  // Nav routes are canonical ("/about"): the language prefix is stripped before
+  // comparing, and added back when rendering links.
+  const route = normalise(canonicalPath(path, basePath).path);
   const isActive = (target: string) => normalise(target) === route;
   const isHome = route === "/";
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const href = (target: string) => basePath + target;
+  const href = (target: string) => localizedHref(basePath, lang, target);
+  const strings = uiStrings(lang);
   const closeMenu = () => (open.value = false);
   const labels = site.labels;
 
@@ -192,6 +205,26 @@ export default function Header({ site, basePath, path }: HeaderProps) {
               </li>
             ))}
           </ul>
+
+          <div
+            class="lang-switcher"
+            role="group"
+            aria-label={strings.languageNav}
+          >
+            {LANGUAGES.map((candidate) => (
+              <a
+                key={candidate}
+                href={localizedHref(basePath, candidate, route)}
+                hreflang={languageMeta[candidate].htmlLang}
+                lang={languageMeta[candidate].htmlLang}
+                title={languageMeta[candidate].name}
+                aria-current={candidate === lang ? "true" : undefined}
+                onClick={closeMenu}
+              >
+                {languageMeta[candidate].label}
+              </a>
+            ))}
+          </div>
 
           <button
             type="button"

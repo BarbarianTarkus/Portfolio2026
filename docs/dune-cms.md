@@ -88,8 +88,14 @@ Notes on editing the files by hand:
   `template`); Dune injects them with defaults. Page-specific fields such as
   `kind`, `work`, `broke` and `next` are described by
   [`lib/content-types.ts`](../lib/content-types.ts).
-- The copy is Spanish (`<html lang="es">`); labels, accents and typographic
-  quotes are part of the content, not the code.
+- A translation is a sibling page in the same folder, named `default.<lang>.md`
+  (`default.en.md`, `default.ca.md`). Dune indexes it under the same canonical
+  route with its `language` tag, so `lib/content.ts` picks the variant for
+  `ctx.state.lang` and falls back to Spanish when it is missing. Slugs, routes,
+  links, e-mail addresses and technology names must stay identical to the
+  Spanish page — only prose is translated. `deno task i18n` checks that.
+- The default copy is Spanish (`<html lang="es">`); labels, accents and
+  typographic quotes are part of the content, not the code.
 
 ## Uploaded media (co-located files)
 

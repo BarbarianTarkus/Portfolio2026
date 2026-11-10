@@ -1,4 +1,5 @@
 import type { Project, ProjectKindLabels } from "../../lib/content.ts";
+import { localizedHref, useLanguage } from "../../lib/i18n.tsx";
 import { Markdown } from "../../lib/markdown.tsx";
 import { TechStack } from "../TechTags.tsx";
 
@@ -10,13 +11,15 @@ interface WorkIndexProps {
 
 /** Numbered project rows: the scanning layer over the project fiches. */
 export function WorkIndex({ projects, kindLabels, basePath }: WorkIndexProps) {
+  const lang = useLanguage();
+
   return (
     <ol class="work-index">
       {projects.map((project) => (
         <li key={project.slug}>
           <a
             class="work-row"
-            href={basePath + "/projects#" + project.slug}
+            href={localizedHref(basePath, lang, "/projects#" + project.slug)}
             aria-label={project.name + " — " + kindLabels[project.kind]}
           >
             <span class="work-year">

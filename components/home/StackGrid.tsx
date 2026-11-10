@@ -1,4 +1,5 @@
 import type { HomeContent, SiteContent } from "../../lib/content.ts";
+import { useLanguage } from "../../lib/i18n.tsx";
 import { ProseField } from "../../lib/markdown.tsx";
 import { buildStackGroups, StackMap } from "../StackMap.tsx";
 
@@ -21,6 +22,7 @@ export function StackGrid(
   const groups = buildStackGroups(
     site.stack,
     site.homelabStack,
+    useLanguage(),
     page.stackSection.infrastructureLabel,
   );
 

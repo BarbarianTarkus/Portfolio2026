@@ -2,6 +2,7 @@
   "nodeModulesDir": "manual",
   "tasks": {
     "check": "deno fmt --check . && deno lint . && deno check",
+    "i18n": "deno run -A scripts/check-translations.ts",
     "fmt": "deno fmt .",
     "dev": "deno run -A --watch=main.ts,dev.ts,config,plugins,lib,routes --watch-exclude=_fresh,dist,node_modules,data,.dune dev.ts",
     "build": "deno run -A scripts/build.ts",

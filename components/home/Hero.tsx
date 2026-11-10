@@ -1,4 +1,5 @@
 import type { HomeContent, SiteContent } from "../../lib/content.ts";
+import { localizedHref, useLanguage } from "../../lib/i18n.tsx";
 import { ProseField } from "../../lib/markdown.tsx";
 
 interface HeroProps {
@@ -21,6 +22,8 @@ export function Hero(
     inlineEditing,
   }: HeroProps,
 ) {
+  const lang = useLanguage();
+
   return (
     <section class="hero">
       <p class="eyebrow">
@@ -64,12 +67,15 @@ export function Hero(
       </p>
 
       <div class="hero-actions">
-        <a class="button" href={basePath + page.primaryAction.route}>
+        <a
+          class="button"
+          href={localizedHref(basePath, lang, page.primaryAction.route)}
+        >
           {page.primaryAction.label}
         </a>
         <a
           class="button button-ghost"
-          href={basePath + page.secondaryAction.route}
+          href={localizedHref(basePath, lang, page.secondaryAction.route)}
         >
           {page.secondaryAction.label}
         </a>

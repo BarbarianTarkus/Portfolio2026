@@ -5,10 +5,17 @@ import type { BootstrapResult } from "@dune/core/bootstrap";
 import { normalizeBasePath } from "./config.ts";
 import { installContentMedia } from "./lib/media.ts";
 import {
+  canonicalPath,
+  DEFAULT_LANGUAGE,
+  isLanguage,
+  pathFor,
+} from "./lib/i18n.tsx";
+import {
   buildClientBundles,
   installInlineEditMiddleware,
   installInlineEditRoutes,
 } from "./lib/inline-edit-runtime.ts";
+import { wrapPageLanguage } from "./lib/language-render.tsx";
 import type { State } from "./utils.ts";
 
 /**
@@ -68,7 +75,13 @@ export async function createApp(): Promise<{
     // Render the public page in-process (no redirect: the admin's CSP would
     // block a cross-document frame navigation) and reuse its HTML verbatim.
     const basePath = normalizeBasePath(Deno.env.get("BASE_PATH"));
-    const target = new URL(`${basePath}${page.route}`, ctx.url);
+    // Language variants share the canonical route, so the prefixed URL is what
+    // actually renders the page the editor just saved.
+    const lang = isLanguage(page.language) ? page.language : DEFAULT_LANGUAGE;
+    const target = new URL(
+      `${basePath}${pathFor(lang, page.route)}`,
+      ctx.url,
+    );
     const response = await app.handler()(
       new Request(target, { headers: { accept: "text/html" } }),
     );
@@ -96,9 +109,20 @@ export async function createApp(): Promise<{
     installInlineEditRoutes(app, dune, { bundles, basePath });
   }
 
-  // Route handlers reach the Dune content API through ctx.state.
+  // Route handlers reach the Dune content API through ctx.state. The language
+  // is derived from the URL prefix ("/en", "/ca"); unprefixed URLs are the
+  // default language.
   app.use((ctx) => {
     ctx.state.contentApi = dune.contentApi;
+    ctx.state.engine = dune.engine;
+    const lang = canonicalPath(ctx.url.pathname, basePath).lang;
+    ctx.state.lang = lang;
+    // Fresh renders the route component in its own pass, outside the _app tree,
+    // so the provider mounted there never reaches the page. Wrapping the vnode
+    // given to ctx.render puts every page (and the 404) in the language context.
+    const render = ctx.render.bind(ctx);
+    ctx.render = ((vnode, init) =>
+      render(wrapPageLanguage(vnode, lang), init)) as typeof ctx.render;
     return ctx.next();
   });
 
@@ -108,15 +132,20 @@ export async function createApp(): Promise<{
   // Fresh matches /projects/<slug> exactly, so the trailing-slash form that a
   // static host serves (…/projects/<slug>/) matches no route and would 404
   // before the handler runs. Render it against the slash-free URL instead, so
-  // the link and its directory-index twin show the same page. Only nested
-  // paths are re-dispatched: section routes and the home page already match
-  // with or without the slash.
+  // the link and its directory-index twin show the same page. Section routes
+  // and the home page already match with or without the slash, but a
+  // single-segment language prefix ("/en/", "/ca/") does not.
   app.use(async (ctx) => {
     if (ctx.req.method !== "GET") return ctx.next();
     const pathname = ctx.url.pathname;
     const relative = basePath ? pathname.slice(basePath.length) : pathname;
     const segments = relative.split("/").filter(Boolean);
-    if (!pathname.endsWith("/") || segments.length < 2) return ctx.next();
+    const isLanguageIndex = segments.length === 1 && isLanguage(segments[0]);
+    if (
+      !pathname.endsWith("/") || (segments.length < 2 && !isLanguageIndex)
+    ) {
+      return ctx.next();
+    }
 
     const target = new URL(ctx.url);
     target.pathname = pathname.replace(/\/+$/, "");

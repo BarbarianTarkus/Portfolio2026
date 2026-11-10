@@ -1,6 +1,15 @@
 import { define } from "../utils.ts";
 import Header from "../islands/Header.tsx";
 import { Footer } from "../components/Footer.tsx";
+import {
+  alternatesFor,
+  canonicalPath,
+  DEFAULT_LANGUAGE,
+  languageMeta,
+  LanguageProvider,
+  LANGUAGES,
+  localizedHref,
+} from "../lib/i18n.tsx";
 
 /**
  * Application shell: <html>, <head> and the persistent header/footer.
@@ -18,8 +27,21 @@ export default define.page(function App({ Component, config, url, state }) {
     );
   }
 
+  // Language is resolved from the URL prefix by main.ts: unprefixed pages are
+  // the default language, "/en" and "/ca" are the translated ones.
+  const lang = state.lang ?? DEFAULT_LANGUAGE;
+  const meta = languageMeta[lang];
+  // The not-found page is rendered for a URL that does not exist, so it keeps
+  // the home page's links (the header language switcher must stay usable) and
+  // omits canonical/hreflang/og:url instead of advertising a broken address.
+  const notFound = state.notFound === true;
+  const canonical = canonicalPath(url.pathname, basePath);
+  const path = notFound ? "/" : canonical.path;
+  const canonicalHref = localizedHref(basePath, lang, path);
+  const alternates = alternatesFor(basePath, path);
+
   return (
-    <html lang="es">
+    <html lang={meta.htmlLang}>
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,10 +49,36 @@ export default define.page(function App({ Component, config, url, state }) {
         <meta name="theme-color" content="#0B0E13" />
         <meta property="og:site_name" content={site.author} />
         <meta property="og:type" content="website" />
-        <meta property="og:locale" content="es_ES" />
+        <meta property="og:locale" content={meta.ogLocale} />
+        {LANGUAGES.filter((candidate) => candidate !== lang).map((
+          candidate,
+        ) => (
+          <meta
+            property="og:locale:alternate"
+            content={languageMeta[candidate].ogLocale}
+          />
+        ))}
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content={site.title} />
         <meta name="twitter:description" content={site.description} />
+        {notFound ? <meta name="robots" content="noindex" /> : (
+          <>
+            <meta property="og:url" content={canonicalHref} />
+            <link rel="canonical" href={canonicalHref} />
+            {alternates.map((alternate) => (
+              <link
+                rel="alternate"
+                hreflang={languageMeta[alternate.lang].htmlLang}
+                href={alternate.href}
+              />
+            ))}
+            <link
+              rel="alternate"
+              hreflang="x-default"
+              href={localizedHref(basePath, DEFAULT_LANGUAGE, path)}
+            />
+          </>
+        )}
         {
           /*
            * The mobile navigation is an overlay that only works once JavaScript
@@ -57,10 +105,17 @@ export default define.page(function App({ Component, config, url, state }) {
       </head>
       <body>
         <div class="layout">
-          <Header site={site} basePath={basePath} path={url.pathname} />
+          <Header
+            site={site}
+            basePath={basePath}
+            path={notFound ? "/" : url.pathname}
+            lang={lang}
+          />
           <main id="main" tabindex={-1}>
             <div class="shell">
-              <Component />
+              <LanguageProvider lang={lang}>
+                <Component />
+              </LanguageProvider>
             </div>
           </main>
           <Footer site={site} />

@@ -32,7 +32,11 @@ header {
 }
 
 .main-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   flex-basis: 100%;
+  gap: 0.5rem;
 }
 
 .main-nav ul {
@@ -62,6 +66,41 @@ header {
   font-size: var(--text-meta);
   font-weight: 400;
   color: var(--accent-dim);
+}
+
+/* Language switcher: ES · EN · CA, current language accented. It lives inside
+   the nav so the mobile overlay carries it without extra markup. */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.08em;
+}
+
+.lang-switcher a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.lang-switcher a:hover,
+.lang-switcher a:focus-visible {
+  color: var(--text-strong);
+}
+
+.lang-switcher a[aria-current="true"] {
+  color: var(--accent);
+}
+
+.lang-switcher a + a {
+  border-left: 1px solid var(--line);
+  padding-left: calc(0.5rem + 1px);
 }
 
 /* Active page: accent underline under the label, not a filled state. */
@@ -162,6 +201,11 @@ html:not(.js) .menu-button {
     top: 0.75rem;
     right: 0.75rem;
   }
+
+  html.js .main-nav .lang-switcher {
+    justify-content: center;
+    font-size: 1rem;
+  }
 }
 
 /* Desktop: single row, brand left, nav right, no toggle. */
@@ -171,7 +215,10 @@ html:not(.js) .menu-button {
   }
 
   .main-nav {
+    flex-direction: row;
+    align-items: center;
     flex-basis: auto;
+    gap: 1.5rem;
   }
 
   .menu-button {

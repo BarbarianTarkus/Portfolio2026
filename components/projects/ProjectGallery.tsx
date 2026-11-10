@@ -1,4 +1,6 @@
 import type { ProjectGalleryGroup } from "../../lib/content.ts";
+import { useLanguage } from "../../lib/i18n.tsx";
+import { uiStrings } from "../../lib/ui-strings.ts";
 import { ProjectLightbox } from "./ProjectLightbox.tsx";
 
 interface GalleryPanelProps {
@@ -27,6 +29,7 @@ function GalleryPanel(
     eager,
   }: GalleryPanelProps,
 ) {
+  const strings = uiStrings(useLanguage());
   const count = group.images.length;
   const slider = count > 1;
   const panelId = projectSlug + "-gallery-" + group.view;
@@ -40,14 +43,14 @@ function GalleryPanel(
       data-gallery-view={group.view}
       role={hasTabs ? "tabpanel" : "group"}
       aria-labelledby={hasTabs ? tabId : undefined}
-      aria-label={hasTabs ? undefined : "Capturas de " + projectName}
+      aria-label={hasTabs ? undefined : strings.gallery.capturesOf(projectName)}
     >
       <div
         class="gallery-track"
         data-gallery-track
         tabindex={slider ? 0 : undefined}
         aria-label={slider
-          ? "Carrusel de capturas de " + projectName + " (" + group.label + ")"
+          ? strings.gallery.carousel(projectName, group.label)
           : undefined}
       >
         {group.images.map((image, index) => (
@@ -56,8 +59,8 @@ function GalleryPanel(
             data-gallery-slide
             key={image.src}
             role="group"
-            aria-roledescription="diapositiva"
-            aria-label={(index + 1) + " de " + count}
+            aria-roledescription={strings.gallery.slideRole}
+            aria-label={strings.gallery.counter(index + 1, count)}
           >
             <div class="gallery-media">
               <a
@@ -68,8 +71,8 @@ function GalleryPanel(
                 target="_blank"
                 rel="noopener noreferrer"
                 data-gallery-zoom
-                aria-label={"Ampliar captura: " + image.alt}
-                title="Ampliar captura"
+                aria-label={strings.gallery.enlarge(image.alt)}
+                title={strings.gallery.enlargeTitle}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -106,7 +109,7 @@ function GalleryPanel(
             class="gallery-button gallery-prev"
             type="button"
             data-gallery-prev
-            aria-label={"Captura anterior de " + group.label}
+            aria-label={strings.gallery.previousInGroup(group.label)}
           >
             <span aria-hidden="true">←</span>
           </button>
@@ -117,7 +120,7 @@ function GalleryPanel(
             class="gallery-button gallery-next"
             type="button"
             data-gallery-next
-            aria-label={"Captura siguiente de " + group.label}
+            aria-label={strings.gallery.nextInGroup(group.label)}
           >
             <span aria-hidden="true">→</span>
           </button>

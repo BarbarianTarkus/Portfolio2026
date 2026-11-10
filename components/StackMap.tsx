@@ -1,4 +1,6 @@
 import { TechStack } from "./TechTags.tsx";
+import { type Language, useLanguage } from "../lib/i18n.tsx";
+import { type UiStrings, uiStrings } from "../lib/ui-strings.ts";
 
 export interface StackSubgroup {
   title: string;
@@ -58,25 +60,14 @@ const TAG_DOMAIN: Record<string, string> = {
   Linux: "infra",
 };
 
+/**
+ * Layer codes stay language-neutral; the title and the note are read from the
+ * UI dictionary so each language version names its layers in its own words.
+ */
 const DOMAINS = [
-  {
-    id: "frontend",
-    code: "UI",
-    title: "Frontend",
-    note: "Interfaz y componentes",
-  },
-  {
-    id: "backend",
-    code: "API",
-    title: "Backend",
-    note: "Lenguajes, plataformas y datos",
-  },
-  {
-    id: "ai",
-    code: "IA",
-    title: "IA agéntica",
-    note: "Uso de Arneses y Agentes",
-  },
+  { id: "frontend", code: "UI" },
+  { id: "backend", code: "API" },
+  { id: "ai", code: "IA" },
 ] as const;
 
 /**
@@ -85,27 +76,15 @@ const DOMAINS = [
  * infrastructure separates access, storage and services. Tags without a
  * sub-scope fall into "Otros" so nothing is hidden.
  */
-const SUBGROUPS: Record<string, StackSubgroup[]> = {
+const SUBGROUPS: Record<string, string[][]> = {
   backend: [
-    {
-      title: "Lenguajes y runtimes",
-      items: ["PHP", "Python", "Rust", "C++", "Deno"],
-    },
-    { title: "Datos", items: ["PostgreSQL"] },
+    ["PHP", "Python", "Rust", "C++", "Deno"],
+    ["PostgreSQL"],
   ],
   infra: [
-    {
-      title: "Red y acceso",
-      items: ["WireGuard", "OpenVPN", "Cloudflare Tunnel"],
-    },
-    {
-      title: "Almacenamiento",
-      items: ["Synology NAS", "NFS / SMB", "Rsync"],
-    },
-    {
-      title: "Servicios y automatización",
-      items: ["Docker", "Gitea", "SonarQube", "Ansible"],
-    },
+    ["WireGuard", "OpenVPN", "Cloudflare Tunnel"],
+    ["Synology NAS", "NFS / SMB", "Rsync"],
+    ["Docker", "Gitea", "SonarQube", "Ansible"],
   ],
 };
 
@@ -113,19 +92,27 @@ function uniqueTags(tags: string[]): string[] {
   return [...new Set(tags)];
 }
 
-function withSubgroups(group: StackGroup): StackGroup {
+function withSubgroups(group: StackGroup, strings: UiStrings): StackGroup {
   const definitions = SUBGROUPS[group.id];
   if (definitions === undefined) return group;
 
+  // Sub-scope titles live in the UI dictionary, in the same order as the tag
+  // groups above, so the map reads in the page's language.
+  const titles = group.id === "backend"
+    ? strings.stack.subgroups.backend
+    : strings.stack.subgroups.infra;
   const remaining = new Set(group.items);
-  const subgroups = definitions.flatMap((definition) => {
-    const items = definition.items.filter((tag) => remaining.has(tag));
-    items.forEach((tag) => remaining.delete(tag));
-    return items.length > 0 ? [{ title: definition.title, items }] : [];
-  });
+  const subgroups: StackSubgroup[] = definitions.flatMap(
+    (definition, index) => {
+      const items = definition.filter((tag) => remaining.has(tag));
+      items.forEach((tag) => remaining.delete(tag));
+      const title = titles[index] ?? group.title;
+      return items.length > 0 ? [{ title, items }] : [];
+    },
+  );
 
   if (remaining.size > 0) {
-    subgroups.push({ title: "Otros", items: [...remaining] });
+    subgroups.push({ title: strings.stack.other, items: [...remaining] });
   }
 
   return { ...group, subgroups };
@@ -133,16 +120,22 @@ function withSubgroups(group: StackGroup): StackGroup {
 
 /**
  * Build the architecture layers from the shared stack plus the homelab. The
- * infrastructure label is copy from the page that renders the map.
+ * infrastructure label is copy from the page that renders the map; it falls
+ * back to the UI dictionary when the caller does not supply one.
  */
 export function buildStackGroups(
   tags: string[],
   homelabStack: string[],
-  infrastructureLabel = "Infraestructura",
+  lang: Language,
+  infrastructureLabel?: string,
 ): StackGroup[] {
+  const strings = uiStrings(lang);
   const pageTags = uniqueTags(tags);
   const groups: StackGroup[] = DOMAINS.map((domain) => ({
-    ...domain,
+    id: domain.id,
+    code: domain.code,
+    title: strings.stack.domains[domain.id].title,
+    note: strings.stack.domains[domain.id].note,
     items: pageTags.filter((tag) => TAG_DOMAIN[tag] === domain.id),
   }));
 
@@ -153,8 +146,8 @@ export function buildStackGroups(
   groups.push({
     id: "infra",
     code: "OPS",
-    title: infrastructureLabel,
-    note: "Red, almacenamiento y servicios",
+    title: infrastructureLabel ?? strings.stack.infrastructure,
+    note: strings.stack.infraNote,
     items: infraTags,
   });
 
@@ -164,13 +157,15 @@ export function buildStackGroups(
     groups.push({
       id: "other",
       code: "OTROS",
-      title: "Otros",
-      note: "Tecnologías/Herramientas complementarias",
+      title: strings.stack.other,
+      note: strings.stack.otherNote,
       items: otherTags,
     });
   }
 
-  return groups.filter((group) => group.items.length > 0).map(withSubgroups);
+  return groups
+    .filter((group) => group.items.length > 0)
+    .map((group) => withSubgroups(group, strings));
 }
 
 interface StackMapProps {
@@ -181,6 +176,8 @@ interface StackMapProps {
 
 /** The stack drawn as architecture layers: UI, API, IA and OPS. */
 export function StackMap({ groups, label }: StackMapProps) {
+  const strings = uiStrings(useLanguage());
+
   return (
     <ol class="stack-map" aria-label={label}>
       {groups.map((group) => (
@@ -209,7 +206,7 @@ export function StackMap({ groups, label }: StackMapProps) {
           </div>
           <span
             class="stack-layer-count"
-            title={group.items.length + " tecnologías"}
+            title={strings.stack.technologies(group.items.length)}
             aria-hidden="true"
           >
             {String(group.items.length).padStart(2, "0")}
