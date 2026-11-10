@@ -61,3 +61,20 @@ export function LinkedInIcon({ class: className }: IconProps) {
     </svg>
   );
 }
+
+/**
+ * A sealed envelope. Like the brand marks above it is drawn as a filled
+ * shape, so the three contact channels share one optical weight.
+ */
+export function MailIcon({ class: className }: IconProps) {
+  return (
+    <svg
+      class={className}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+    </svg>
+  );
+}

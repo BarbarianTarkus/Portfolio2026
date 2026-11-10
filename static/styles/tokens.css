@@ -11,7 +11,8 @@
   --text-strong: #e8edf4; /* headings and the name: one step above body */
   --muted: #7f8ca3; /* metadata, secondary prose */
 
-  /* Accent: links, action, active state, section numbers. Nothing else.
+  /* Accent: links, action, active state, section numbers, the mail tile.
+     Nothing else.
      Values verified for WCAG contrast against --bg (docs/redesign/research.md):
      accent 11.98:1, text 12.81:1, muted 5.69:1; accent-dim is 5.40:1 here and
      4.52:1 at worst (on --surface-2), which still clears 4.5:1. */

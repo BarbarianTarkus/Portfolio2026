@@ -7,8 +7,9 @@ import { PageMeta } from "../components/PageMeta.tsx";
 import { define } from "../utils.ts";
 
 /**
- * Contact as three rows. Each row is one link; the arrow is decorative and the
- * handle is the link text, so screen readers announce the target once.
+ * Contact as three rows. Each row is one link wrapping its label, value and
+ * hint; the glyph tile and the arrow are decorative, so the accessible name is
+ * the row's own copy and the target is never announced twice.
  */
 export const handler = define.handlers({
   async GET(ctx) {
