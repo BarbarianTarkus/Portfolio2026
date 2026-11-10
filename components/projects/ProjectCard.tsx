@@ -167,7 +167,9 @@ export function ProjectCard(
 
   return (
     <article
-      class="project-card"
+      class={project.featured === true
+        ? "project-card project-card--featured"
+        : "project-card"}
       id={project.slug}
       key={project.slug}
       aria-labelledby={project.slug + "-title"}

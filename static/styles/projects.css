@@ -33,6 +33,16 @@
   border-color: var(--line-strong);
 }
 
+/* The degree's final project leads the list: an accent edge and kicker set it
+   apart without changing the two-column rhythm of the grid. */
+.project-card--featured {
+  border-top: 2px solid var(--accent);
+}
+
+.project-card--featured .fiche-kind {
+  color: var(--accent);
+}
+
 /* An expanded card takes the whole row: a 1700px-tall detail column next to a
    700px card would leave a large dead gutter on the other side of the grid. */
 @media (min-width: 64rem) {

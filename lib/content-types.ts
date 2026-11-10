@@ -227,13 +227,15 @@ export interface ExperienceContent {
  * "académico" spelling (the legacy JSON mixed "academico" with an accented
  * label key, which rendered an empty category label for academic projects).
  */
-export type ProjectKind = "cliente" | "académico" | "propio";
+export type ProjectKind = "cliente" | "académico" | "propio" | "tfg";
 
 /** Human-readable label per project category. */
 export interface ProjectKindLabels {
   cliente: string;
   "académico": string;
   propio: string;
+  /** The degree's final project; rendered as its own kicker. */
+  tfg: string;
 }
 
 /** Labels of the expanded project blocks. */
@@ -306,6 +308,8 @@ export interface Project {
   period: string;
   /** Verified work count, e.g. "69 commits" or "12 PRs mergeados". */
   work?: string;
+  /** Marks the standout card (the degree's final project). */
+  featured?: boolean;
   links: ProjectLink[];
   /**
    * Screenshot packs in source order. The first image of the first pack is
