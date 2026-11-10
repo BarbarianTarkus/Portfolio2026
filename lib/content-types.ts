@@ -312,6 +312,11 @@ export interface Project {
   featured?: boolean;
   links: ProjectLink[];
   /**
+   * Standalone page shipped with the project (an interactive diagram, for
+   * example), opened from its own ghost button on the card.
+   */
+  diagram?: ProjectLink;
+  /**
    * Screenshot packs in source order. The first image of the first pack is
    * the card's cover; the rest live inside the collapsible detail block.
    */

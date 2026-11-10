@@ -233,6 +233,13 @@
   background: #d8b31a;
 }
 
+/* The diagram is a side door, not the card's main action: a ghost button
+   keeps the row quiet next to the gold CTA. */
+.project-card-links .project-link-diagram {
+  padding: 0.6rem 1rem;
+  letter-spacing: 0.04em;
+}
+
 .project-link-favicon {
   width: 1.125rem;
   height: 1.125rem;

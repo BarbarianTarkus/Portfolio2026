@@ -337,6 +337,9 @@ projects:
     period: curso 2024–25
     work: 6 prácticas en un sistema
     links: []
+    diagram:
+      label: Ver el diagrama completo
+      href: /projects/red-segmentada/topologia.html
     problem: >-
       La asignatura entregaba seis prácticas sueltas; el escenario que monté debía ser **un sistema de
       red y no seis maquetas**: rutas que sobreviven al reinicio, cada zona accesible solo desde donde su
@@ -358,6 +361,25 @@ projects:
         **Nagios Core + NRPE con plugins propios** (`check_eth`, `check_mem`), verificados desde
         consola antes de publicarse en el panel, y túneles SSH para llegar a las tres redes internas sin
         abrir puertos.
+    gallery:
+      - view: web
+        label: Web
+        images:
+          - src: /projects/red-segmentada/topologia-cover.webp
+            alt: >-
+              Mapa de la red: Internet entra por el Router Accés, cruza la DMZ con dns1, dns2 y
+              monitor-dmz, y baja por el Router Intern hacia las redes de servidores y de clientes.
+            caption: 'Topología: perímetro, DMZ y redes internas'
+          - src: /projects/red-segmentada/nagios.webp
+            alt: >-
+              Panel de Nagios Core con el estado de los servicios de dns1, dns2, localhost, el web
+              server, routeraccés, routerintern y los dos servidores de correo.
+            caption: 'Nagios Core: estado de los servicios'
+          - src: /projects/red-segmentada/segmentos.webp
+            alt: >-
+              Tabla de segmentos con el rango de cada red, los routers que la encaminan y los equipos
+              que viven en ella.
+            caption: 'Segmentos y direccionamiento'
   - slug: password-manager
     name: Password-Manager
     kind: académico

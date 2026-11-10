@@ -97,7 +97,8 @@
   },
   "fmt": {
     "exclude": [
-      "content/"
+      "content/",
+      "static/projects/red-segmentada/topologia.html"
     ]
   }
 }

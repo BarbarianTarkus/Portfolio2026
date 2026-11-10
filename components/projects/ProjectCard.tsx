@@ -182,18 +182,33 @@ export function ProjectCard(
       />
 
       <div class="project-card-body">
-        {ctaLink !== undefined && (
+        {(ctaLink !== undefined || project.diagram !== undefined) && (
           <p class="project-card-links">
-            <a
-              class="button project-link-cta"
-              href={ctaLink.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={ctaLink.label}
-            >
-              <LinkIcon link={ctaLink} basePath={basePath} />
-              {visitLabel}
-            </a>
+            {ctaLink !== undefined && (
+              <a
+                class="button project-link-cta"
+                href={ctaLink.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={ctaLink.label}
+              >
+                <LinkIcon link={ctaLink} basePath={basePath} />
+                {visitLabel}
+              </a>
+            )}
+            {project.diagram !== undefined && (
+              <a
+                class="button button-ghost project-link-diagram"
+                href={project.diagram.href.startsWith("http")
+                  ? project.diagram.href
+                  : basePath + project.diagram.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={project.diagram.label}
+              >
+                {project.diagram.label}
+              </a>
+            )}
             {secondaryLinks.map((link) => {
               const isRepo = link.href.includes("github.com");
               return (

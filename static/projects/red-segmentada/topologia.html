@@ -1,0 +1,342 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Topologia seax.edu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: flujo de izquierda a derecha por el perímetro (Internet → Router Accés → bus DMZ),
+   y luego hacia abajo por el Router Intern hacia las dos redes internas. */
+:root {
+  --bg: #f2f5f8;
+  --fg: #12202c;
+  --muted: #566879;
+  --card: #ffffff;
+  --line: #c6d1dc;
+  --net: #4f5f6f;
+  --edge: #0b6b83;
+  --dmz: #9a5f0b;
+  --cli: #1d4fb0;
+  --srv: #17754c;
+  --pub: #6b3fb0;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1620; --fg: #e5edf4; --muted: #93a5b6; --card: #16212d; --line: #2c3b4b;
+    --net: #9fb0c1; --edge: #47c3e0; --dmz: #f0b85a; --cli: #7fb0ff; --srv: #5ed49c; --pub: #bf9cff;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1620; --fg: #e5edf4; --muted: #93a5b6; --card: #16212d; --line: #2c3b4b;
+  --net: #9fb0c1; --edge: #47c3e0; --dmz: #f0b85a; --cli: #7fb0ff; --srv: #5ed49c; --pub: #bf9cff;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  padding-block: 28px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+main { max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+header { display: flex; flex-direction: column; gap: 14px; }
+h1 { font-size: clamp(26px, 4vw, 36px); line-height: 1.15; font-weight: 600; letter-spacing: -0.01em; text-wrap: balance; }
+.lead { color: var(--muted); max-width: 62ch; }
+
+.chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase;
+  padding: 5px 11px 5px 9px; border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+  background: color-mix(in srgb, var(--c) 10%, var(--bg));
+}
+.chip::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+.chip .net { font-family: var(--mono); text-transform: none; letter-spacing: 0; color: var(--muted); font-weight: 400; }
+
+.z-net { --c: var(--net); }
+.z-edge { --c: var(--edge); }
+.z-dmz { --c: var(--dmz); }
+.z-cli { --c: var(--cli); }
+.z-srv { --c: var(--srv); }
+.z-pub { --c: var(--pub); }
+
+figure { display: flex; flex-direction: column; gap: 12px; }
+.canvas {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  background-image: radial-gradient(color-mix(in srgb, var(--line) 70%, transparent) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.canvas svg { display: block; width: 100%; min-width: 900px; height: auto; }
+figcaption { color: var(--muted); font-size: 13px; max-width: 80ch; }
+
+/* SVG parts */
+.zone { fill: color-mix(in srgb, var(--c) 8%, var(--card)); stroke: color-mix(in srgb, var(--c) 50%, transparent); stroke-width: 1.2; }
+.zl-name { font: 600 13px var(--sans); letter-spacing: 0.08em; fill: var(--c); }
+.zl-net { font: 400 12px var(--mono); fill: var(--muted); }
+.card { fill: var(--card); stroke: var(--line); stroke-width: 1.2; }
+.tile { fill: color-mix(in srgb, var(--c) 15%, var(--card)); stroke: color-mix(in srgb, var(--c) 40%, transparent); stroke-width: 1; }
+.ico { color: var(--c); }
+.t-title { font: 600 14px var(--sans); fill: var(--fg); }
+.t-sub { font: 400 12px var(--mono); fill: var(--muted); }
+.t-subs { font: 400 12px var(--sans); fill: var(--muted); }
+.t-line { font: 400 11.5px var(--sans); fill: var(--fg); }
+.t-mono { font: 400 11px var(--mono); fill: var(--fg); }
+.bd { fill: color-mix(in srgb, var(--c) 16%, var(--card)); stroke: color-mix(in srgb, var(--c) 45%, transparent); stroke-width: 1; }
+.bd-t { font: 500 10.5px var(--mono); fill: var(--fg); }
+.link { stroke: var(--c); stroke-width: 3; stroke-linecap: round; fill: none; }
+.link-thin { stroke: var(--c); stroke-width: 2; stroke-linecap: round; fill: none; }
+.bus { stroke: var(--c); stroke-width: 7; stroke-linecap: round; }
+.dot { fill: var(--c); }
+.l-lab { font: 400 11px var(--mono); fill: var(--muted); }
+
+/* tabla de subredes */
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 13.5px; }
+caption { text-align: left; padding: 14px 16px 6px; font-weight: 600; font-size: 14px; }
+th, td { text-align: left; padding: 10px 16px; vertical-align: top; border-top: 1px solid var(--line); }
+th { font-size: 11.5px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); border-top: 0; }
+td.mono, .mono { font-family: var(--mono); font-size: 12.5px; }
+td .seg { display: inline-flex; align-items: center; gap: 8px; font-weight: 500; }
+td .seg::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+</style>
+
+<main>
+  <header>
+    <h1>Topologia seax.edu</h1>
+    <p class="lead">Perímetro, DMZ y redes internas. Cada nodo muestra su dirección, su servicio y la tecnología que corre en él.</p>
+    <ul class="chips" aria-label="Zonas de la red">
+      <li class="chip z-net">Internet</li>
+      <li class="chip z-edge">Routers <span class="net">nftables</span></li>
+      <li class="chip z-dmz">DMZ <span class="net">10.1.1.0/28</span></li>
+      <li class="chip z-cli">Clients <span class="net">10.1.2.0/24</span></li>
+      <li class="chip z-srv">Servidors <span class="net">10.1.3.0/28</span></li>
+      <li class="chip z-pub">public.edu</li>
+    </ul>
+  </header>
+
+  <figure>
+    <div class="canvas">
+      <svg viewBox="0 0 1240 874" role="img" aria-label="Internet entra por el Router Accés, que da a la DMZ con dns1, dns2 y monitor-dmz. Del bus de la DMZ cuelga el Router Intern, que reparte a las redes de Clients y Servidors. El Router Accés también conecta con los servicios de public.edu.">
+        <defs>
+          <symbol id="i-globe" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></g></symbol>
+          <symbol id="i-shield" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></g></symbol>
+          <symbol id="i-router" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 13L5 6M17 13l2-7"/><path d="M7.5 16.5h.01M11 16.5h.01"/></g></symbol>
+          <symbol id="i-dns" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="2" y="16" width="6" height="5" rx="1"/><rect x="16" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M5 16v-4h14v4"/></g></symbol>
+          <symbol id="i-monitor" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M5.5 10H8l2-3 3 6 2-3h3.5"/></g></symbol>
+          <symbol id="i-gauge" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17a8 8 0 0 1 16 0"/><path d="M12 17l4-6"/><circle cx="12" cy="17" r="1.4"/><path d="M3 21h18"/></g></symbol>
+          <symbol id="i-laptop" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="10" rx="1.5"/><path d="M2 19h20"/></g></symbol>
+          <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></g></symbol>
+        </defs>
+
+        <!-- ───────── Zona DMZ ───────── -->
+        <g class="z-dmz">
+          <rect class="zone" x="560" y="20" width="630" height="290" rx="14"/>
+          <text class="zl-name" x="578" y="44">DMZ<tspan class="zl-net" dx="10">10.1.1.0/28</tspan></text>
+        </g>
+
+        <!-- Zona Servidors -->
+        <g class="z-srv">
+          <rect class="zone" x="530" y="660" width="320" height="198" rx="14"/>
+          <text class="zl-name" x="548" y="684">SERVIDORS<tspan class="zl-net" dx="10">10.1.3.0/28</tspan></text>
+        </g>
+
+        <!-- Zona Clients -->
+        <g class="z-cli">
+          <rect class="zone" x="870" y="660" width="320" height="198" rx="14"/>
+          <text class="zl-name" x="888" y="684">CLIENTS<tspan class="zl-net" dx="10">10.1.2.0/24</tspan></text>
+        </g>
+
+        <!-- ───────── Enlaces ───────── -->
+        <!-- Internet — Router Accés -->
+        <g class="z-edge">
+          <line class="link" x1="150" y1="250" x2="290" y2="250"/>
+          <circle class="dot" cx="150" cy="250" r="4.5"/><circle class="dot" cx="290" cy="250" r="4.5"/>
+          <text class="l-lab" x="220" y="238" text-anchor="middle">192.168.0.0/24</text>
+          <text class="l-lab" x="220" y="272" text-anchor="middle">eth-troncal</text>
+        </g>
+        <!-- Router Accés — bus DMZ -->
+        <g class="z-edge">
+          <line class="link" x1="500" y1="250" x2="560" y2="250"/>
+          <circle class="dot" cx="500" cy="250" r="4.5"/>
+        </g>
+        <!-- Router Accés — public.edu -->
+        <g class="z-pub">
+          <line class="link" x1="395" y1="330" x2="395" y2="420"/>
+          <circle class="dot" cx="395" cy="330" r="4.5"/><circle class="dot" cx="395" cy="420" r="4.5"/>
+        </g>
+        <!-- Bus eth-dmz -->
+        <g class="z-dmz">
+          <line class="bus" x1="563" y1="250" x2="1186" y2="250"/>
+          <line class="link-thin" x1="674" y1="202" x2="674" y2="250"/>
+          <line class="link-thin" x1="881" y1="202" x2="881" y2="250"/>
+          <line class="link-thin" x1="1081" y1="202" x2="1081" y2="250"/>
+          <text class="l-lab" x="578" y="276">segment eth-dmz</text>
+        </g>
+        <!-- bus — Router Intern -->
+        <g class="z-edge">
+          <line class="link" x1="865" y1="250" x2="865" y2="420"/>
+          <circle class="dot" cx="865" cy="250" r="4.5"/><circle class="dot" cx="865" cy="420" r="4.5"/>
+          <text class="l-lab" x="879" y="372">eth-dmz 10.1.1.2</text>
+        </g>
+        <!-- Router Intern — Servidors / Clients -->
+        <g class="z-edge">
+          <line class="link" x1="865" y1="590" x2="865" y2="626"/>
+          <line class="link" x1="546" y1="626" x2="886" y2="626"/>
+          <circle class="dot" cx="865" cy="590" r="4.5"/>
+          <text class="l-lab" x="556" y="616">eth-servidors 10.1.3.1/28</text>
+          <text class="l-lab" x="900" y="616">eth-clients 10.1.2.1/24</text>
+        </g>
+        <g class="z-srv">
+          <line class="link" x1="546" y1="626" x2="546" y2="660"/>
+          <line class="link-thin" x1="546" y1="660" x2="546" y2="810"/>
+          <line class="link-thin" x1="546" y1="732" x2="566" y2="732"/>
+          <line class="link-thin" x1="546" y1="810" x2="566" y2="810"/>
+        </g>
+        <g class="z-cli">
+          <line class="link" x1="886" y1="626" x2="886" y2="660"/>
+          <line class="link-thin" x1="886" y1="660" x2="886" y2="810"/>
+          <line class="link-thin" x1="886" y1="732" x2="906" y2="732"/>
+          <line class="link-thin" x1="886" y1="810" x2="906" y2="810"/>
+        </g>
+
+        <!-- ───────── Nodos ───────── -->
+        <!-- Internet -->
+        <g class="z-net">
+          <rect class="card" x="20" y="202" width="130" height="96" rx="10"/>
+          <rect class="tile" x="32" y="214" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-globe" x="38" y="220" width="20" height="20"/>
+          <text class="t-title" x="74" y="235">Internet</text>
+          <text class="t-sub" x="34" y="276">gw 192.168.0.1</text>
+        </g>
+
+        <!-- Router Accés -->
+        <g class="z-edge">
+          <rect class="card" x="290" y="170" width="210" height="160" rx="10"/>
+          <rect class="tile" x="302" y="182" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-shield" x="308" y="188" width="20" height="20"/>
+          <text class="t-title" x="344" y="197">Router Accés</text>
+          <text class="t-subs" x="344" y="213">Filtrat + NAT</text>
+          <text class="t-mono" x="304" y="236">eth-troncal 192.168.0.52/24</text>
+          <text class="t-mono" x="304" y="253">eth-dmz 10.1.1.1/28</text>
+          <rect class="bd" x="304" y="290" width="66" height="20" rx="10"/><text class="bd-t" x="337" y="304" text-anchor="middle">nftables</text>
+          <rect class="bd" x="376" y="290" width="40" height="20" rx="10"/><text class="bd-t" x="396" y="304" text-anchor="middle">NAT</text>
+        </g>
+
+        <!-- public.edu -->
+        <g class="z-pub">
+          <rect class="card" x="290" y="420" width="210" height="120" rx="10"/>
+          <rect class="tile" x="302" y="432" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-mail" x="308" y="438" width="20" height="20"/>
+          <text class="t-title" x="344" y="447">public.edu</text>
+          <text class="t-sub" x="304" y="486">mx1 / mx2.public.edu</text>
+          <text class="t-sub" x="304" y="503">www.public.edu</text>
+          <rect class="bd" x="304" y="512" width="1" height="1" opacity="0"/>
+        </g>
+
+        <!-- dns1 -->
+        <g class="z-dmz">
+          <rect class="card" x="578" y="62" width="192" height="140" rx="10"/>
+          <rect class="tile" x="590" y="74" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-dns" x="596" y="80" width="20" height="20"/>
+          <text class="t-title" x="632" y="89">dns1 / server1</text>
+          <text class="t-sub" x="632" y="105">10.1.1.3</text>
+          <text class="t-line" x="592" y="130">màster: seax.edu + inversa</text>
+          <text class="t-line" x="592" y="147">esclau de public.edu</text>
+          <rect class="bd" x="592" y="168" width="48" height="20" rx="10"/><text class="bd-t" x="616" y="182" text-anchor="middle">BIND9</text>
+        </g>
+
+        <!-- dns2 -->
+        <g class="z-dmz">
+          <rect class="card" x="785" y="62" width="192" height="140" rx="10"/>
+          <rect class="tile" x="797" y="74" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-dns" x="803" y="80" width="20" height="20"/>
+          <text class="t-title" x="839" y="89">dns2 / server2</text>
+          <text class="t-sub" x="839" y="105">10.1.1.4</text>
+          <text class="t-line" x="799" y="130">màster: public.edu</text>
+          <text class="t-line" x="799" y="147">esclau de seax.edu</text>
+          <rect class="bd" x="799" y="168" width="48" height="20" rx="10"/><text class="bd-t" x="823" y="182" text-anchor="middle">BIND9</text>
+        </g>
+
+        <!-- monitor-dmz -->
+        <g class="z-dmz">
+          <rect class="card" x="992" y="62" width="178" height="140" rx="10"/>
+          <rect class="tile" x="1004" y="74" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-monitor" x="1010" y="80" width="20" height="20"/>
+          <text class="t-title" x="1046" y="89">monitor-dmz</text>
+          <text class="t-sub" x="1046" y="105">10.1.1.11</text>
+        </g>
+
+        <!-- Router Intern -->
+        <g class="z-edge">
+          <rect class="card" x="750" y="420" width="230" height="170" rx="10"/>
+          <rect class="tile" x="762" y="432" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-router" x="768" y="438" width="20" height="20"/>
+          <text class="t-title" x="804" y="447">Router Intern</text>
+          <text class="t-subs" x="804" y="463">Filtrat + DHCP</text>
+          <text class="t-mono" x="764" y="486">eth-dmz 10.1.1.2</text>
+          <text class="t-mono" x="764" y="503">eth-clients 10.1.2.1/24</text>
+          <text class="t-mono" x="764" y="520">eth-servidors 10.1.3.1/28</text>
+          <rect class="bd" x="764" y="550" width="66" height="20" rx="10"/><text class="bd-t" x="797" y="564" text-anchor="middle">nftables</text>
+          <rect class="bd" x="836" y="550" width="66" height="20" rx="10"/><text class="bd-t" x="869" y="564" text-anchor="middle">ISC DHCP</text>
+        </g>
+
+        <!-- Servidors -->
+        <g class="z-srv">
+          <rect class="card" x="566" y="700" width="268" height="64" rx="10"/>
+          <rect class="tile" x="578" y="716" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-gauge" x="584" y="722" width="20" height="20"/>
+          <text class="t-title" x="620" y="729">Nagios Core 4.4.6</text>
+          <text class="t-sub" x="620" y="746">10.1.3.2</text>
+        </g>
+        <g class="z-srv">
+          <rect class="card" x="566" y="778" width="268" height="64" rx="10"/>
+          <rect class="tile" x="578" y="794" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-monitor" x="584" y="800" width="20" height="20"/>
+          <text class="t-title" x="620" y="807">monitor-servidors</text>
+          <text class="t-sub" x="620" y="824">10.1.3.11</text>
+        </g>
+
+        <!-- Clients -->
+        <g class="z-cli">
+          <rect class="card" x="906" y="700" width="268" height="64" rx="10"/>
+          <rect class="tile" x="918" y="716" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-monitor" x="924" y="722" width="20" height="20"/>
+          <text class="t-title" x="960" y="729">monitor-clients</text>
+          <text class="t-sub" x="960" y="746">10.1.2.11</text>
+        </g>
+        <g class="z-cli">
+          <rect class="card" x="906" y="778" width="268" height="64" rx="10"/>
+          <rect class="tile" x="918" y="794" width="32" height="32" rx="8"/>
+          <use class="ico" href="#i-laptop" x="924" y="800" width="20" height="20"/>
+          <text class="t-title" x="960" y="807">clients DHCP</text>
+          <text class="t-sub" x="960" y="824">10.1.2.12–254</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Todo el tráfico entre Internet y la red interna pasa por dos routers con nftables. Los servidores DNS viven en la DMZ y se replican entre sí como máster y esclavo de sus zonas.</figcaption>
+  </figure>
+
+  <div class="tbl-wrap">
+    <table>
+      <caption>Segmentos y direccionamiento</caption>
+      <thead><tr><th>Segmento</th><th>Rango</th><th>Routers</th><th>Equipos</th></tr></thead>
+      <tbody>
+        <tr class="z-net"><td><span class="seg">Troncal</span></td><td class="mono">192.168.0.0/24</td><td class="mono">gw .1 · Accés .52</td><td>Salida a Internet</td></tr>
+        <tr class="z-dmz"><td><span class="seg">DMZ</span></td><td class="mono">10.1.1.0/28</td><td class="mono">Accés .1 · Intern .2</td><td class="mono">dns1 .3 · dns2 .4 · monitor-dmz .11</td></tr>
+        <tr class="z-cli"><td><span class="seg">Clients</span></td><td class="mono">10.1.2.0/24</td><td class="mono">Intern .1</td><td class="mono">monitor-clients .11 · DHCP .12–254</td></tr>
+        <tr class="z-srv"><td><span class="seg">Servidors</span></td><td class="mono">10.1.3.0/28</td><td class="mono">Intern .1</td><td class="mono">Nagios .2 · monitor-servidors .11</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+</body></html>
