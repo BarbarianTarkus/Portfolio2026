@@ -145,6 +145,34 @@ export function ExperiencePage(
                 />
               </p>
             )}
+            {page.education.projects !== undefined &&
+              page.education.projects.length > 0 && (
+              <>
+                {page.education.projectsLabel !== undefined && (
+                  <p class="job-points-label">
+                    <ProseField
+                      text={page.education.projectsLabel}
+                      path="education.projectsLabel"
+                      sourcePath={sourcePath}
+                      editing={inlineEditing}
+                    />
+                  </p>
+                )}
+                <ul class="job-points">
+                  {page.education.projects.map((project, index) => (
+                    <li key={project}>
+                      <ProseField
+                        text={project}
+                        basePath={basePath}
+                        path={"education.projects." + index}
+                        sourcePath={sourcePath}
+                        editing={inlineEditing}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
             {page.education.bullets !== undefined &&
               page.education.bullets.length > 0 && (
               <>

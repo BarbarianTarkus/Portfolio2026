@@ -188,6 +188,12 @@ export interface EducationEntry {
    * Optional so an entry can stay a bare period/role/company line.
    */
   summary?: string;
+  /**
+   * Coursework projects that have their own page in /projects, listed right
+   * under the summary; each item is inline Markdown (usually a link).
+   */
+  projectsLabel?: string;
+  projects?: string[];
   /** Lead-in over the coursework bullets ("Aprendizaje que destaco"). */
   bulletsLabel?: string;
   /** What the coursework taught, one bullet per skill; inline Markdown. */

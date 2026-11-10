@@ -85,12 +85,11 @@ education:
   company: 'Universitat Politècnica de Catalunya (UPC) · EPSEVG, Vilanova i la Geltrú'
   summary: >-
     Estudios en la EPSEVG, compaginados desde 2020 con el soporte TIC del campus
-    y, más tarde, con el trabajo en 3iPunt. Las prácticas de las asignaturas
-    están publicadas en GitHub, y dos de ellas tienen ficha propia: el [gestor de
-    contraseñas](/projects#password-manager) de la asignatura de bases de datos
-    y [PetSalut](/projects#petsalut), el proyecto en equipo de 2024. En redes
-    inalámbricas e IoT trabajé con Bluetooth LE y con la seguridad de puntos de
-    acceso usando Aircrack-ng.
+    y, más tarde, con el trabajo en 3iPunt.
+  projectsLabel: Proyectos realizados durante los estudios
+  projects:
+    - '[PetSalut](/projects#petsalut)'
+    - '[Password-Manager](/projects#password-manager)'
   bulletsLabel: Aprendizaje que destaco
   bullets:
     - >-
