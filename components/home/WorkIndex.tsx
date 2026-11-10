@@ -1,4 +1,5 @@
 import type { Project, ProjectKindLabels } from "../../lib/content.ts";
+import { Markdown } from "../../lib/markdown.tsx";
 import { TechStack } from "../TechTags.tsx";
 
 interface WorkIndexProps {
@@ -29,7 +30,11 @@ export function WorkIndex({ projects, kindLabels, basePath }: WorkIndexProps) {
                 </span>
               </span>
               <span class="work-summary">
-                {project.summary}
+                <Markdown
+                  text={project.summary}
+                  basePath={basePath}
+                  links={false}
+                />
               </span>
             </span>
             <TechStack tags={project.tags} class="work-stack" linked={false} />

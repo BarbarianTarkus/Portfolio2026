@@ -1,0 +1,84 @@
+/* ==========================================================================
+   Markdown prose — emphasis, links and measure for rendered copy.
+
+   Content fields are plain strings with inline Markdown (lib/markdown.tsx):
+   **bold**, *italic*, `code` and [links](/route). typography.css styles the
+   elements; this layer sets the reading rhythm and the link treatment so the
+   same emphasis reads consistently in a page, a job bullet and a fiche.
+   ========================================================================== */
+
+/* Copy gets a prettier rag; labels and headings keep their own wrapping. */
+.prose,
+.page-lede,
+.section-note,
+.job-points,
+.fiche-block p,
+.fiche-block li,
+.project-card-summary,
+.work-summary,
+.contact-hint,
+.stack-block p {
+  text-wrap: pretty;
+}
+
+.prose,
+.job-points,
+.fiche-block p,
+.fiche-block li {
+  line-height: 1.7;
+}
+
+/* Links inside copy: accent ink with a tinted rule at rest, brighter on hover.
+   Navigation, buttons and card actions keep their own treatments. */
+.prose a,
+.page-lede a,
+.section-note a,
+.job-points a,
+.fiche-block a,
+.project-card-summary a,
+.work-summary a,
+.contact-hint a,
+.stack-block a {
+  color: var(--accent);
+  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  text-underline-offset: 3px;
+}
+
+.prose a:hover,
+.page-lede a:hover,
+.section-note a:hover,
+.job-points a:hover,
+.fiche-block a:hover,
+.project-card-summary a:hover,
+.work-summary a:hover,
+.contact-hint a:hover,
+.stack-block a:hover {
+  color: var(--accent-bright);
+  text-decoration-color: currentColor;
+}
+
+/* Project fiches were the longest lines on the site: a 52rem column at 15px
+   ran past 100 characters. Cap them at the prose measure and use body size,
+   matching the job bullets. */
+.fiche-block p,
+.fiche-block li {
+  max-width: var(--measure);
+  font-size: var(--text-body);
+}
+
+/* Card and index pitches keep a scannable measure instead of the grid width. */
+.project-card-summary,
+.work-summary {
+  max-width: var(--measure);
+  line-height: 1.65;
+}
+
+/* Secondary copy steps its emphasis up to the strong ink, not just weight. */
+.page-lede em,
+.section-note em,
+.contact-hint em,
+.work-summary em,
+.project-card-summary em,
+.stack-block p em {
+  color: var(--text-strong);
+}

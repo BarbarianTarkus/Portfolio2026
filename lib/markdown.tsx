@@ -24,6 +24,12 @@ interface MarkdownProps {
   basePath?: string;
   /** Optional class for the wrapping <span>. */
   class?: string;
+  /**
+   * Render inline links. Set false when the copy sits inside an <a> (project
+   * index rows, contact hints): nested anchors are invalid HTML, so the label
+   * is kept and only the href is dropped.
+   */
+  links?: boolean;
 }
 
 /** Escape a string for literal use inside a RegExp. */
@@ -31,14 +37,28 @@ function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export function Markdown({ text, basePath = "", class: cls }: MarkdownProps) {
+export function Markdown(
+  { text, basePath = "", class: cls, links = true }: MarkdownProps,
+) {
   const raw = marked.parseInline(text ?? "") as string;
   let html = sanitizeHtml(raw);
 
+  if (!links) {
+    html = html.replace(/<a\b[^>]*>([\s\S]*?)<\/a>/g, "$1");
+  }
+
   if (basePath !== "") {
     const prefix = basePath.replace(/\/+$/, "");
-    const pattern = new RegExp(`href="/(?!${escapeRegExp(prefix)}/)`, "g");
-    html = html.replace(pattern, `href="${prefix}/`);
+    // Links and inline images both become root-relative URLs; prefix both so
+    // the site keeps working under BASE_PATH (GitHub Pages project sites).
+    // The lookahead runs after the quote's slash, so it matches the prefix
+    // without one: URLs that are already prefixed must stay untouched.
+    const bare = prefix.replace(/^\/+/, "");
+    const pattern = new RegExp(
+      `(href|src)="/(?!${escapeRegExp(bare)}(?:/|"))`,
+      "g",
+    );
+    html = html.replace(pattern, `$1="${prefix}/`);
   }
 
   // The HTML is produced by marked and then passed through Dune's allowlist

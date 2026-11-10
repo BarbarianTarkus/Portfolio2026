@@ -14,7 +14,7 @@
   border-radius: var(--radius);
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.04em;
 }
 
@@ -70,7 +70,7 @@
 .tag-label {
   color: var(--muted);
   font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   letter-spacing: 0.03em;
   white-space: nowrap;
 }

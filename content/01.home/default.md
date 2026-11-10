@@ -17,12 +17,16 @@ projectsSection:
   title: Proyectos
   linkLabel: Los 6 proyectos
   linkRoute: /projects
-  note: "Repositorios públicos: trabajo para cliente, proyectos de la carrera y herramientas propias. El trabajo en producción está en la experiencia, arriba."
+  note: "Repositorios públicos: **trabajo para cliente, proyectos de la carrera y herramientas propias**. El trabajo en producción está en la experiencia, arriba."
 focus:
   - title: Infraestructura y seguridad
-    body: NAS, WireGuard y OpenVPN, Gitea, SonarQube y servicios publicados por túnel de Cloudflare, sin abrir puertos en el router.
+    body: >-
+      **NAS, WireGuard y OpenVPN, Gitea, SonarQube** y servicios publicados por
+      túnel de Cloudflare, sin abrir puertos en el router.
   - title: Desarrollo full-stack
-    body: PHP, JavaScript y Moodle en producción; Svelte, Astro, Python, Rust y Deno en proyectos propios y en cliente.
+    body: >-
+      **PHP, JavaScript y Moodle** en producción; **Svelte, Astro, Python, Rust
+      y Deno** en proyectos propios y en cliente.
 stackSection:
   num: "03"
   title: Stack y enfoque

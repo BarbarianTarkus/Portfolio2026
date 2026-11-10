@@ -44,15 +44,19 @@ a:hover {
   text-decoration-color: var(--accent);
 }
 
+/* Inline code is a chip, not a tint: --surface sits behind cards and would
+   disappear there, so the chip uses the inset tone plus a hairline border. */
 code,
 kbd,
 samp {
-  padding: 0.1em 0.35em;
+  padding: 0.12em 0.4em;
+  border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--surface);
+  background: var(--surface-2);
   color: var(--text-strong);
   font-family: var(--font-mono);
-  font-size: 0.875em;
+  font-size: 0.86em;
+  overflow-wrap: break-word;
 }
 
 ul,
@@ -68,6 +72,24 @@ li::marker {
 strong {
   color: var(--text-strong);
   font-weight: 600;
+}
+
+/* Markdown emphasis. *Italic* is reserved for asides and loanwords; the
+   weight and colour of <strong> carry the scanning anchors. */
+em {
+  font-style: italic;
+}
+
+del {
+  color: var(--muted);
+  text-decoration-thickness: 1px;
+}
+
+mark {
+  padding: 0.05em 0.2em;
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  color: var(--text-strong);
 }
 
 /* Mono label for eyebrows, section numbers and metadata. */

@@ -1,5 +1,6 @@
 import type { SiteContent } from "../lib/content.ts";
 import { PageHeader } from "./PageHeader.tsx";
+import { Markdown } from "../lib/markdown.tsx";
 import { PageMeta } from "./PageMeta.tsx";
 
 interface NotFoundPageProps {
@@ -23,7 +24,10 @@ export function NotFoundPage({ basePath, site }: NotFoundPageProps) {
         <p class="error-code" aria-hidden="true">
           {notFound.code}
         </p>
-        <PageHeader title={notFound.heading} lede={notFound.lede} />
+        <PageHeader
+          title={notFound.heading}
+          lede={<Markdown text={notFound.lede} basePath={basePath} />}
+        />
         {
           /* Explicit "false" stops Fresh from marking this home link as the
             current/ancestor page while rendering the 404 response. */

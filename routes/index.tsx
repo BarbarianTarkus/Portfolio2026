@@ -95,7 +95,11 @@ export function HomePage(
         }}
       />
 
-      <JobList jobs={experience.jobs} maxBullets={2} />
+      <JobList
+        jobs={experience.jobs}
+        maxBullets={2}
+        basePath={basePath}
+      />
 
       <SectionHead
         num={page.projectsSection.num}

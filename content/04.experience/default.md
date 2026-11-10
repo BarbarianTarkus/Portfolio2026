@@ -7,8 +7,8 @@ meta:
     Informática.
 title: Experiencia
 lede: >-
-  Tres etapas, en orden inverso al calendario: desarrollo full-stack en
-  producción, backend sobre un ERP en PHP y, antes, soporte TIC en la
+  **Tres etapas**, en orden inverso al calendario: **desarrollo full-stack en
+  producción**, backend sobre un ERP en PHP y, antes, soporte TIC en la
   universidad. Es donde he aprendido lo que sé.
 linkedinLabel: LinkedIn
 jobsSection:
@@ -29,12 +29,12 @@ jobs:
       - Jira
     bullets:
       - >-
-        Desarrollo full-stack de aplicaciones web en producción con PHP,
+        **Desarrollo full-stack** de aplicaciones web en producción con PHP,
         JavaScript, Moodle y jQuery.
-      - Control de versiones y trabajo con ramas en Git y Bitbucket.
-      - 'Seguimiento de incidencias, tareas y planificación en Jira.'
+      - '**Control de versiones** y trabajo con ramas en Git y Bitbucket.'
+      - '**Seguimiento de incidencias, tareas y planificación** en Jira.'
       - >-
-        Colaboración con el equipo técnico en un entorno de consultoría y
+        **Colaboración con el equipo técnico** en un entorno de consultoría y
         desarrollo a medida.
   - role: Desarrollador backend PHP
     company: 4DMOVIN Business / Namastech
@@ -47,12 +47,14 @@ jobs:
       - Microsoft Graph
       - IMAP / POP / SMTP
     bullets:
-      - Desarrollo sobre un ERP en PHP y Angular.
+      - '**Desarrollo sobre un ERP** en PHP y Angular.'
       - >-
-        Automatización de correos y sincronización de calendarios integrando
+        **Automatización de correos y sincronización de calendarios** integrando
         Google APIs y Microsoft Graph API, mejorando la compatibilidad con IMAP,
         POP y SMTP.
-      - Pantalla de gestión y automatización de redes sociales (posts y feeds).
+      - >-
+        **Pantalla de gestión y automatización de redes sociales** (posts y
+        feeds).
   - role: Soporte TIC (becario)
     company: EPSEVG — Universitat Politècnica de Catalunya
     period: noviembre 2020 — enero 2022
@@ -65,14 +67,14 @@ jobs:
       - Raspberry Pi
     bullets:
       - >-
-        Helpdesk para el personal de la UPC: incidencias informáticas de primer
-        nivel.
+        **Helpdesk para el personal de la UPC**: incidencias informáticas de
+        primer nivel.
       - >-
-        Administración de sistemas Linux y Windows: cuentas, permisos y
+        **Administración de sistemas Linux y Windows**: cuentas, permisos y
         resolución de incidencias.
-      - Gestión de imágenes de sistemas operativos con OpenGnsys.
+      - '**Gestión de imágenes de sistemas operativos** con OpenGnsys.'
       - >-
-        Puesta en marcha del Digital Signage de la universidad: sistema
+        **Puesta en marcha del Digital Signage de la universidad**: sistema
         operativo Linux y hardware Raspberry.
 educationSection:
   num: '02'

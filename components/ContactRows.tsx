@@ -1,4 +1,5 @@
 import type { ContactContent, SiteContent } from "../lib/content.ts";
+import { Markdown } from "../lib/markdown.tsx";
 
 interface ContactRowsProps {
   site: SiteContent;
@@ -32,7 +33,7 @@ function ContactRow(
         </span>
         <span class="contact-value">{value}</span>
         <span class="contact-hint">
-          {row.hint}
+          <Markdown text={row.hint} links={false} />
         </span>
         <span class="contact-arrow" aria-hidden="true">→</span>
       </a>

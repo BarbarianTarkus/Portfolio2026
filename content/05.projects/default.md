@@ -6,7 +6,7 @@ meta:
     propias, con el problema, las decisiones y capturas de cada uno.
 title: Proyectos
 lede: >-
-  Proyectos seleccionados, no historial laboral. Los dos más recientes encabezan la página; cada
+  Proyectos seleccionados, **no historial laboral**. Los dos más recientes encabezan la página; cada
   tarjeta resume el proyecto y despliega el problema, las decisiones y las capturas cuando quieras
   ver más.
 kindLabels:
@@ -22,7 +22,7 @@ projects:
     kind: propio
     year: '2026'
     summary: >-
-      Programa no oficial de Phenomena Experience: cartelera, butacas libres, ciclos y enlaces de
+      **Programa no oficial de Phenomena Experience**: cartelera, butacas libres, ciclos y enlaces de
       compra en una sola app SSR con Deno y Fresh. El repositorio sigue privado; la app está
       publicada.
     tags:
@@ -45,21 +45,21 @@ projects:
     problem: >-
       La cartelera del cine vive repartida entre la web, la compra de entradas y el calendario:
       saber qué se puede ver hoy, cuántas butacas quedan y cuándo encaja una sesión obliga a saltar
-      entre pestañas. Quería resolverlo en una sola pantalla, sin depender de una API que el cine no
-      ofrece.
+      entre pestañas. Quería **resolverlo en una sola pantalla**, sin depender de una API que el cine
+      no ofrece.
     decisions:
       - >-
-        Fresh 2 con SSR e islas pequeñas (unos 25 KB de JS/CSS) en vez de una SPA: la primera
+        **Fresh 2 con SSR** e islas pequeñas (unos 25 KB de JS/CSS) en vez de una SPA: la primera
         pantalla ya trae la cartelera y solo se hidrata la búsqueda y los filtros.
       - >-
-        Un scraper en Python de la biblioteca estándar genera el JSON y una SQLite que la app lee
+        **Un scraper en Python** de la biblioteca estándar genera el JSON y una SQLite que la app lee
         con node:sqlite; el dataset se reconstruye en cada máquina y nunca se versiona, así que no
         envejece en el repositorio.
       - >-
-        Los datos de butacas y formatos se normalizan en el scraper (35 mm, 70 mm, 4K, Dolby
+        **Los datos de butacas y formatos** se normalizan en el scraper (35 mm, 70 mm, 4K, Dolby
         Atmos...), para que los filtros y las fichas no trabajen con una nota de texto libre.
       - >-
-        Diseño propio de la sala: paleta cálida, tipografías autoalojadas y una tira de 35 mm para
+        **Diseño propio de la sala**: paleta cálida, tipografías autoalojadas y una tira de 35 mm para
         los ciclos, en lugar de una plantilla de cartelera genérica.
     gallery:
       - view: web
@@ -118,7 +118,7 @@ projects:
     kind: cliente
     year: '2026'
     summary: >-
-      Landing page para un servicio de coctelería: sitio estático con Astro y un CMS headless para
+      **Landing page para un servicio de coctelería**: sitio estático con Astro y un CMS headless para
       que el cliente edite sin tocar código.
     tags:
       - Astro
@@ -136,18 +136,18 @@ projects:
         kind: demo
         icon: /projects/mixology/favicon.png
     problem: >-
-      Un amigo empezaba con un servicio de coctelería y necesitaba presencia web con presupuesto
-      casi nulo: dominio barato, hosting gratuito y capacidad de cambiar textos y fotos sin
+      Un amigo empezaba con un servicio de coctelería y necesitaba **presencia web con presupuesto
+      casi nulo**: dominio barato, hosting gratuito y capacidad de cambiar textos y fotos sin
       llamarme.
     decisions:
       - >-
-        Astro en modo estático servido desde Cloudflare: coste de hosting cero y ningún servidor que
+        **Astro en modo estático** servido desde Cloudflare: coste de hosting cero y ningún servidor que
         mantener, que era la condición del encargo.
       - >-
-        Comparé Strapi, Decap y TinaCMS; me quedé con TinaCMS porque ofrece edición visual real y no
+        Comparé Strapi, Decap y TinaCMS; **me quedé con TinaCMS** porque ofrece edición visual real y no
         obliga a autohospedar nada, algo que el cliente no podría mantener.
       - >-
-        Generé la primera versión visual con ayuda de IA para iterar rápido y después fijé
+        **Generé la primera versión visual con ayuda de IA** para iterar rápido y después fijé
         tipografía, colores y espaciado a mano: dejar el sistema en manos del generador producía
         inconsistencias.
     gallery:
@@ -171,7 +171,7 @@ projects:
     kind: propio
     year: '2026'
     summary: >-
-      Plugin local de Moodle que cruza los plugins instalados con el catálogo oficial y responde,
+      **Plugin local de Moodle** que cruza los plugins instalados con el catálogo oficial y responde,
       para la versión a la que quieres actualizar, cuáles siguen siendo compatibles, cuáles no y
       cuáles ni siquiera están publicados en moodle.org.
     tags:
@@ -187,25 +187,25 @@ projects:
       Moodle no avisa de si los plugins de terceros seguirán funcionando al subir de versión: la
       respuesta está repartida por las fichas de moodle.org, así que preparar una actualización
       obliga a comprobar plugin por plugin cuáles tienen una release para la versión de destino.
-      Quería esa respuesta en una sola tabla, dentro del propio sitio y para cualquier versión
+      Quería esa respuesta **en una sola tabla, dentro del propio sitio** y para cualquier versión
       futura.
     decisions:
       - >-
-        Partí del plugin de 2020 de Raúl Martínez, que lanzaba una petición HTML a moodle.org y una
+        **Partí del plugin de 2020 de Raúl Martínez**, que lanzaba una petición HTML a moodle.org y una
         regex por cada plugin instalado, y lo reescribí sobre la API oficial del pluglist
         (`download.moodle.org/api/1.3/pluglist.php`): la compatibilidad se deriva de
         `supportedmoodles` y la respuesta se cachea una hora, guardando el JSON en bruto (~15 MB)
         para no serializar el árbol entero.
       - >-
-        Reescribí el informe como una clase propia que extiende `flexible_table`, con dependencias,
+        **Reescribí el informe como una clase propia** que extiende `flexible_table`, con dependencias,
         versión instalada, compatibilidad y última release, ordenación por columnas, filtros por
         texto y estado, y exportación a CSV/Excel con `core\dataformat`.
       - >-
-        Lo integré en la administración de Moodle 4.1+ (registro en `settings.php`, capacidad
+        **Lo integré en la administración de Moodle 4.1+** (registro en `settings.php`, capacidad
         `moodle/site:config`), con cadenas en inglés y español y provider de privacidad: el plugin
         no guarda datos personales, solo consume datos públicos de moodle.org.
       - >-
-        Normalicé las versiones a `major.minor` (5.1, no 5.1.0) y corregí el crash de instalación
+        **Normalicé las versiones a `major.minor`** (5.1, no 5.1.0) y corregí el crash de instalación
         por `normalize_version()` sin cargar, que rompía la instalación.
     gallery:
       - view: web
@@ -219,7 +219,7 @@ projects:
     kind: propio
     year: '2025'
     summary: >-
-      API para una aplicación de la compra, construida con Deno KV y Oak como excusa para probar
+      **API para una aplicación de la compra**, construida con Deno KV y Oak como excusa para probar
       almacenamiento serverless sin administrar una base de datos.
     tags:
       - Deno
@@ -233,24 +233,24 @@ projects:
         href: 'https://github.com/BarbarianTarkus/rebost-api'
         kind: repo
     problem: >-
-      Quería una API para una app de la compra sin montar un servidor de base de datos, y comprobar
+      Quería una API para una app de la compra **sin montar un servidor de base de datos**, y comprobar
       si Deno KV servía para algo más que un ejemplo de la documentación.
     decisions:
       - >-
-        Oak como router: es el framework que ya usaba el ecosistema de Deno y no obliga a arrastrar
+        **Oak como router**: es el framework que ya usaba el ecosistema de Deno y no obliga a arrastrar
         Express ni un framework pesado.
       - >-
-        Deno KV en lugar de PostgreSQL: cero provisión y cero copias de seguridad que mantener, a
+        **Deno KV en lugar de PostgreSQL**: cero provisión y cero copias de seguridad que mantener, a
         cambio de atar el proyecto a las APIs del runtime.
       - >-
-        Despliegue con `deployctl` a Deno Deploy y una tarea de depuración para VS Code, para
+        **Despliegue con `deployctl`** a Deno Deploy y una tarea de depuración para VS Code, para
         trabajar en local con el mismo código que corre en producción.
   - slug: password-manager
     name: Password-Manager
     kind: académico
     year: 2022–25
     summary: >-
-      Gestor de contraseñas para la asignatura de administración de bases de datos: PostgreSQL
+      **Gestor de contraseñas** para la asignatura de administración de bases de datos: PostgreSQL
       ajustado a mano, PostgREST como API y Svelte en el front.
     tags:
       - PostgreSQL
@@ -264,25 +264,25 @@ projects:
         href: 'https://github.com/BarbarianTarkus/Password-Manager'
         kind: repo
     problem: >-
-      La asignatura pedía administrar una base de datos de verdad: justificar la configuración, los
+      La asignatura pedía **administrar una base de datos de verdad**: justificar la configuración, los
       permisos y las consultas sobre datos que crecen, no un CRUD de juguete.
     decisions:
       - >-
-        Usé PostgREST en vez de escribir un backend propio: la API sale del esquema y de las
+        **Usé PostgREST en vez de escribir un backend propio**: la API sale del esquema y de las
         políticas de la base de datos, así que los permisos se definen en un solo sitio.
       - >-
-        Ajusté `postgresql.conf` a mano —memoria compartida, caché efectiva, número de conexiones—
+        **Ajusté `postgresql.conf` a mano** —memoria compartida, caché efectiva, número de conexiones—
         en lugar de quedarme con los valores por defecto, pensados para un portátil y no para un
         servidor.
       - >-
-        Docker para que PostgreSQL, PostgREST y pgAdmin se levanten igual en cualquier máquina,
+        **Docker** para que PostgreSQL, PostgREST y pgAdmin se levanten igual en cualquier máquina,
         incluida la del corrector.
   - slug: petsalut
     name: PetSalut
     kind: académico
     year: '2024'
     summary: >-
-      Aplicación web de gestión para clínicas veterinarias, desarrollada en equipo dentro del
+      **Aplicación web de gestión** para clínicas veterinarias, desarrollada en equipo dentro del
       proyecto de la UPC.
     tags:
       - C++
@@ -297,17 +297,17 @@ projects:
         kind: repo
     problem: >-
       El equipo tenía que entregar un sistema con tres actores (clínicas, propietarios y mascotas) y
-      hacerlo con un flujo de trabajo real —ramas, pull requests y CI—, no con un ZIP al final del
+      hacerlo con **un flujo de trabajo real** —ramas, pull requests y CI—, no con un ZIP al final del
       cuatrimestre.
     decisions:
       - >-
-        Cada funcionalidad entraba por pull request revisado por otra persona del equipo: 12 PRs
+        **Cada funcionalidad entraba por pull request** revisado por otra persona del equipo: 12 PRs
         mergeados, sin commits directos a la rama principal.
       - >-
-        La integración continua corría en GitHub Actions y desplegaba en Azure Functions, para que
+        **La integración continua corría en GitHub Actions** y desplegaba en Azure Functions, para que
         la entrega no dependiera de que alguien compilara en su portátil.
       - >-
-        Fijamos primero el esquema de base de datos y las historias de usuario; cada cambio de
+        **Fijamos primero el esquema de base de datos** y las historias de usuario; cada cambio de
         esquema obligaba a reescribir las historias antes de seguir con la interfaz.
 detailsLabel: Mostrar más detalles
 detailsCloseLabel: Ocultar detalles

@@ -27,7 +27,7 @@
   --font-mono: "Fira Code", ui-monospace, "SF Mono", Menlo, monospace;
 
   --text-body: 1.0625rem; /* 17px */
-  --text-meta: 0.75rem; /* 12px mono */
+  --text-meta: 0.8125rem; /* 13px mono: labels stay legible on laptops */
   --text-small: 0.9375rem; /* 15px */
 
   /* Layout --------------------------------------------------------------- */
