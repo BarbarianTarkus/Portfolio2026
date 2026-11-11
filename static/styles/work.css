@@ -63,6 +63,12 @@
   object-fit: contain;
 }
 
+/* Wordmarks keep their aspect instead of sitting in a 40px square. */
+.job-brand.is-wide {
+  width: 7.5rem;
+  height: 2.5rem;
+}
+
 .job-brand:hover {
   opacity: 1;
 }

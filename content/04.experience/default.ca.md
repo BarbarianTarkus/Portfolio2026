@@ -142,6 +142,7 @@ jobs:
     company: 4DMOVIN Business / Namastech
     url: https://4dmovin.com/
     logo: /companies/4dmovin.webp
+    logoWide: true
     summary: >-
       Programari de gestió immobiliària: digitalitza l'operativa d'una
       immobiliària sense necessitat de ser un expert en tecnologia. També

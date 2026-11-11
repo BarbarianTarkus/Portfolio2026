@@ -140,6 +140,7 @@ jobs:
     company: 4DMOVIN Business / Namastech
     url: https://4dmovin.com/
     logo: /companies/4dmovin.webp
+    logoWide: true
     summary: >-
       Real-estate management software: it digitises an agency's operations
       without needing to be a technology expert. It also builds modules for

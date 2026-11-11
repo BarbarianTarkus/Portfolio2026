@@ -63,7 +63,9 @@ export function JobList(
             </p>
             {job.logo !== undefined && (
               <a
-                class="job-brand"
+                class={job.logoWide === true
+                  ? "job-brand is-wide"
+                  : "job-brand"}
                 href={job.url}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -73,8 +75,8 @@ export function JobList(
                 <img
                   src={assetPrefix + job.logo}
                   alt=""
-                  width="48"
-                  height="48"
+                  width={job.logoWide === true ? 120 : 48}
+                  height={job.logoWide === true ? 20 : 48}
                   loading="lazy"
                   decoding="async"
                 />

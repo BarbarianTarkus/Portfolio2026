@@ -210,6 +210,11 @@ export interface JobEntry {
   url?: string;
   /** Square brand mark under static/, e.g. /companies/3ipunt.svg. */
   logo?: string;
+  /**
+   * The mark is a horizontal wordmark rather than a square icon, so the brand
+   * slot widens to the image's own aspect instead of squeezing it into 40px.
+   */
+  logoWide?: boolean;
   /** One brief paragraph on what the company does; inline Markdown. */
   summary?: string;
   period: string;

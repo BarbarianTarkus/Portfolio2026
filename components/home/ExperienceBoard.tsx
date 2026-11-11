@@ -17,12 +17,18 @@ export function ExperienceBoard({ jobs, basePath }: ExperienceBoardProps) {
     <ol class="experience-board">
       {jobs.map((job) => {
         const point = job.bullets[0] ?? job.summary;
+        // A wordmark is at least five times wider than tall, so it gets its own
+        // slot; square marks keep the 40px box.
+        const wide = job.logoWide === true;
+        const brandClass = wide
+          ? "experience-brand is-wide"
+          : "experience-brand";
         const logo = job.logo === undefined ? undefined : (
           <img
             src={basePath + job.logo}
             alt=""
-            width="40"
-            height="40"
+            width={wide ? 128 : 40}
+            height={wide ? 22 : 40}
             loading="lazy"
             decoding="async"
           />
@@ -35,10 +41,10 @@ export function ExperienceBoard({ jobs, basePath }: ExperienceBoardProps) {
                 <Markdown text={job.period} basePath={basePath} links={false} />
               </span>
               {logo !== undefined && (job.url === undefined
-                ? <span class="experience-brand">{logo}</span>
+                ? <span class={brandClass}>{logo}</span>
                 : (
                   <a
-                    class="experience-brand"
+                    class={brandClass}
                     href={job.url}
                     target="_blank"
                     rel="noopener noreferrer"

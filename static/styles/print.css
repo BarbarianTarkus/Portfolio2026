@@ -72,6 +72,13 @@
     content: "" !important;
   }
 
+  /* The wordmark raster ships light for the dark surface, so on paper it turns
+     into solid ink instead of printing white letters on a white page. */
+  .experience-brand img,
+  .job-brand img {
+    filter: brightness(0);
+  }
+
   .job {
     grid-template-columns: 9.5rem minmax(0, 1fr);
   }
