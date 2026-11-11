@@ -1,0 +1,21 @@
+// Cloudflare Workers deployment of the prerendered site (option A).
+//
+//   BASE_PATH="" deno task cf:build   # render dist/ for a root domain
+//   deno task cf:deploy               # upload dist/ to Workers Static Assets
+//
+// The site is fully static (48 pages rendered by scripts/ssg.ts), so no Worker
+// script runs: Wrangler uploads dist/ as static assets and serves them from the
+// edge. That keeps the Dune CMS, SQLite and sharp out of the runtime, none of
+// which can run inside workerd.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio2026",
+  "compatibility_date": "2026-11-11",
+  "assets": {
+    "directory": "./dist",
+    // /about -> /about/index.html, redirecting to the canonical trailing slash.
+    "html_handling": "auto-trailing-slash",
+    // dist/404.html is served with a 404 status for unknown paths.
+    "not_found_handling": "404-page"
+  }
+}

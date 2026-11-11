@@ -25,3 +25,6 @@ vendor/
 
 # SonarQube scanner working directory
 .scannerwork/
+
+# Wrangler local state (Cloudflare Workers deployment, see wrangler.jsonc)
+.wrangler/
