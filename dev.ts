@@ -6,8 +6,10 @@ import { watchContent } from "./scripts/lib/watch-content.ts";
  * Development server.
  *
  * Fresh's `Builder` bundles the server and the islands on demand and reloads
- * the browser when a route or island changes. Dune's content index is rebuilt
- * when a content file changes, so edits made in /admin (or by hand) show up
+ * the browser when a route or island changes. `static/styles` is part of the
+ * `--watch` set in deno.json, so a stylesheet edit restarts the server and the
+ * live-reload client refreshes the page. Dune's content index is rebuilt when
+ * a content file changes, so edits made in /admin (or by hand) show up
  * without restarting the process.
  */
 Deno.env.set("DUNE_DEV", "1");

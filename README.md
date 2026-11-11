@@ -101,9 +101,10 @@ deno task dev
 
 The dev server runs at <http://localhost:5173/> with live reload (set `PORT` to
 use another port). Editing a route or island rebuilds the browser bundle;
-editing a content page rebuilds Dune's content index in place, so changes show
-up without restarting the process. No `BASE_PATH` is needed in development: the
-site is served from the domain root.
+editing a stylesheet in `static/styles/` restarts the server and Fresh reloads
+the page in place; editing a content page rebuilds Dune's content index in
+place, so changes show up without restarting the process. No `BASE_PATH` is
+needed in development: the site is served from the domain root.
 
 ## Editing content
 
