@@ -12,6 +12,8 @@
     "cf:build": "BASE_PATH=\"\" deno task ssg",
     "cf:dev": "deno run -A npm:wrangler dev",
     "cf:deploy": "deno run -A npm:wrangler deploy",
+    "cf:pages:create": "deno run -A npm:wrangler pages project create portfolio2026 --production-branch=master",
+    "cf:pages": "deno run -A npm:wrangler pages deploy dist --project-name=portfolio2026 --commit-dirty=true",
     "update": "deno run -A -r jsr:@fresh/update ."
   },
   "lint": {
