@@ -176,7 +176,6 @@ export default function Header(
           aria-current={isHome ? "page" : "false"}
         >
           <BrandMark class="brand-mark" />
-          <span class="brand-name">{site.author}</span>
         </a>
 
         <MenuToggle
