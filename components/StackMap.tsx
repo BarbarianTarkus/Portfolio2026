@@ -43,6 +43,8 @@ const TAG_DOMAIN: Record<string, string> = {
   SQLite: "backend",
   Oak: "backend",
   "DeepSeek Harness": "ai",
+  MCP: "ai",
+  Skills: "ai",
   Pi: "ai",
   "Gentle Shell": "ai",
   Ollama: "ai",

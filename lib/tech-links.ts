@@ -37,6 +37,16 @@ const TECH_LINKS: Record<string, string> = {
   ReScript: "https://rescript-lang.org/",
   DynamoDB: "https://aws.amazon.com/dynamodb/",
   "Azure Functions": "https://learn.microsoft.com/azure/azure-functions/",
+  CSS: "https://developer.mozilla.org/docs/Web/CSS",
+  MySQL: "https://www.mysql.com/",
+  Unity: "https://unity.com/",
+  WooCommerce: "https://woocommerce.com/",
+  WordPress: "https://wordpress.org/",
+  Arduino: "https://www.arduino.cc/",
+  ESP32: "https://www.espressif.com/en/products/socs/esp32",
+  "C#": "https://learn.microsoft.com/dotnet/csharp/",
+  "Meta Quest": "https://www.meta.com/quest/",
+  OpenXR: "https://www.khronos.org/openxr/",
 
   // Work history and homelab stacks.
   jQuery: "https://jquery.com/",
@@ -65,6 +75,12 @@ const TECH_LINKS: Record<string, string> = {
   SonarQube: "https://www.sonarsource.com/products/sonarqube/",
   "Cloudflare Tunnel":
     "https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/",
+  BIND9: "https://www.isc.org/bind/",
+  DHCP: "https://www.rfc-editor.org/rfc/rfc2131.html",
+  Nagios: "https://www.nagios.org/",
+  nftables: "https://www.netfilter.org/projects/nftables/",
+  SSH: "https://www.openssh.com/",
+  WiFi: "https://www.wi-fi.org/",
 
   // Agentic AI. OpenCode, Claude Code and Gemini CLI are not in the current
   // stack but stay ready for a future project fiche.
