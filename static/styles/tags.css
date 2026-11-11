@@ -99,3 +99,9 @@
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
+
+/* Painted from the data attribute so the monogram stays decorative: as a text
+   node it would count as visible text and break WCAG 2.5.3 on the tag links. */
+.tag-monogram::before {
+  content: attr(data-monogram);
+}

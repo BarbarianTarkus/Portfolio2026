@@ -36,10 +36,16 @@ const TAG_MONOGRAMS: Record<string, string> = {
 function GlyphContent({ tag }: { tag: string }) {
   const icon = techIconForTag(tag);
   if (icon === undefined) {
+    // The monogram is a decorative stand-in for the missing icon, so it is
+    // painted from a data attribute instead of being a text node: a visible
+    // "RUS" next to the tag name would break WCAG 2.5.3 (label in name), since
+    // the accessible name is the technology name alone.
     return (
-      <span class="tag-monogram" aria-hidden="true">
-        {TAG_MONOGRAMS[tag] ?? tag.slice(0, 3)}
-      </span>
+      <span
+        class="tag-monogram"
+        aria-hidden="true"
+        data-monogram={TAG_MONOGRAMS[tag] ?? tag.slice(0, 3)}
+      />
     );
   }
   return (

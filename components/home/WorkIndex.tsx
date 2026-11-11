@@ -22,10 +22,17 @@ export function WorkIndex(
     <ol class="work-index">
       {rows.map((project) => (
         <li key={project.slug}>
+          {
+            /*
+            No `aria-label`: an explicit name would hide the year, the kind
+            and the summary from the accessible name, which fails WCAG 2.5.3
+            (the visible label must appear in the accessible name). The row's
+            own text is a fine name for the link.
+          */
+          }
           <a
             class="work-row"
             href={localizedHref(basePath, lang, "/projects#" + project.slug)}
-            aria-label={project.name + " — " + kindLabels[project.kind]}
           >
             <span class="work-year">
               {project.year}
