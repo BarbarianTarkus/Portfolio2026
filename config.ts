@@ -12,6 +12,20 @@
 export const DEFAULT_BASE_PATH = "/Portfolio2026";
 
 /**
+ * Public origin the site is published from (scheme + host, no trailing slash).
+ *
+ * Search engines only accept absolute URLs for `rel=canonical` and
+ * `hreflang`, and neither the dev server nor the static export can derive the
+ * public origin from the request (pages are rendered for 127.0.0.1 or for a LAN
+ * address). Override it with SITE_ORIGIN when the site moves to another domain.
+ */
+export const DEFAULT_SITE_ORIGIN = "https://barbariantarkus.github.io";
+
+/** Effective public origin for the current build (no trailing slash). */
+export const SITE_ORIGIN = (Deno.env.get("SITE_ORIGIN") ?? DEFAULT_SITE_ORIGIN)
+  .trim().replace(/\/+$/, "");
+
+/**
  * Normalize a base path to either "" (root) or "/some/prefix".
  *
  * Splitting on "/" also collapses leading, trailing and repeated slashes, so

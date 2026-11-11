@@ -1,7 +1,9 @@
+import { SITE_ORIGIN } from "../config.ts";
 import { define } from "../utils.ts";
 import Header from "../islands/Header.tsx";
 import { Footer } from "../components/Footer.tsx";
 import {
+  absoluteUrl,
   alternatesFor,
   canonicalPath,
   DEFAULT_LANGUAGE,
@@ -37,8 +39,16 @@ export default define.page(function App({ Component, config, url, state }) {
   const notFound = state.notFound === true;
   const canonical = canonicalPath(url.pathname, basePath);
   const path = notFound ? "/" : canonical.path;
-  const canonicalHref = localizedHref(basePath, lang, path);
-  const alternates = alternatesFor(basePath, path);
+  // Canonical and hreflang URLs are absolute (a relative one is rejected by
+  // search engines); in-document links below stay relative to the base path.
+  const canonicalHref = absoluteUrl(
+    SITE_ORIGIN,
+    localizedHref(basePath, lang, path),
+  );
+  const alternates = alternatesFor(basePath, path).map((alternate) => ({
+    ...alternate,
+    href: absoluteUrl(SITE_ORIGIN, alternate.href),
+  }));
 
   return (
     <html lang={meta.htmlLang}>
@@ -75,7 +85,10 @@ export default define.page(function App({ Component, config, url, state }) {
             <link
               rel="alternate"
               hreflang="x-default"
-              href={localizedHref(basePath, DEFAULT_LANGUAGE, path)}
+              href={absoluteUrl(
+                SITE_ORIGIN,
+                localizedHref(basePath, DEFAULT_LANGUAGE, path),
+              )}
             />
           </>
         )}

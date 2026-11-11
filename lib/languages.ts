@@ -91,6 +91,19 @@ export function canonicalPath(
   };
 }
 
+/**
+ * Anchor a site-relative href to the public origin.
+ *
+ * `rel=canonical` and `hreflang` alternates must be absolute URLs; every link
+ * inside the document stays relative so the export keeps working under any
+ * deployment prefix. Absolute hrefs are passed through unchanged.
+ */
+export function absoluteUrl(origin: string, href: string): string {
+  if (/^https?:\/\//.test(href)) return href;
+  if (!origin) return href;
+  return origin + (href.startsWith("/") ? href : `/${href}`);
+}
+
 /** Every language that should be advertised as an alternate of `route`. */
 export function alternatesFor(
   basePath: string,
