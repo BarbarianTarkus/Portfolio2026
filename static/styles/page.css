@@ -1,35 +1,41 @@
-/* Inner pages — titles, ledes, prose and section notes. */
+/* Inner pages — titles, ledes, prose and section notes.
 
-.page-title {
-  font-size: clamp(2.25rem, 5vw, 3.25rem);
-  letter-spacing: -0.02em;
-}
+   `main` is the scope root: page headers, prose and notes are page-level
+   elements with no shared wrapper, and every one of them renders inside the
+   page's main landmark. */
 
-.page-lede {
-  max-width: var(--measure);
-  margin-top: 1rem;
-  color: var(--muted);
-  font-size: 1.1875rem;
-  line-height: 1.55;
-}
+@scope (main) {
+  .page-title {
+    font-size: clamp(2.25rem, 5vi, 3.25rem);
+    letter-spacing: -0.02em;
+  }
 
-.page-meta {
-  margin-top: 1.25rem;
-}
+  .page-lede {
+    max-inline-size: var(--measure);
+    margin-block-start: 1rem;
+    color: var(--muted);
+    font-size: 1.1875rem;
+    line-height: 1.55;
+  }
 
-.prose {
-  max-width: var(--measure);
-  margin-top: 1.5rem;
-  color: var(--text);
-}
+  .page-meta {
+    margin-block-start: 1.25rem;
+  }
 
-.prose > * + * {
-  margin-top: 1rem;
-}
+  .prose {
+    max-inline-size: var(--measure);
+    margin-block-start: 1.5rem;
+    color: var(--text);
 
-.section-note {
-  max-width: var(--measure);
-  margin-top: 0.75rem;
-  color: var(--muted);
-  font-size: var(--text-small);
+    > * + * {
+      margin-block-start: 1rem;
+    }
+  }
+
+  .section-note {
+    max-inline-size: var(--measure);
+    margin-block-start: 0.75rem;
+    color: var(--muted);
+    font-size: var(--text-small);
+  }
 }

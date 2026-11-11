@@ -1,4 +1,5 @@
-/* Base — reset, document defaults, focus, accessibility helpers and scroll lock. */
+/* Base — reset, document defaults, focus, accessibility helpers and scroll lock.
+   Imported into the `base` layer by main.css. */
 
 *,
 *::before,
@@ -13,11 +14,14 @@ html {
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-block-size: 100svb;
   color: var(--text);
   font-family: var(--font-body);
   font-size: var(--text-body);
   line-height: 1.65;
+  /* Pretty wrapping is the document default; headings opt into balance in the
+     typography layer. Nothing here resets wrapping to the default `wrap`. */
+  text-wrap: pretty;
   background: var(--bg);
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
@@ -27,11 +31,11 @@ img,
 svg,
 video,
 canvas {
-  max-width: 100%;
+  max-inline-size: 100%;
 }
 
 img {
-  height: auto;
+  block-size: auto;
 }
 
 ::selection {
@@ -46,7 +50,7 @@ main:focus {
 
 /* Anchor targets land with breathing room instead of flush against the edge. */
 [id] {
-  scroll-margin-top: 2rem;
+  scroll-margin-block-start: 2rem;
 }
 
 /* Keyboard-only focus ring: mouse/touch activation stays ring-free. */
@@ -55,11 +59,13 @@ main:focus {
   outline-offset: 3px;
 }
 
+/* Visually hidden, still announced: clip-path keeps the box out of view
+   without the old 1px overflow hack. */
 .sr-only {
   position: absolute;
   overflow: hidden;
-  width: 1px;
-  height: 1px;
+  inline-size: 1px;
+  block-size: 1px;
   margin: -1px;
   padding: 0;
   border: 0;
@@ -70,10 +76,11 @@ main:focus {
 .skip-to-content-link {
   position: fixed;
   z-index: 10;
-  top: 0.75rem;
-  left: 0.75rem;
-  min-height: 44px;
-  padding: 0.75rem 1rem;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 0.75rem;
+  min-block-size: 44px;
+  padding-block: 0.75rem;
+  padding-inline: 1rem;
   transform: translateY(-200%);
   border-radius: var(--radius);
   background: var(--accent);
@@ -82,10 +89,10 @@ main:focus {
   font-size: var(--text-meta);
   text-decoration: none;
   transition: transform var(--transition);
-}
 
-.skip-to-content-link:focus-visible {
-  transform: translateY(0);
+  &:focus-visible {
+    transform: translateY(0);
+  }
 }
 
 /* Scroll lock while the mobile navigation overlay is open. */

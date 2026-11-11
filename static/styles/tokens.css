@@ -1,25 +1,32 @@
-/* Design tokens — colour, type, spacing and shell width for the whole site. */
+/* Design tokens — colour, type, spacing and shell width for the whole site.
+   Imported into the `tokens` layer by main.css.
+
+   Colours are authored in oklch(): lightness, chroma and hue are separate, so a
+   tint can be derived with color-mix() or a relative colour without dragging the
+   hue along with it. The design ships one colour scheme (dark), so each token
+   carries a single value rather than a light-dark() pair; print.css overrides
+   the same names for paper. */
 
 :root {
   /* Surface and ink ------------------------------------------------------ */
-  --bg: #0b0e13; /* page */
-  --surface: #12171f; /* raised block, used sparingly */
-  --surface-2: #1a212b; /* inset only: the 404 numeral */
-  --line: #232c38; /* every decorative rule and border is 1px of this */
-  --line-strong: #595f69; /* 3:1 on --bg: only for borders that bound a control */
-  --text: #cbd3df; /* body copy */
-  --text-strong: #e8edf4; /* headings and the name: one step above body */
-  --muted: #7f8ca3; /* metadata, secondary prose */
+  --bg: oklch(0.1629 0.0117 260.6); /* page */
+  --surface: oklch(0.2033 0.0178 259.7); /* raised block, used sparingly */
+  --surface-2: oklch(0.2455 0.0217 257.3); /* inset only: the 404 numeral */
+  --line: oklch(0.29 0.0254 255.7); /* every decorative rule and border */
+  --line-strong: oklch(0.4838 0.0177 260.7); /* 3:1 on --bg: control borders */
+  --text: oklch(0.8643 0.0188 258.4); /* body copy */
+  --text-strong: oklch(0.9443 0.0109 256.7); /* headings, the name */
+  --muted: oklch(0.6376 0.0378 261.9); /* metadata, secondary prose */
 
   /* Accent: links, action, active state, section numbers, the mail tile.
      Nothing else.
      Values verified for WCAG contrast against --bg (docs/redesign/research.md):
      accent 11.98:1, text 12.81:1, muted 5.69:1; accent-dim is 5.40:1 here and
      4.52:1 at worst (on --surface-2), which still clears 4.5:1. */
-  --accent: #f1c81b;
-  --accent-bright: #ffd84d; /* hover only */
-  --accent-dim: #98873b; /* section numbers, resting marks */
-  --brand: #fb9b18; /* legacy warm accent; the logo now uses --accent */
+  --accent: oklch(0.844 0.1685 93.4);
+  --accent-bright: oklch(0.8916 0.1569 93); /* hover only */
+  --accent-dim: oklch(0.6231 0.0983 96.8); /* section numbers, resting marks */
+  --brand: oklch(0.7709 0.1671 65.7); /* legacy warm accent; logo uses --accent */
 
   /* Typography ----------------------------------------------------------- */
   --font-display: "Roboto Condensed", "Arial Narrow", sans-serif;
@@ -33,9 +40,10 @@
 
   /* Layout --------------------------------------------------------------- */
   /* 68rem shell: wider than the old 54rem, still clamped so it never forces a
-     horizontal scrollbar on a 1024px laptop. */
+     horizontal scrollbar on a 1024px laptop. The gutter scales with the inline
+     viewport (vi, not vw) so it follows the reading direction. */
   --shell: 68rem;
-  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --gutter: clamp(1.25rem, 4vi, 2.5rem);
   --measure: 62ch; /* prose cap, ~62-70 characters at 17px */
   --radius: 2px; /* near-square: a rounded card reads "webapp" */
 

@@ -28,3 +28,6 @@ vendor/
 
 # Wrangler local state (Cloudflare Workers deployment, see wrangler.jsonc)
 .wrangler/
+
+# Local screenshot harness used to A/B the CSS refactor
+.screenshots/

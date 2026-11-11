@@ -1,4 +1,8 @@
-/* Typography — headings, body copy, links, code and lists. */
+/* Typography — headings, body copy, links, code and lists.
+   Imported into the `typography` layer by main.css.
+
+   Element defaults live in their own layer, so any component rule outranks them
+   without needing a heavier selector. */
 
 h1,
 h2,
@@ -37,11 +41,11 @@ a {
   transition:
     color var(--transition),
     text-decoration-color var(--transition);
-}
 
-a:hover {
-  color: var(--accent);
-  text-decoration-color: var(--accent);
+  &:hover {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
 }
 
 /* Inline code is a chip, not a tint: --surface sits behind cards and would
@@ -49,7 +53,8 @@ a:hover {
 code,
 kbd,
 samp {
-  padding: 0.12em 0.4em;
+  padding-block: 0.12em;
+  padding-inline: 0.4em;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--surface-2);
@@ -86,9 +91,10 @@ del {
 }
 
 mark {
-  padding: 0.05em 0.2em;
+  padding-block: 0.05em;
+  padding-inline: 0.2em;
   border-radius: var(--radius);
-  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  background: color-mix(in oklab, var(--accent) 22%, transparent);
   color: var(--text-strong);
 }
 

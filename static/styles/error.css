@@ -1,22 +1,24 @@
-/* 404 page. */
+/* 404 page. Scoped on the page wrapper: it adjusts the spacing of the
+   page header and the call to action, both owned by other components. */
+@scope (.error-page) {
+  :scope {
+    max-inline-size: var(--measure);
+    padding-block: clamp(2rem, 6vi, 4rem);
+  }
 
-.error-page {
-  max-width: var(--measure);
-  padding-block: clamp(2rem, 6vw, 4rem);
-}
+  .error-code {
+    color: var(--surface-2);
+    font-family: var(--font-display);
+    font-size: clamp(4rem, 14vi, 7rem);
+    font-weight: 700;
+    line-height: 0.9;
+  }
 
-.error-code {
-  color: var(--surface-2);
-  font-family: var(--font-display);
-  font-size: clamp(4rem, 14vw, 7rem);
-  font-weight: 700;
-  line-height: 0.9;
-}
+  .page-title {
+    margin-block-start: 1rem;
+  }
 
-.error-page .page-title {
-  margin-top: 1rem;
-}
-
-.error-page .button {
-  margin-top: 2rem;
+  .button {
+    margin-block-start: 2rem;
+  }
 }

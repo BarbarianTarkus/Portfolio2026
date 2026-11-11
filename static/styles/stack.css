@@ -1,242 +1,313 @@
-/* Stack — focus areas plus the layered stack map (UI / API / OPS). */
+/* Stack — focus areas plus the layered stack map (UI / API / OPS).
 
-.stack-grid {
-  margin-top: 2rem;
-}
+   Two roots need two scopes: the home page wraps the focus copy and the map in
+   `.stack-grid`, while About renders the map on its own. A rule inside a scope
+   cannot reach the scope root by its class — only `:scope` matches it — so the
+   grid's own margin lives in the grid scope and the map's own box in the map
+   scope. The map scope stops at the tag lists: TechStack renders its own
+   component (tags.css), and the stack only positions the wrapper that holds it. */
 
-.stack-focus {
-  display: grid;
-  gap: 1.75rem;
-}
+@scope (.stack-grid) {
+  :scope {
+    margin-block-start: 2rem;
 
-.stack-block h3 {
-  margin-bottom: 0.75rem;
-  color: var(--text-strong);
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.stack-block p {
-  color: var(--muted);
-  font-size: var(--text-small);
-  line-height: 1.6;
-}
-
-/* The map is a cross-section, not a card: hairline rows, a code in a small
-   outline, and a spine that ties the three layers together. */
-.stack-map {
-  position: relative;
-  margin: 2.75rem 0 0;
-  padding: 0;
-  border-top: 1px solid var(--line);
-  list-style: none;
-}
-
-.stack-map::before {
-  content: "";
-  position: absolute;
-  top: 1rem;
-  bottom: 1rem;
-  left: 1rem;
-  width: 1px;
-  background: var(--line);
-  pointer-events: none;
-}
-
-.stack-layer {
-  display: grid;
-  grid-template-columns: 2rem minmax(0, 11rem) minmax(0, 1fr) 2rem;
-  align-items: center;
-  gap: 1.25rem;
-  padding: 1.15rem 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.stack-layer-code {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--bg);
-  color: var(--accent-dim);
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: -0.02em;
-  transition:
-    color var(--transition),
-    border-color var(--transition);
-}
-
-.stack-layer:hover .stack-layer-code,
-.stack-layer:focus-within .stack-layer-code {
-  border-color: var(--accent-dim);
-  color: var(--accent);
-}
-
-.stack-layer-head {
-  display: grid;
-  gap: 0.15rem;
-}
-
-.stack-layer-title {
-  color: var(--text-strong);
-  font-family: var(--font-body);
-  font-size: 0.9375rem;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: 0;
-}
-
-.stack-layer-note {
-  max-width: 20ch;
-  color: var(--muted);
-  font-size: 0.75rem;
-  line-height: 1.45;
-}
-
-.stack-map .stack-layer-tags {
-  margin-top: 0;
-}
-
-.stack-layer-count {
-  justify-self: end;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.08em;
-}
-
-/* Backend and infrastructure are read as sub-scopes, so their rows align to
-   the top instead of centering the code against a tall tag block. */
-.stack-layer--grouped {
-  align-items: start;
-}
-
-.stack-subrow {
-  display: grid;
-  gap: 0.4rem;
-}
-
-.stack-subrow + .stack-subrow {
-  margin-top: 0.9rem;
-}
-
-.stack-subrow-title {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-@media (min-width: 48rem) {
-  .stack-focus {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2rem 3rem;
-  }
-}
-
-@media (min-width: 80rem) {
-  .stack-grid {
-    display: block;
+    @media (width >= 80rem) {
+      display: block flow;
+    }
   }
 
   .stack-focus {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 2rem 3rem;
+    display: block grid;
+    gap: 1.75rem;
+
+    @media (width >= 48rem) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem 3rem;
+    }
+  }
+
+  .stack-block {
+    h3 {
+      margin-block-end: 0.75rem;
+      color: var(--text-strong);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: var(--text-small);
+      line-height: 1.6;
+    }
   }
 
   /* At wide sizes the map sits under the focus copy as a full-width
      cross-section, so the tags read across the page instead of down a
      narrow column. */
-  .stack-grid .stack-map {
-    margin-top: 2.5rem;
-  }
-}
-
-@media (max-width: 47.99rem) {
-  .stack-map {
-    margin-top: 2rem;
-  }
-
-  .stack-layer {
-    grid-template-columns: 2rem minmax(0, 1fr) auto;
-    align-items: start;
-    gap: 0.7rem 1rem;
-    padding: 1rem 0;
-  }
-
-  .stack-layer-head {
-    padding-top: 0.15rem;
-  }
-
-  .stack-layer-note {
-    max-width: none;
-  }
-
-  .stack-layer-tags {
-    grid-column: 2 / -1;
-    grid-row: 2;
-  }
-
-  .stack-subrow {
-    gap: 0.35rem;
-  }
-
-  .stack-subrow + .stack-subrow {
-    margin-top: 0.9rem;
-  }
-}
-
-/* The homelab list is deliberately narrower than the prose: ten labeled
-   technologies wrap into two balanced rows instead of one long strip. */
-.homelab-stack {
-  max-width: 35rem;
-}
-
-/* Scroll-driven entrance for the stack cross-section. Each row reveals as it
-   enters the viewport; a second, brighter hairline draws down the spine. This
-   is progressive enhancement: without view() support the map is simply static. */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    .stack-map .stack-layer {
-      animation: stack-row-in linear;
-      animation-timeline: view();
-      animation-range: entry 0% entry 75%;
+  @media (width >= 80rem) {
+    :scope .stack-map {
+      margin-block-start: 2.5rem;
     }
+  }
+}
 
-    .stack-map::after {
+@scope (.stack-map) to (.tag-list) {
+  /* The map is a cross-section, not a card: hairline rows, a code in a small
+     outline, and a spine that ties the three layers together.
+
+     The spine and the scanning hairline are decoration behind the codes, so the
+     map owns a stacking context and both hairlines sit at z-index 0 while every
+     row sits at 1. Without that, the rows stop being the winning layer as soon
+     as the entrance animation gives them a transform (a transform makes the row
+     a stacking context, and a later sibling pseudo-element paints over it). */
+  :scope {
+    position: relative;
+    isolation: isolate;
+    margin-block: 2.75rem 0;
+    margin-inline: 0;
+    padding: 0;
+    border-block-start: 1px solid var(--line);
+    list-style: none;
+
+    &::before {
       content: "";
       position: absolute;
       z-index: 0;
-      top: 1rem;
-      bottom: 1rem;
-      left: 1rem;
-      width: 1px;
-      background: linear-gradient(
-        to bottom,
-        transparent,
-        var(--accent-dim) 25%,
-        var(--accent) 55%,
-        transparent
-      );
-      transform-origin: top;
-      animation: stack-scan linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 45%;
+      inset-block-start: 1rem;
+      inset-block-end: 1rem;
+      inset-inline-start: 1rem;
+      inline-size: 1px;
+      background: var(--line);
       pointer-events: none;
+    }
+
+    @media (width < 48rem) {
+      margin-block-start: 2rem;
+    }
+  }
+
+  /* The row padding is the map's rhythm: it grows with the viewport instead of
+     snapping when the row drops to the stacked layout. */
+  .stack-layer {
+    position: relative;
+    z-index: 1;
+    display: block grid;
+    grid-template-columns: 2rem minmax(0, 11rem) minmax(0, 1fr) 2rem;
+    align-items: center;
+    gap: 1.25rem;
+    padding-block: clamp(1rem, 0.85rem + 0.63vi, 1.15rem);
+    padding-inline: 0;
+    border-block-end: 1px solid var(--line);
+
+    &:hover .stack-layer-code,
+    &:focus-within .stack-layer-code {
+      border-color: var(--accent-dim);
+      color: var(--accent);
+    }
+
+    @media (width < 48rem) {
+      grid-template-columns: 2rem minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 0.7rem 1rem;
+    }
+  }
+
+  .stack-layer-code {
+    position: relative;
+    z-index: 1;
+    display: block grid;
+    place-items: center;
+    inline-size: 2rem;
+    block-size: 2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--accent-dim);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: -0.02em;
+    transition:
+      color var(--transition),
+      border-color var(--transition);
+  }
+
+  .stack-layer-head {
+    display: block grid;
+    gap: 0.15rem;
+
+    @media (width < 48rem) {
+      padding-block-start: 0.15rem;
+    }
+  }
+
+  .stack-layer-title {
+    color: var(--text-strong);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0;
+  }
+
+  .stack-layer-note {
+    max-inline-size: 20ch;
+    color: var(--muted);
+    font-size: 0.75rem;
+    line-height: 1.45;
+
+    @media (width < 48rem) {
+      max-inline-size: none;
+    }
+  }
+
+  /* Scoped by the row rather than by the map: inside `@scope` the root is only
+     reachable as `:scope`, and the row is what actually owns the tag block. */
+  .stack-layer .stack-layer-tags {
+    margin-block-start: 0;
+
+    @media (width < 48rem) {
+      grid-column: 2 / -1;
+      grid-row: 2;
+    }
+  }
+
+  .stack-layer-count {
+    justify-self: end;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* Backend and infrastructure are read as sub-scopes, so their rows align to
+     the top instead of centering the code against a tall tag block. */
+  .stack-layer--grouped {
+    align-items: start;
+  }
+
+  .stack-subrow {
+    display: block grid;
+    gap: 0.4rem;
+
+    + .stack-subrow {
+      margin-block-start: 0.9rem;
+    }
+
+    @media (width < 48rem) {
+      gap: 0.35rem;
+    }
+  }
+
+  .stack-subrow-title {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* The homelab list is deliberately narrower than the prose: ten labeled
+     technologies wrap into two balanced rows instead of one long strip. */
+  .homelab-stack {
+    max-inline-size: 35rem;
+  }
+
+  /* Scroll-driven entrance for the stack cross-section: each row eases in as it
+     climbs into view, and a second, brighter hairline draws down the spine
+     behind the codes. The reveal ends well past the point where the row is
+     readable, so it stays apparent at normal scroll speed instead of finishing
+     while the row is still at the viewport edge (a range of a row's own height
+     is one wheel notch long, which reads as no animation at all).
+
+     Progressive enhancement: browsers without a view() timeline get the same
+     entrance from static/js/stack-reveal.js, and with neither the map is simply
+     static. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      :scope .stack-layer {
+        animation: stack-row-in linear;
+        animation-timeline: view();
+        animation-range: entry 0% cover 30%;
+      }
+
+      :scope::after {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        inset-block-start: 1rem;
+        inset-block-end: 1rem;
+        inset-inline-start: 1rem;
+        inline-size: 1px;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          var(--accent-dim) 25%,
+          var(--accent) 55%,
+          transparent
+        );
+        transform-origin: top;
+        animation: stack-scan linear both;
+        animation-timeline: view();
+        animation-range: entry 0% cover 55%;
+        pointer-events: none;
+      }
+    }
+
+    /* Same entrance for engines that cannot run a view() timeline (Safari
+       before 26, older WebKitGTK and Chromium). stack-reveal.js arms the map and
+       flips it to "shown" on intersection; without the script nothing is armed
+       and the map keeps its static no-JS baseline. */
+    @supports not (animation-timeline: view()) {
+      :scope[data-stack-reveal] .stack-layer {
+        opacity: 0;
+        transform: translateX(-0.75rem);
+        transition:
+          opacity 520ms cubic-bezier(0.2, 0.7, 0.2, 1),
+          transform 520ms cubic-bezier(0.2, 0.7, 0.2, 1);
+        transition-delay: calc(var(--stack-row, 0) * 80ms);
+      }
+
+      :scope[data-stack-reveal="shown"] .stack-layer {
+        opacity: 1;
+        transform: none;
+      }
+
+      :scope[data-stack-reveal]::after {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        inset-block-start: 1rem;
+        inset-block-end: 1rem;
+        inset-inline-start: 1rem;
+        inline-size: 1px;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          var(--accent-dim) 25%,
+          var(--accent) 55%,
+          transparent
+        );
+        transform: scaleY(0);
+        transform-origin: top;
+        opacity: 0;
+        transition:
+          transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1) 160ms,
+          opacity 360ms linear 160ms;
+        pointer-events: none;
+      }
+
+      :scope[data-stack-reveal="shown"]::after {
+        transform: scaleY(1);
+        opacity: 0.85;
+      }
     }
   }
 }
 
 @keyframes stack-row-in {
   from {
-    opacity: 0.15;
-    transform: translateX(-0.6rem);
+    opacity: 0;
+    transform: translateX(-0.75rem);
   }
 
   to {

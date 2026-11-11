@@ -1,4 +1,7 @@
-/* Print — compact light-theme layout. */
+/* Print — compact light-theme layout. Imported into the `adjustments` layer by
+   main.css, so it lands after every component and needs no selector games to
+   win. Paper is its own colour scheme: the same token names are repointed at
+   ink-on-white values here instead of tinting every component separately. */
 
 @media print {
   @page {
@@ -6,17 +9,17 @@
   }
 
   :root {
-    --bg: #ffffff;
-    --surface: #f2f2f2;
-    --surface-2: #e6e6e6;
-    --line: #b8b8b8;
-    --text: #1a1a1a;
-    --text-strong: #000000;
-    --muted: #4a4a4a;
-    --accent: #000000;
-    --accent-dim: #4a4a4a;
-    --accent-bright: #000000;
-    --brand: #000000;
+    --bg: oklch(1 0 0);
+    --surface: oklch(0.9612 0 0);
+    --surface-2: oklch(0.9249 0 0);
+    --line: oklch(0.7826 0 0);
+    --text: oklch(0.2178 0 0);
+    --text-strong: oklch(0 0 0);
+    --muted: oklch(0.4091 0 0);
+    --accent: oklch(0 0 0);
+    --accent-dim: oklch(0.4091 0 0);
+    --accent-bright: oklch(0 0 0);
+    --brand: oklch(0 0 0);
   }
 
   header nav,
@@ -41,7 +44,7 @@
   }
 
   .shell {
-    max-width: none;
+    max-inline-size: none;
     padding-inline: 0;
   }
 
@@ -56,16 +59,17 @@
   }
 
   .experience-board {
-    display: block;
+    display: block flow;
   }
 
   .experience-column {
-    padding: 0.75rem 0;
-    border-right: 0;
-  }
+    padding-block: 0.75rem;
+    padding-inline: 0;
+    border-inline-end: 0;
 
-  .experience-column + .experience-column {
-    padding-left: 0;
+    + & {
+      padding-inline-start: 0;
+    }
   }
 
   .experience-brand::after {
@@ -99,10 +103,10 @@
     display: none !important;
   }
 
-  /* Channel tones are screen affordances: in print every row is ink on
-     paper, and the tinted tiles would only cost toner. */
+  /* Channel tones are screen affordances: in print every row is ink on paper,
+     and the tinted tiles would only cost toner. */
   .contact-row[data-channel] {
-    --channel: #000000;
+    --channel: oklch(0 0 0);
   }
 
   .contact-mark {
@@ -119,27 +123,27 @@
       "mark label value arrow"
       "mark .     hint  arrow"
       "mark .     url   arrow";
-  }
 
-  .contact-row[data-channel][href^="http"]::after {
-    grid-area: url;
-    color: var(--muted);
-    font-size: 0.75em;
-    overflow-wrap: anywhere;
+    &::after {
+      grid-area: url;
+      color: var(--muted);
+      font-size: 0.75em;
+      overflow-wrap: anywhere;
+    }
   }
 
   a[href^="http"]::after {
     content: " (" attr(href) ")";
-    color: #555;
+    color: oklch(0.4495 0 0);
     font-size: 0.75em;
     overflow-wrap: anywhere;
   }
 
   .section-head {
-    margin-top: 2rem;
+    margin-block-start: 2rem;
   }
 
   .site-footer {
-    margin-top: 2rem;
+    margin-block-start: 2rem;
   }
 }

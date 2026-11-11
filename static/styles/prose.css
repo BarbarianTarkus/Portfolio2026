@@ -5,83 +5,81 @@
    **bold**, *italic*, `code` and [links](/route). typography.css styles the
    elements; this layer sets the reading rhythm and the link treatment so the
    same emphasis reads consistently in a page, a job bullet and a fiche.
+
+   Rendered copy already wraps `pretty`: body asks for it (base.css) and the
+   property inherits, so these rules only re-state measure and rhythm. Every
+   copy container is its own scope root — the link treatment belongs to the
+   container that renders Markdown, not to every link on the site.
    ========================================================================== */
 
-/* Copy gets a prettier rag; labels and headings keep their own wrapping. */
-.prose,
-.page-lede,
-.section-note,
-.job-points,
-.job-summary,
-.fiche-block p,
-.fiche-block li,
-.project-card-summary,
-.work-summary,
-.contact-hint,
-.stack-block p {
-  text-wrap: pretty;
+@scope (.prose, .page-lede, .section-note, .job-points, .job-summary,
+  .fiche-block, .project-card-summary, .work-summary, .contact-hint,
+  .stack-block) {
+  /* Links inside copy: accent ink with a tinted rule at rest, brighter on
+     hover. Navigation, buttons and card actions keep their own treatments. */
+  :scope a {
+    color: var(--accent);
+    text-decoration-color: color-mix(in oklab, var(--accent) 45%, transparent);
+    text-underline-offset: 3px;
+
+    &:hover {
+      color: var(--accent-bright);
+      text-decoration-color: currentColor;
+    }
+  }
 }
 
-.prose,
-.job-points,
-.fiche-block p,
-.fiche-block li {
-  line-height: 1.7;
+/* Scoped from an outer root for the same reason as the pitch block below:
+   work.css scopes .job-points from .job and keeps its tighter 1.65 rhythm;
+   a root on the element itself would outrank it. */
+@scope (main) {
+  .prose,
+  .job-points {
+    line-height: 1.7;
+  }
 }
 
-/* Links inside copy: accent ink with a tinted rule at rest, brighter on hover.
-   Navigation, buttons and card actions keep their own treatments. */
-.prose a,
-.page-lede a,
-.section-note a,
-.job-points a,
-.job-summary a,
-.fiche-block a,
-.project-card-summary a,
-.work-summary a,
-.contact-hint a,
-.stack-block a {
-  color: var(--accent);
-  text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  text-underline-offset: 3px;
+@scope (.fiche-block) {
+  /* Project fiches were the longest lines on the site: a 52rem column at 15px
+     ran past 100 characters. Cap them at the prose measure and use body size,
+     matching the job bullets. */
+  :scope p,
+  :scope li {
+    max-inline-size: var(--measure);
+    font-size: var(--text-body);
+    line-height: 1.7;
+  }
 }
 
-.prose a:hover,
-.page-lede a:hover,
-.section-note a:hover,
-.job-points a:hover,
-.job-summary a:hover,
-.fiche-block a:hover,
-.project-card-summary a:hover,
-.work-summary a:hover,
-.contact-hint a:hover,
-.stack-block a:hover {
-  color: var(--accent-bright);
-  text-decoration-color: currentColor;
+/* Card pitches keep a scannable measure instead of the grid width. Scoped on
+   the pitch itself so it outranks the card's own .project-card rule, exactly
+   as this later layer did before the rules were scoped. */
+@scope (.project-card-summary) {
+  :scope {
+    max-inline-size: var(--measure);
+    line-height: 1.65;
+  }
 }
 
-/* Project fiches were the longest lines on the site: a 52rem column at 15px
-   ran past 100 characters. Cap them at the prose measure and use body size,
-   matching the job bullets. */
-.fiche-block p,
-.fiche-block li {
-  max-width: var(--measure);
-  font-size: var(--text-body);
+/* Index pitches live inside .work-index, whose own rule keeps its tighter
+   rhythm; an outer root preserves that priority instead of outranking it. */
+@scope (main) {
+  .work-summary {
+    max-inline-size: var(--measure);
+    line-height: 1.65;
+  }
 }
 
-/* Card and index pitches keep a scannable measure instead of the grid width. */
-.project-card-summary,
-.work-summary {
-  max-width: var(--measure);
-  line-height: 1.65;
+@scope (.page-lede, .section-note, .contact-hint, .work-summary,
+  .project-card-summary) {
+  /* Secondary copy steps its emphasis up to the strong ink, not just weight. */
+  :scope em {
+    color: var(--text-strong);
+  }
 }
 
-/* Secondary copy steps its emphasis up to the strong ink, not just weight. */
-.page-lede em,
-.section-note em,
-.contact-hint em,
-.work-summary em,
-.project-card-summary em,
-.stack-block p em {
-  color: var(--text-strong);
+@scope (.stack-block) {
+  :scope p em {
+    color: var(--text-strong);
+  }
 }

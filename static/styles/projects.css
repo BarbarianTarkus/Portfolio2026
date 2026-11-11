@@ -1,333 +1,366 @@
-/* Projects — cards, covers, disclosures and fiche text. */
+/* Projects — cards, covers, disclosures and fiche text.
 
-.project-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-  gap: 1.25rem;
-  margin-top: 2.25rem;
-}
+   Scope roots follow the markup: the grid, the card, the article, the cover
+   and the action row (both shared by card and article), the homelab panel and
+   the fiche block. The card and the article host the gallery and its lightbox,
+   a <dialog> in the top layer, so those two scopes stop at it.
+   Selectors keep the specificity they had — `:scope` stands in for the class
+   that used to prefix them. */
 
-@media (min-width: 64rem) {
-  .project-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
+@scope (.project-grid) {
+  :scope {
+    display: block grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem;
+    margin-block-start: clamp(2.25rem, 1.65rem + 0.75vi, 2.5rem);
+  }
+
+  @media (width >= 64rem) {
+    :scope {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+    }
   }
 }
 
 /* A card is a cover, a short pitch and a disclosure. It is a real border, not
    a shadow: the page already uses rules as its hierarchy device. */
-.project-card {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--surface);
-  transition: border-color var(--transition);
-}
+@scope (.project-card) to (.gallery-lightbox) {
+  :scope {
+    display: block flex;
+    min-inline-size: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+    transition: border-color var(--transition);
 
-.project-card:hover,
-.project-card:focus-within {
-  border-color: var(--line-strong);
+    &:hover,
+    &:focus-within {
+      border-color: var(--line-strong);
+    }
+  }
+
+  /* The cover is shared with the article; the card's own hover eases the shot
+     in, so the motion is opt-in. */
+  @media (prefers-reduced-motion: no-preference) {
+    :scope:hover .project-cover img {
+      transform: scale(1.015);
+    }
+  }
+
+  /* The card's first-impact area is the slider itself. The controls sit over
+     the image so the media reads as one block, not as a widget stacked above
+     it. */
+  .project-media {
+    border-block-end: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+
+  .project-card-body {
+    display: block flex;
+    flex: 1;
+    flex-direction: column;
+    padding-block: clamp(1.25rem, 0.85rem + 0.5vi, 1.45rem) clamp(1rem, 0.8rem +
+      0.25vi, 1.15rem);
+    padding-inline: clamp(1.25rem, 0.85rem + 0.5vi, 1.45rem);
+  }
+
+  .fiche-kind {
+    margin-block-end: 0.35rem;
+    color: var(--accent-dim);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .project-card-title {
+    font-size: clamp(1.4rem, 2.2vi, 1.75rem);
+    letter-spacing: -0.015em;
+  }
+
+  /* A project with a live preview links its name straight to it. The arrow and
+     the underline on hover mark the jump without adding another control. */
+  .project-card-title-link {
+    color: inherit;
+    text-decoration: underline transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+    transition:
+      color var(--transition),
+      text-decoration-color var(--transition);
+
+    &::after {
+      content: "↗";
+      display: inline flow-root;
+      margin-inline-start: 0.3em;
+      color: var(--accent-dim);
+      font-size: 0.68em;
+      transition:
+        color var(--transition),
+        transform var(--transition);
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+
+      &::after {
+        color: var(--accent);
+        transform: translate(1px, -1px);
+      }
+    }
+  }
+
+  .fiche-meta {
+    display: block flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin-block-start: 0.6rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.02em;
+  }
+
+  .project-card-summary {
+    margin-block-start: 0.7rem;
+    color: var(--text);
+    font-size: var(--text-small);
+    line-height: 1.6;
+  }
+
+  /* The card's only route into the project: a rule-topped link that mirrors the
+     summary row it replaces, with the arrow pointing at the full article. */
+  .project-more {
+    display: block flex;
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: 44px;
+    margin-block-start: 1rem;
+    border-block-start: 1px solid var(--line);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
+
+    span {
+      font-size: 1rem;
+      line-height: 1;
+      transition: transform var(--transition);
+    }
+
+    &:hover,
+    &:focus-visible {
+      color: var(--accent-bright);
+
+      span {
+        transform: translateX(2px);
+      }
+    }
+  }
 }
 
 /* The degree's final project leads the list: an accent edge and kicker set it
    apart without changing the two-column rhythm of the grid. */
-.project-card--featured {
-  border-top: 2px solid var(--accent);
+@scope (.project-card--featured) {
+  :scope {
+    border-block-start: 2px solid var(--accent);
+  }
+
+  :scope .fiche-kind {
+    color: var(--accent);
+  }
 }
 
-.project-card--featured .fiche-kind {
-  color: var(--accent);
-}
+@scope (.project-cover) {
+  :scope {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    margin: 0;
+    border-block-end: 1px solid var(--line);
+    background: var(--surface-2);
+  }
 
-.project-cover {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 16 / 10;
-  margin: 0;
-  border-bottom: 1px solid var(--line);
-  background: var(--surface-2);
+  :scope img {
+    display: block flow;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: transform 300ms ease-out;
+    }
+  }
 }
 
 /* A video replaces the screenshot as the card's impact image. The player
    fills the same frame and shows black while it loads. */
-.project-cover--video iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  background: #000;
-}
-
-.project-cover img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 300ms ease-out;
-}
-
-.project-card:hover .project-cover img {
-  transform: scale(1.015);
+@scope (.project-cover--video) {
+  :scope iframe {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    border: 0;
+    background: oklch(0 0 0);
+  }
 }
 
 /* Projects without screenshots get a typographic panel, not a broken image. */
-.project-cover--empty {
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-}
+@scope (.project-cover--empty) {
+  :scope {
+    display: block grid;
+    place-items: center;
+    overflow: hidden;
+  }
 
-.project-cover--empty::before {
-  position: absolute;
-  content: attr(data-initial);
-  color: var(--surface-2);
-  font-family: var(--font-display);
-  font-size: clamp(7rem, 14vw, 12rem);
-  font-weight: 700;
-  line-height: 0.8;
-  transform: translate(-0.1em, -0.08em);
-}
+  :scope::before {
+    position: absolute;
+    content: attr(data-initial);
+    color: var(--surface-2);
+    font-family: var(--font-display);
+    font-size: clamp(7rem, 14vi, 12rem);
+    font-weight: 700;
+    line-height: 0.8;
+    transform: translate(-0.1em, -0.08em);
+  }
 
-.project-cover--empty span {
-  position: relative;
-  color: var(--line-strong);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-/* The card's first-impact area is the slider itself. The controls sit over the
-   image so the media reads as one block, not as a widget stacked above it. */
-.project-media {
-  border-bottom: 1px solid var(--line);
-  background: var(--surface-2);
-}
-
-.project-card-body {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: 1.25rem 1.25rem 1rem;
-}
-
-.fiche-kind {
-  margin-bottom: 0.35rem;
-  color: var(--accent-dim);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.project-card-title {
-  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
-  letter-spacing: -0.015em;
-}
-
-/* A project with a live preview links its name straight to it. The arrow and
-   the underline on hover mark the jump without adding another control. */
-.project-card-title-link {
-  color: inherit;
-  text-decoration: underline transparent;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.16em;
-  transition:
-    color var(--transition),
-    text-decoration-color var(--transition);
-}
-
-.project-card-title-link::after {
-  content: "↗";
-  display: inline-block;
-  margin-left: 0.3em;
-  color: var(--accent-dim);
-  font-size: 0.68em;
-  transition:
-    color var(--transition),
-    transform var(--transition);
-}
-
-.project-card-title-link:hover,
-.project-card-title-link:focus-visible {
-  color: var(--accent);
-  text-decoration-color: var(--accent);
-}
-
-.project-card-title-link:hover::after,
-.project-card-title-link:focus-visible::after {
-  color: var(--accent);
-  transform: translate(1px, -1px);
-}
-
-.fiche-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1rem;
-  margin-top: 0.6rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.02em;
-}
-
-.project-card-summary {
-  margin-top: 0.7rem;
-  color: var(--text);
-  font-size: var(--text-small);
-  line-height: 1.6;
+  :scope span {
+    position: relative;
+    color: var(--line-strong);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
 }
 
 /* The actions sit right under the media, before the card identifies the
    project: the preview and its repository are the first decision on the card. */
-.project-links {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem 1.25rem;
-  margin-bottom: 1.15rem;
+@scope (.project-links) {
+  :scope {
+    display: block flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.25rem;
+    margin-block-end: 1.15rem;
+  }
+
+  :scope .project-link {
+    display: inline flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-block-size: 44px;
+    border-block-end: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    text-decoration: none;
+
+    &:hover {
+      border-block-end-color: var(--accent);
+      color: var(--accent);
+    }
+  }
+
+  /* One prominent action per card, with the same verb everywhere: the live
+     demo when there is one, its repository otherwise. The page accent is the
+     loudest yellow in the site; a full button of it glares in the grid, so the
+     card CTA keeps the same family in a deeper gold. */
+  :scope .project-link-cta {
+    gap: 0.5rem;
+    padding-block: 0.6rem;
+    padding-inline: 1rem;
+    letter-spacing: 0.04em;
+    border-color: oklch(0.7291 0.1465 91.6);
+    background: oklch(0.7291 0.1465 91.6);
+
+    &:hover,
+    &:focus-visible {
+      border-color: oklch(0.7772 0.1543 93.3);
+      background: oklch(0.7772 0.1543 93.3);
+    }
+  }
+
+  /* The diagram is a side door, not the card's main action: a ghost button
+     keeps the row quiet next to the gold CTA. */
+  :scope .project-link-diagram {
+    padding-block: 0.6rem;
+    padding-inline: 1rem;
+    letter-spacing: 0.04em;
+  }
+
+  :scope .project-link--icon {
+    justify-content: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+
+    &:hover {
+      border-color: var(--accent);
+    }
+  }
+
+  .project-link-favicon {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    border-radius: 2px;
+    object-fit: contain;
+  }
+
+  .project-link-glyph {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  /* Repository links are a GitHub glyph, not a long owner/name string: the
+     accessible name and tooltip keep the full label. */
+  .project-link-icon {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    fill: currentColor;
+  }
 }
 
-.project-links .project-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-height: 44px;
-  border-bottom: 1px solid var(--line);
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  text-decoration: none;
-}
+@scope (.fiche-block) {
+  :scope {
+    margin-block-start: 1.5rem;
+  }
 
-.project-links .project-link:hover {
-  border-bottom-color: var(--accent);
-  color: var(--accent);
-}
+  :scope h3 {
+    margin-block-end: 0.5rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
 
-/* One prominent action per card, with the same verb everywhere: the live
-   demo when there is one, its repository otherwise. The page accent is the
-   loudest yellow in the site; a full button of it glares in the grid, so the
-   card CTA keeps the same family in a deeper gold. */
-.project-links .project-link-cta {
-  gap: 0.5rem;
-  padding: 0.6rem 1rem;
-  letter-spacing: 0.04em;
-  border-color: #c9a30f;
-  background: #c9a30f;
-}
+  :scope p,
+  :scope li {
+    color: var(--text);
+    font-size: var(--text-small);
+    line-height: 1.65;
+  }
 
-.project-links .project-link-cta:hover,
-.project-links .project-link-cta:focus-visible {
-  border-color: #d8b31a;
-  background: #d8b31a;
-}
+  .fiche-list {
+    padding-inline-start: 1.1rem;
+    list-style: square;
 
-/* The diagram is a side door, not the card's main action: a ghost button
-   keeps the row quiet next to the gold CTA. */
-.project-links .project-link-diagram {
-  padding: 0.6rem 1rem;
-  letter-spacing: 0.04em;
-}
-
-.project-link-favicon {
-  width: 1.125rem;
-  height: 1.125rem;
-  border-radius: 2px;
-  object-fit: contain;
-}
-
-.project-link-glyph {
-  font-size: 1rem;
-  line-height: 1;
-}
-
-/* Repository links are a GitHub glyph, not a long owner/name string: the
-   accessible name and tooltip keep the full label. */
-.project-links .project-link--icon {
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-}
-
-.project-links .project-link--icon:hover {
-  border-color: var(--accent);
-}
-
-.project-link-icon {
-  width: 1.125rem;
-  height: 1.125rem;
-  fill: currentColor;
-}
-
-/* The card's only route into the project: a rule-topped link that mirrors the
-   summary row it replaces, with the arrow pointing at the full article. */
-.project-more {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 44px;
-  margin-top: 1rem;
-  border-top: 1px solid var(--line);
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.06em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
-.project-more span {
-  font-size: 1rem;
-  line-height: 1;
-  transition: transform var(--transition);
-}
-
-.project-more:hover,
-.project-more:focus-visible {
-  color: var(--accent-bright);
-}
-
-.project-more:hover span,
-.project-more:focus-visible span {
-  transform: translateX(2px);
-}
-
-.fiche-block {
-  margin-top: 1.5rem;
-}
-
-.fiche-block h3 {
-  margin-bottom: 0.5rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.fiche-block p,
-.fiche-block li {
-  color: var(--text);
-  font-size: var(--text-small);
-  line-height: 1.65;
-}
-
-.fiche-list {
-  padding-left: 1.1rem;
-  list-style: square;
-}
-
-.fiche-list li + li {
-  margin-top: 0.5rem;
+    li + li {
+      margin-block-start: 0.5rem;
+    }
+  }
 }
 
 /* ── Project page ──────────────────────────────────────────────────────────
@@ -335,233 +368,243 @@
    name and meta as the card so the reader never loses the thread, then the
    prose blocks at measure width and the captures at full article width. */
 
-.project-article {
-  max-width: 56rem;
-  padding-block: 2rem 3.5rem;
-}
+@scope (.project-article) to (.gallery-lightbox) {
+  :scope {
+    max-inline-size: 56rem;
+    padding-block: clamp(2rem, 1.4rem + 0.75vi, 2.5rem) clamp(3.5rem, 2.3rem +
+      1.5vi, 4rem);
+  }
 
-.article-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  min-height: 44px;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.06em;
-  text-decoration: none;
-  text-transform: uppercase;
-}
+  .article-back {
+    display: inline flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-block-size: 44px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    text-transform: uppercase;
 
-.article-back:hover,
-.article-back:focus-visible {
-  color: var(--accent);
-}
+    &:hover,
+    &:focus-visible {
+      color: var(--accent);
+    }
+  }
 
-.article-kind {
-  margin-top: 1.5rem;
-  color: var(--accent-dim);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+  .article-kind {
+    margin-block-start: 1.5rem;
+    color: var(--accent-dim);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
 
-.article-title {
-  margin-top: 0.6rem;
-  color: var(--text-strong);
-}
+  .article-title {
+    margin-block-start: 0.6rem;
+    color: var(--text-strong);
+  }
 
-.article-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1rem;
-  margin-top: 0.85rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.02em;
-}
+  .article-meta {
+    display: block flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin-block-start: 0.85rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.02em;
+  }
 
-.article-lede {
-  margin-top: 1.25rem;
-}
+  /* Article ledes carry more air than a page lede: this rule already won over
+     page.css .page-lede by source order before scoping, so it stays a plain
+     class selector (same specificity) and the nearer .project-article scope
+     keeps it on top. */
+  .article-lede {
+    margin-block-start: 1.25rem;
+  }
 
-.article-tags {
-  margin-top: 1.5rem;
-}
+  .article-tags {
+    margin-block-start: 1.5rem;
+  }
 
-.project-article .project-links {
-  margin-top: 1.5rem;
-  margin-bottom: 0;
-}
+  :scope .project-links {
+    margin-block-start: 1.5rem;
+    margin-block-end: 0;
+  }
 
-.article-video {
-  margin-top: 2.5rem;
-  border: 1px solid var(--line);
-}
+  .article-video {
+    margin-block-start: 2.5rem;
+    border: 1px solid var(--line);
+  }
 
-.article-body {
-  max-width: var(--measure);
-  margin-top: 2.5rem;
-}
+  .article-body {
+    max-inline-size: var(--measure);
+    margin-block-start: 2.5rem;
+  }
 
-.article-section-title {
-  padding-top: 1rem;
-  margin-top: 3rem;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  font-weight: 400;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
+  .article-section-title {
+    padding-block-start: 1rem;
+    margin-block-start: clamp(3rem, 2rem + 1.25vi, 3.5rem);
+    border-block-start: 1px solid var(--line);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
 
-.project-article > .article-back:last-child {
-  margin-top: 3rem;
-}
+  :scope > .article-back:last-child {
+    margin-block-start: clamp(3rem, 2rem + 1.25vi, 3.5rem);
+  }
 
-/* Captures on the project page read as figures, not as a card slider: the
-   frame grows with the image, so a 2:1 diagram is not boxed into a 16:10
-   letterbox. The slider, its controls and the lightbox stay as they are. */
-.article-gallery .gallery-media {
-  aspect-ratio: auto;
-  padding: 0;
-}
+  /* Captures on the project page read as figures, not as a card slider: the
+     frame grows with the image, so a 2:1 diagram is not boxed into a 16:10
+     letterbox. The slider, its controls and the lightbox stay as they are. */
+  .article-gallery .gallery-media {
+    aspect-ratio: auto;
+    padding: 0;
+  }
 
-.article-gallery .gallery-media img {
-  width: 100%;
-  height: auto;
-  max-width: none;
-  max-height: min(80vh, 44rem);
-  object-fit: contain;
+  .article-gallery .gallery-media img {
+    inline-size: 100%;
+    block-size: auto;
+    max-inline-size: none;
+    max-block-size: min(80vb, 44rem);
+    object-fit: contain;
+  }
 }
 
 /* Homelab hero — the page opens on the infrastructure the work runs on, so the
    homelab reads as a featured system instead of a footnote. The panel shares
    the cards' surface and hairline but not their density: bigger type, no
    border radius tricks, and the metrics in a ruled column of their own. */
-.homelab-hero {
-  display: grid;
-  gap: 1.75rem;
-  margin-top: 2.5rem;
-  padding: clamp(1.5rem, 3.5vw, 2.5rem);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background:
-    linear-gradient(180deg, rgb(241 200 27 / 4%), transparent 38%),
-    var(--surface);
-}
-
-.homelab-hero-copy {
-  min-width: 0;
-}
-
-.homelab-hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: var(--accent);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.homelab-hero-eyebrow::before {
-  content: "";
-  width: 1.5rem;
-  height: 1px;
-  background: var(--accent-dim);
-}
-
-.homelab-hero-title {
-  max-width: 20ch;
-  margin-top: 0.85rem;
-  color: var(--text-strong);
-  font-size: clamp(1.9rem, 4vw, 2.85rem);
-  line-height: 1.05;
-  letter-spacing: -0.022em;
-}
-
-.homelab-hero-note {
-  max-width: 58ch;
-  margin-top: 1rem;
-  color: var(--text);
-}
-
-.homelab-hero-tags {
-  margin-top: 1.5rem;
-}
-
-/* Facts read as ruled rows: the value sets the rhythm and the mono label
-   spells out what it measures. On wide screens they become a stacked column. */
-.homelab-hero-facts {
-  display: grid;
-  margin: 0;
-  padding-top: 0.6rem;
-  border-top: 1px solid var(--line);
-}
-
-.homelab-hero-fact {
-  display: flex;
-  align-items: baseline;
-  gap: 0.85rem;
-  padding: 0.55rem 0;
-}
-
-.homelab-hero-fact + .homelab-hero-fact {
-  border-top: 1px solid var(--line);
-}
-
-.homelab-hero-fact dt {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.homelab-hero-fact dd {
-  order: -1;
-  min-width: 4.25rem;
-  margin: 0;
-  color: var(--text-strong);
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 3.5vw, 2.6rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-@media (min-width: 64rem) {
-  .homelab-hero {
-    grid-template-columns: minmax(0, 1.7fr) minmax(12rem, 0.55fr);
-    gap: clamp(2rem, 5vw, 4rem);
+@scope (.homelab-hero) {
+  :scope {
+    display: block grid;
+    gap: 1.75rem;
+    margin-block-start: clamp(2.5rem, 1.7rem + 1vi, 3rem);
+    padding: clamp(1.5rem, 3.5vi, 2.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background:
+      linear-gradient(180deg, oklch(0.844 0.1685 93.4 / 4%), transparent 38%),
+      var(--surface);
   }
 
+  .homelab-hero-copy {
+    min-inline-size: 0;
+  }
+
+  .homelab-hero-eyebrow {
+    display: inline flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+
+    &::before {
+      content: "";
+      inline-size: 1.5rem;
+      block-size: 1px;
+      background: var(--accent-dim);
+    }
+  }
+
+  .homelab-hero-title {
+    max-inline-size: 20ch;
+    margin-block-start: 0.85rem;
+    color: var(--text-strong);
+    font-size: clamp(1.9rem, 4vi, 2.85rem);
+    line-height: 1.05;
+    letter-spacing: -0.022em;
+  }
+
+  .homelab-hero-note {
+    max-inline-size: 58ch;
+    margin-block-start: 1rem;
+    color: var(--text);
+  }
+
+  .homelab-hero-tags {
+    margin-block-start: 1.5rem;
+  }
+
+  /* Facts read as ruled rows: the value sets the rhythm and the mono label
+     spells out what it measures. On wide screens they become a stacked column. */
   .homelab-hero-facts {
-    gap: 1rem;
-    padding-top: 0;
-    padding-left: clamp(1.5rem, 3vw, 2.25rem);
-    border-top: 0;
-    border-left: 1px solid var(--line);
-    align-content: normal;
+    display: block grid;
+    margin: 0;
+    padding-block-start: 0.6rem;
+    border-block-start: 1px solid var(--line);
   }
 
   .homelab-hero-fact {
-    flex-direction: column-reverse;
-    gap: 0.15rem;
-    padding: 0;
-  }
+    display: block flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    padding-block: 0.55rem;
+    padding-inline: 0;
 
-  .homelab-hero-fact dd {
-    order: 0;
-    min-width: 0;
+    dt {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: var(--text-meta);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    dd {
+      order: -1;
+      min-inline-size: 4.25rem;
+      margin: 0;
+      color: var(--text-strong);
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vi, 2.6rem);
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
   }
 
   .homelab-hero-fact + .homelab-hero-fact {
-    padding-top: 1rem;
+    border-block-start: 1px solid var(--line);
+  }
+
+  @media (width >= 64rem) {
+    :scope {
+      grid-template-columns: minmax(0, 1.7fr) minmax(12rem, 0.55fr);
+      gap: clamp(2rem, 5vi, 4rem);
+    }
+
+    .homelab-hero-facts {
+      gap: 1rem;
+      padding-block-start: 0;
+      padding-inline-start: clamp(1.5rem, 3vi, 2.25rem);
+      border-block-start: 0;
+      border-inline-start: 1px solid var(--line);
+      align-content: normal;
+    }
+
+    .homelab-hero-fact {
+      flex-direction: column-reverse;
+      gap: 0.15rem;
+      padding: 0;
+
+      dd {
+        order: 0;
+        min-inline-size: 0;
+      }
+    }
+
+    .homelab-hero-fact + .homelab-hero-fact {
+      padding-block-start: 1rem;
+    }
   }
 }

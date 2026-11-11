@@ -1,11 +1,20 @@
-/* Buttons and text links. */
+/* Buttons and text links — one shape per action, shared by the hero, the
+   project cards and the contact page.
+
+   These are leaf components: the class is already the component (no wrapper
+   element owns them), so they need no @scope ring — a scope root here would only
+   be the button itself. Component styles that do own a subtree are scoped. */
 
 .button {
-  display: inline-flex;
+  display: inline flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 0.7rem 1.25rem;
+  min-block-size: 44px;
+  padding-block: 0.7rem;
+  /* Fixed, not fluid: the label is uppercase mono at a meta size, and a clamp
+     shrank the pill by ~11px at 390px wide. Parity with the previous design
+     wins over fluid rhythm for this one leaf component. */
+  padding-inline: 1.25rem;
   border: 1px solid var(--accent);
   border-radius: var(--radius);
   background: var(--accent);
@@ -20,48 +29,48 @@
     background-color var(--transition),
     border-color var(--transition),
     color var(--transition);
-}
 
-.button:hover,
-.button:focus-visible {
-  border-color: var(--accent-bright);
-  background: var(--accent-bright);
-  color: var(--bg);
-  text-decoration: none;
+  &:hover,
+  &:focus-visible {
+    border-color: var(--accent-bright);
+    background: var(--accent-bright);
+    color: var(--bg);
+    text-decoration: none;
+  }
 }
 
 .button-ghost {
   border-color: var(--line-strong);
   background: transparent;
   color: var(--text);
-}
 
-.button-ghost:hover,
-.button-ghost:focus-visible {
-  border-color: var(--accent-dim);
-  background: transparent;
-  color: var(--text-strong);
+  &:hover,
+  &:focus-visible {
+    border-color: var(--accent-dim);
+    background: transparent;
+    color: var(--text-strong);
+  }
 }
 
 .text-link {
-  display: inline-flex;
+  display: inline flex;
   align-items: center;
   gap: 0.4rem;
-  min-height: 44px;
-  border-bottom: 1px solid var(--line-strong);
+  min-block-size: 44px;
+  border-block-end: 1px solid var(--line-strong);
   color: var(--text);
   text-decoration: none;
-}
 
-.text-link:hover {
-  border-bottom-color: var(--accent);
-  color: var(--accent);
-}
+  &:hover {
+    border-block-end-color: var(--accent);
+    color: var(--accent);
+  }
 
-.text-link span[aria-hidden="true"] {
-  transition: transform var(--transition);
-}
+  span[aria-hidden="true"] {
+    transition: transform var(--transition);
+  }
 
-.text-link:hover span[aria-hidden="true"] {
-  transform: translateX(2px);
+  &:hover span[aria-hidden="true"] {
+    transform: translateX(2px);
+  }
 }

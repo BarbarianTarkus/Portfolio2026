@@ -1,229 +1,233 @@
-/* Work history — experience and education rows. */
+/* Work history — experience and education rows.
 
-.job-list {
-  margin-top: 0.5rem;
-  list-style: none;
-}
+   The list is the scope root: a row, its brand mark and its project index only
+   exist inside it, and the rows carry the section's vertical rhythm. */
 
-.job {
-  display: grid;
-  gap: 0.4rem;
-  padding: 1.75rem 0;
-  border-bottom: 1px solid var(--line);
-}
-
-.job-period {
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.04em;
-}
-
-.job-role {
-  color: var(--text-strong);
-  font-family: var(--font-display);
-  font-size: 1.375rem;
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.01em;
-}
-
-.job-company,
-.job-stack {
-  max-width: var(--measure);
-}
-
-.job-company {
-  margin-top: 0.2rem;
-  color: var(--muted);
-  font-size: var(--text-small);
-}
-
-/* Employer brand mark, under the date; the tile links to the company site. */
-.job-aside {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.job-brand {
-  display: block;
-  flex: none;
-  width: 2.5rem;
-  height: 2.5rem;
-  opacity: 0.9;
-  transition: opacity 150ms ease;
-}
-
-.job-brand img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/* Wordmarks keep their aspect instead of sitting in a 40px square. */
-.job-brand.is-wide {
-  width: 7.5rem;
-  height: 2.5rem;
-}
-
-.job-brand:hover {
-  opacity: 1;
-}
-
-/* Degree summary: body size under the company line, at the reading measure. */
-.job-summary {
-  max-width: var(--measure);
-  margin-top: 0.6rem;
-  color: var(--text);
-  font-size: var(--text-body);
-  line-height: 1.65;
-}
-
-/* Lead-in over the degree bullets, e.g. "Aprendizaje que destaco". */
-.job-points-label {
-  max-width: var(--measure);
-  margin-top: 1.1rem;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.job-points {
-  max-width: var(--measure);
-  margin-top: 0.85rem;
-  padding-left: 1.1rem;
-  color: var(--text);
-  font-size: var(--text-body);
-  line-height: 1.65;
-  list-style: square;
-}
-
-.job-points li + li {
-  margin-top: 0.4rem;
-}
-
-/* The stack is a TechStack list now, so only its rhythm lives here; the
-   higher-specificity selector wins over the shared .tag-list margin. */
-.job-stack.tag-list {
-  margin-top: 0.9rem;
-}
-
-/* Work projects: the products a job shipped, each with its own article under
-   /experience/<company>/<project>/. Rows, not cards — the timeline keeps its
-   vertical rhythm and the product names stay scannable. */
-.job-projects {
-  max-width: var(--measure);
-  margin-top: 0.55rem;
-  list-style: none;
-  border-top: 1px solid var(--line);
-}
-
-.job-project {
-  border-bottom: 1px solid var(--line);
-}
-
-.job-project-link {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.1rem 1rem;
-  padding: 0.8rem 0;
-  color: inherit;
-  text-decoration: none;
-}
-
-.job-project-name {
-  grid-row: 1;
-  grid-column: 1;
-  color: var(--text-strong);
-  font-family: var(--font-display);
-  font-size: 1.0625rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.job-project-summary {
-  grid-row: 2;
-  grid-column: 1;
-  color: var(--muted);
-  font-size: var(--text-small);
-  line-height: 1.55;
-}
-
-/* The teaser is inline Markdown: drop the paragraph box so it reads as one
-   line under (mobile) or beside (desktop) the name. */
-.job-project-summary p {
-  margin: 0;
-}
-
-.job-project-arrow {
-  grid-row: 1 / span 2;
-  grid-column: 2;
-  align-self: center;
-  color: var(--accent-dim);
-  transition: transform var(--transition), color var(--transition);
-}
-
-.job-project-link:hover .job-project-name,
-.job-project-link:focus-visible .job-project-name {
-  color: var(--accent);
-}
-
-.job-project-link:hover .job-project-arrow,
-.job-project-link:focus-visible .job-project-arrow {
-  transform: translateX(3px);
-  color: var(--accent);
-}
-
-/* Wide screens read the rows as an index: name column, teaser, arrow. */
-@media (min-width: 48rem) {
-  .job-project-link {
-    grid-template-columns: 8rem minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0 1.25rem;
-    padding: 0.6rem 0;
+@scope (.job-list) {
+  :scope {
+    margin-block-start: 0.5rem;
+    list-style: none;
   }
 
-  .job-project-name,
-  .job-project-summary,
-  .job-project-arrow {
-    grid-row: 1;
-  }
-
-  .job-project-summary {
-    grid-column: 2;
-  }
-
-  .job-project-arrow {
-    grid-column: 3;
-  }
-}
-
-@media (min-width: 48rem) {
+  /* Rows set the section rhythm, so their block padding grows with the viewport
+     instead of snapping when the two-column layout starts. */
   .job {
-    grid-template-columns: 14rem minmax(0, 1fr);
-    gap: 2rem;
-    padding: 2rem 0;
+    display: block grid;
+    gap: 0.4rem;
+    padding-block: clamp(1.75rem, 1.5rem + 1.05vi, 2rem);
+    padding-inline: 0;
+    border-block-end: 1px solid var(--line);
+
+    @media (width >= 48rem) {
+      grid-template-columns: 14rem minmax(0, 1fr);
+      gap: 2rem;
+    }
   }
 
   .job-period {
-    padding-top: 0.3rem;
-    white-space: nowrap;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.04em;
+
+    @media (width >= 48rem) {
+      padding-block-start: 0.3rem;
+      white-space: nowrap;
+    }
   }
 
+  .job-role {
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .job-company,
+  .job-stack {
+    max-inline-size: var(--measure);
+  }
+
+  .job-company {
+    margin-block-start: 0.2rem;
+    color: var(--muted);
+    font-size: var(--text-small);
+  }
+
+  /* Employer brand mark, under the date; the tile links to the company site. */
   .job-aside {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 1.1rem;
+    display: block flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    @media (width >= 48rem) {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 1.1rem;
+    }
   }
 
   .job-brand {
-    width: 2.75rem;
-    height: 2.75rem;
+    display: block flow;
+    flex: none;
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    opacity: 0.9;
+    transition: opacity 150ms ease;
+
+    img {
+      display: block flow;
+      inline-size: 100%;
+      block-size: 100%;
+      object-fit: contain;
+    }
+
+    /* Wordmarks keep their aspect instead of sitting in a 40px square. */
+    &.is-wide {
+      inline-size: 7.5rem;
+      block-size: 2.5rem;
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+
+    @media (width >= 48rem) {
+      inline-size: 2.75rem;
+      block-size: 2.75rem;
+    }
+  }
+
+  /* Degree summary: body size under the company line, at the reading measure. */
+  .job-summary {
+    max-inline-size: var(--measure);
+    margin-block-start: 0.6rem;
+    color: var(--text);
+    font-size: var(--text-body);
+    line-height: 1.65;
+  }
+
+  /* Lead-in over the degree bullets, e.g. "Aprendizaje que destaco". */
+  .job-points-label {
+    max-inline-size: var(--measure);
+    margin-block-start: 1.1rem;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .job-points {
+    max-inline-size: var(--measure);
+    margin-block-start: 0.85rem;
+    padding-inline-start: 1.1rem;
+    color: var(--text);
+    font-size: var(--text-body);
+    /* No line-height here: prose.css owns the reading rhythm (1.7) and this
+       declaration was already inert before scoping; keeping it would let the
+       nearer .job scope outrank prose and tighten the bullets. */
+    list-style: square;
+
+    li + li {
+      margin-block-start: 0.4rem;
+    }
+  }
+
+  /* The stack is a TechStack list now, so only its rhythm lives here; the
+     higher-specificity selector wins over the shared .tag-list margin. */
+  .job-stack.tag-list {
+    margin-block-start: 0.9rem;
+  }
+
+  /* Work projects: the products a job shipped, each with its own article under
+     /experience/<company>/<project>/. Rows, not cards — the timeline keeps its
+     vertical rhythm and the product names stay scannable. */
+  .job-projects {
+    max-inline-size: var(--measure);
+    margin-block-start: 0.55rem;
+    list-style: none;
+    border-block-start: 1px solid var(--line);
+  }
+
+  .job-project {
+    border-block-end: 1px solid var(--line);
+  }
+
+  .job-project-link {
+    display: block grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.1rem 1rem;
+    padding-block: 0.8rem;
+    padding-inline: 0;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover .job-project-name,
+    &:focus-visible .job-project-name {
+      color: var(--accent);
+    }
+
+    &:hover .job-project-arrow,
+    &:focus-visible .job-project-arrow {
+      transform: translateX(3px);
+      color: var(--accent);
+    }
+
+    /* Wide screens read the rows as an index: name column, teaser, arrow. */
+    @media (width >= 48rem) {
+      grid-template-columns: 8rem minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 0 1.25rem;
+      padding-block: 0.6rem;
+    }
+  }
+
+  .job-project-name {
+    grid-row: 1;
+    grid-column: 1;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .job-project-summary {
+    grid-row: 2;
+    grid-column: 1;
+    color: var(--muted);
+    font-size: var(--text-small);
+    line-height: 1.55;
+
+    /* The teaser is inline Markdown: drop the paragraph box so it reads as one
+       line under (mobile) or beside (desktop) the name. */
+    p {
+      margin: 0;
+    }
+
+    @media (width >= 48rem) {
+      grid-row: 1;
+      grid-column: 2;
+    }
+  }
+
+  .job-project-arrow {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: center;
+    color: var(--accent-dim);
+    transition:
+      transform var(--transition),
+      color var(--transition);
+
+    @media (width >= 48rem) {
+      grid-row: 1;
+      grid-column: 3;
+    }
   }
 }

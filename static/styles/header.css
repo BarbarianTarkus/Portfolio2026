@@ -1,256 +1,259 @@
-/* Header — brand, navigation, mobile menu overlay and menu button. */
+/* Header — brand, navigation, mobile menu overlay and menu button.
+   Scoped on the <header> element itself: the public layout renders exactly one
+   header inside .layout, and the admin toolbar is also a <header>, so an
+   element root keeps both on the chrome they already had. */
+@scope (header) {
+  :scope {
+    border-block-end: 1px solid var(--line);
+    background: var(--bg);
+  }
 
-header {
-  border-bottom: 1px solid var(--line);
-  background: var(--bg);
-}
+  .header-inner {
+    display: block flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 2rem;
+    padding-block: 1rem;
 
-.header-inner {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem 2rem;
-  padding-block: 1rem;
-}
+    /* Desktop: single row, brand left, nav right. */
+    @media (width >= 48rem) {
+      flex-wrap: nowrap;
+    }
 
-.site-title {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  min-height: 44px;
-  color: var(--accent);
-  font-family: var(--font-display);
-  font-size: 1.125rem;
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-  transition: color var(--transition);
-}
+    @media (width >= 80rem) {
+      padding-block: 1.25rem;
+    }
+  }
 
-.site-title:hover,
-.site-title:focus-visible {
-  color: var(--accent-bright);
-}
+  .site-title {
+    display: inline flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-block-size: 44px;
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    transition: color var(--transition);
 
-.brand-mark {
-  display: block;
-  width: auto;
-  height: 1.65rem;
-  flex: none;
-  overflow: visible;
-}
+    &:hover,
+    &:focus-visible {
+      color: var(--accent-bright);
+    }
+  }
 
-.brand-name {
-  display: none;
-  line-height: 1;
-  letter-spacing: 0.01em;
-}
+  .brand-mark {
+    display: block flow;
+    inline-size: auto;
+    block-size: 1.65rem;
+    flex: none;
+    overflow: visible;
+  }
 
-@media (min-width: 64rem) {
   .brand-name {
-    display: inline;
+    display: none;
+    line-height: 1;
+    letter-spacing: 0.01em;
+
+    @media (width >= 64rem) {
+      display: inline flow;
+    }
+  }
+
+  .main-nav {
+    display: block flex;
+    flex-direction: column;
+    align-items: flex-start;
+    flex-basis: 100%;
+    gap: 0.5rem;
+
+    @media (width >= 48rem) {
+      flex-direction: row;
+      align-items: center;
+      flex-basis: auto;
+      gap: 1.5rem;
+    }
+
+    ul {
+      display: block flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.5rem;
+      list-style: none;
+    }
+
+    a {
+      display: inline flex;
+      align-items: center;
+      gap: 0.4rem;
+      min-block-size: 44px;
+      color: var(--muted);
+      font-size: var(--text-small);
+      text-decoration: none;
+
+      &:hover,
+      &:focus-visible {
+        color: var(--text-strong);
+      }
+
+      /* Active page: accent underline under the label, not a filled state. */
+      &[aria-current="page"] {
+        color: var(--text-strong);
+        text-decoration: underline;
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 6px;
+      }
+    }
+  }
+
+  .nav-index {
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    font-weight: 400;
+    color: var(--accent-dim);
+  }
+
+  /* Language switcher: ES · EN · CA, current language accented. It lives inside
+     the nav so the mobile overlay carries it without extra markup. */
+  .lang-switcher {
+    display: block flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.08em;
+
+    a {
+      display: inline flex;
+      align-items: center;
+      justify-content: center;
+      min-inline-size: 44px;
+      min-block-size: 44px;
+      color: var(--muted);
+      text-decoration: none;
+
+      &:hover,
+      &:focus-visible {
+        color: var(--text-strong);
+      }
+
+      &[aria-current="true"] {
+        color: var(--accent);
+      }
+
+      + a {
+        border-inline-start: 1px solid var(--line);
+        padding-inline-start: calc(0.5rem + 1px);
+      }
+    }
+  }
+
+  .menu-button {
+    display: none;
+    place-items: center;
+    min-inline-size: 44px;
+    min-block-size: 44px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+
+    svg {
+      inline-size: 1.25rem;
+      block-size: 1.25rem;
+      fill: currentColor;
+    }
   }
 }
 
-.main-nav {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  flex-basis: 100%;
-  gap: 0.5rem;
-}
-
-.main-nav ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem 1.5rem;
-  list-style: none;
-}
-
-.main-nav a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-height: 44px;
-  color: var(--muted);
-  font-size: var(--text-small);
-  text-decoration: none;
-}
-
-.main-nav a:hover,
-.main-nav a:focus-visible {
-  color: var(--text-strong);
-}
-
-.nav-index {
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  font-weight: 400;
-  color: var(--accent-dim);
-}
-
-/* Language switcher: ES · EN · CA, current language accented. It lives inside
-   the nav so the mobile overlay carries it without extra markup. */
-.lang-switcher {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.08em;
-}
-
-.lang-switcher a {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 44px;
-  min-height: 44px;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.lang-switcher a:hover,
-.lang-switcher a:focus-visible {
-  color: var(--text-strong);
-}
-
-.lang-switcher a[aria-current="true"] {
-  color: var(--accent);
-}
-
-.lang-switcher a + a {
-  border-left: 1px solid var(--line);
-  padding-left: calc(0.5rem + 1px);
-}
-
-/* Active page: accent underline under the label, not a filled state. */
-.main-nav a[aria-current="page"] {
-  color: var(--text-strong);
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
-}
-
-.menu-button {
-  display: none;
-  place-items: center;
-  min-width: 44px;
-  min-height: 44px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--text);
-  font: inherit;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.menu-button svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  fill: currentColor;
-}
-
 /* Without JavaScript the overlay cannot open, so it renders as a plain list
-   and the toggle is hidden (the `js` class is added in routes/_app.tsx). */
+   and the toggle is hidden (the `js` class is added in routes/_app.tsx).
+   Kept unscoped: html is an ancestor of the scope root, which a scoped
+   selector could never reach. */
 html:not(.js) .menu-button {
   display: none;
 }
 
 /* --------------------------------------------------------------------------
-   Mobile overlay — only when JavaScript is available.
+   Mobile overlay — only when JavaScript is available. The root carries the
+   `js` gate because it sits above the header and cannot be matched from
+   inside the base scope.
    -------------------------------------------------------------------------- */
 
-@media (max-width: 47.999rem) {
-  html.js .menu-button {
-    display: grid;
-  }
+@media (width < 48rem) {
+  @scope (html.js header) {
+    .menu-button {
+      display: block grid;
+    }
 
-  html.js .main-nav {
-    position: fixed;
-    z-index: 5;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
-    padding: var(--gutter);
-    transform: translateX(-100%);
-    visibility: hidden;
-    opacity: 0;
-    pointer-events: none;
-    background: var(--bg);
-    transition:
-      transform 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86),
-      opacity 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86),
-      visibility 250ms;
-  }
+    .main-nav {
+      position: fixed;
+      z-index: 5;
+      inset: 0;
+      display: block flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: var(--gutter);
+      transform: translateX(-100%);
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      background: var(--bg);
 
-  html.js .main-nav.open {
-    transform: translateX(0);
-    visibility: visible;
-    opacity: 1;
-    pointer-events: auto;
-  }
+      @media (prefers-reduced-motion: no-preference) {
+        transition:
+          transform 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86),
+          opacity 250ms cubic-bezier(0.785, 0.135, 0.15, 0.86),
+          visibility 250ms;
+      }
 
-  html.js .main-nav ul {
-    flex-direction: column;
-    gap: 1.25rem;
-    text-align: center;
-  }
+      &.open {
+        transform: translateX(0);
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+      }
 
-  html.js .main-nav a:not([aria-current="page"]) {
-    font-family: var(--font-mono);
-    font-size: 1.25rem;
-    color: var(--text);
-  }
+      ul {
+        flex-direction: column;
+        gap: 1.25rem;
+        text-align: center;
+      }
 
-  html.js .main-nav a {
-    font-family: var(--font-mono);
-    font-size: 1.25rem;
-  }
+      a:not([aria-current="page"]) {
+        font-family: var(--font-mono);
+        font-size: 1.25rem;
+        color: var(--text);
+      }
 
-  html.js .main-nav .nav-index {
-    font-size: 0.875rem;
-  }
+      a {
+        font-family: var(--font-mono);
+        font-size: 1.25rem;
+      }
 
-  html.js .main-nav .close-menu {
-    position: absolute;
-    top: 0.75rem;
-    right: 0.75rem;
-  }
+      .nav-index {
+        font-size: 0.875rem;
+      }
 
-  html.js .main-nav .lang-switcher {
-    justify-content: center;
-    font-size: 1rem;
-  }
-}
+      .close-menu {
+        position: absolute;
+        inset-block-start: 0.75rem;
+        inset-inline-end: 0.75rem;
+      }
 
-/* Desktop: single row, brand left, nav right, no toggle. */
-@media (min-width: 48rem) {
-  .header-inner {
-    flex-wrap: nowrap;
-  }
-
-  .main-nav {
-    flex-direction: row;
-    align-items: center;
-    flex-basis: auto;
-    gap: 1.5rem;
-  }
-
-  .menu-button {
-    display: none;
-  }
-}
-
-@media (min-width: 80rem) {
-  .header-inner {
-    padding-block: 1.25rem;
+      .lang-switcher {
+        justify-content: center;
+        font-size: 1rem;
+      }
+    }
   }
 }

@@ -3,169 +3,171 @@
    Each row is one link: a tinted glyph tile, the channel label, the value and
    a decorative arrow. Colour identifies the channel (mail is the accent,
    GitHub near-white, LinkedIn a lightened brand blue); it never carries the
-   hierarchy, which still comes from the type scale and the rules. */
+   hierarchy, which still comes from the type scale and the rules.
 
-.contact-rows {
-  margin-top: 2rem;
-  list-style: none;
-}
+   The list owns its rows, so it is the scope root: rows, their states and
+   their parts cannot be matched outside it. */
 
-.contact-row {
-  --channel: var(--muted);
-  --mark-edge: color-mix(in srgb, var(--channel) 45%, var(--line));
-  --mark-fill: color-mix(in srgb, var(--channel) 12%, transparent);
-  --mark-edge-active: color-mix(in srgb, var(--channel) 80%, var(--line));
-  --mark-fill-active: color-mix(in srgb, var(--channel) 20%, transparent);
-
-  display: grid;
-  grid-template-columns: 2.75rem minmax(0, 1fr) 1.5rem;
-  grid-template-areas:
-    "mark label arrow"
-    "mark value ."
-    "mark hint  .";
-  column-gap: 1rem;
-  row-gap: 0.15rem;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--line-strong);
-  color: inherit;
-  text-decoration: none;
-  transition: border-color var(--transition);
-}
-
-/* Channel tones. The white mark is GitHub's own dark-mode identity; LinkedIn's
-   #0A66C2 is only 3.4:1 on --bg, so the tone is lifted until the 20px glyph
-   clears 3:1 and the hovered value clears 4.5:1. */
-.contact-row[data-channel="email"] {
-  --channel: var(--accent);
-}
-
-.contact-row[data-channel="github"] {
-  --channel: #ffffff;
-}
-
-.contact-row[data-channel="linkedin"] {
-  --channel: #5aa9f0;
-}
-
-/* Glyph tile ------------------------------------------------------------- */
-
-.contact-mark {
-  display: grid;
-  grid-area: mark;
-  place-items: center;
-  align-self: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border: 1px solid var(--mark-edge);
-  border-radius: var(--radius);
-  background: var(--mark-fill);
-  color: var(--channel);
-  transition:
-    background-color var(--transition),
-    border-color var(--transition);
-}
-
-.contact-mark svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  fill: currentColor;
-}
-
-/* Copy ------------------------------------------------------------------- */
-
-.contact-label {
-  grid-area: label;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-meta);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.contact-value {
-  grid-area: value;
-  overflow-wrap: anywhere;
-  color: var(--text-strong);
-  font-family: var(--font-display);
-  font-size: 1.375rem;
-  font-weight: 700;
-  line-height: 1.2;
-  transition: color var(--transition);
-}
-
-.contact-hint {
-  grid-area: hint;
-  max-width: 52ch;
-  margin-top: 0.35rem;
-  color: var(--muted);
-  font-size: var(--text-small);
-  line-height: 1.5;
-}
-
-.contact-arrow {
-  grid-area: arrow;
-  align-self: start;
-  margin-top: 0.1em;
-  color: var(--muted);
-  font-size: 1.125rem;
-  line-height: 1;
-  transition:
-    color var(--transition),
-    transform var(--transition);
-}
-
-/* Active state ----------------------------------------------------------- */
-
-.contact-row:focus-visible {
-  border-top-color: var(--channel);
-}
-
-.contact-row:focus-visible .contact-mark {
-  border-color: var(--mark-edge-active);
-  background: var(--mark-fill-active);
-}
-
-.contact-row:focus-visible .contact-value {
-  color: var(--channel);
-}
-
-.contact-row:focus-visible .contact-arrow {
-  transform: translateX(2px);
-  color: var(--channel);
-}
-
-/* Pointer devices only: on touch a tap would otherwise leave the row stuck in
-   its hover colour until the next tap lands elsewhere. */
-@media (hover: hover) {
-  .contact-row:hover {
-    border-top-color: var(--channel);
+@scope (.contact-rows) {
+  :scope {
+    margin-block-start: clamp(2rem, 1.4rem + 0.75vi, 2.5rem);
+    list-style: none;
   }
 
-  .contact-row:hover .contact-mark {
-    border-color: var(--mark-edge-active);
-    background: var(--mark-fill-active);
-  }
-
-  .contact-row:hover .contact-value {
-    color: var(--channel);
-  }
-
-  .contact-row:hover .contact-arrow {
-    transform: translateX(2px);
-    color: var(--channel);
-  }
-}
-
-/* The label moves into its own column once there is room, so the value and the
-   hint share one left edge on every row. */
-@media (min-width: 48rem) {
   .contact-row {
-    grid-template-columns: 2.75rem 7.5rem minmax(0, 1fr) 1.5rem;
+    --channel: var(--muted);
+    /* Tints of the channel colour. Mixing against `transparent` is exactly
+       colour-preserving in oklab, but mixing two opaque colours there
+       re-interpolates them, so the two edges that blend with --line keep the
+       sRGB result the design was tuned on. */
+    --mark-edge: color-mix(in srgb, var(--channel) 45%, var(--line));
+    --mark-fill: color-mix(in oklab, var(--channel) 12%, transparent);
+    --mark-edge-active: color-mix(in srgb, var(--channel) 80%, var(--line));
+    --mark-fill-active: color-mix(in oklab, var(--channel) 20%, transparent);
+
+    display: block grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr) 1.5rem;
     grid-template-areas:
-      "mark label value arrow"
-      "mark .     hint  arrow";
-    align-items: baseline;
-    column-gap: 1.25rem;
-    row-gap: 0.35rem;
+      "mark label arrow"
+      "mark value ."
+      "mark hint  .";
+    column-gap: 1rem;
+    row-gap: 0.15rem;
+    padding-block: clamp(1.5rem, 1.1rem + 0.5vi, 1.85rem);
+    padding-inline: 0;
+    border-block-start: 1px solid var(--line-strong);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color var(--transition);
+
+    /* Channel tones. The white mark is GitHub's own dark-mode identity;
+       LinkedIn's #0A66C2 is only 3.4:1 on --bg, so the tone is lifted until
+       the 20px glyph clears 3:1 and the hovered value clears 4.5:1. */
+    &[data-channel="email"] {
+      --channel: var(--accent);
+    }
+
+    &[data-channel="github"] {
+      --channel: oklch(1 0 0);
+    }
+
+    &[data-channel="linkedin"] {
+      --channel: oklch(0.7148 0.1302 247.8);
+    }
+
+    &:focus-visible {
+      border-block-start-color: var(--channel);
+    }
+
+    &:focus-visible .contact-mark {
+      border-color: var(--mark-edge-active);
+      background: var(--mark-fill-active);
+    }
+
+    &:focus-visible .contact-value {
+      color: var(--channel);
+    }
+
+    &:focus-visible .contact-arrow {
+      transform: translateX(2px);
+      color: var(--channel);
+    }
+
+    /* Pointer devices only: on touch a tap would otherwise leave the row stuck
+       in its hover colour until the next tap lands elsewhere. */
+    @media (hover: hover) {
+      &:hover {
+        border-block-start-color: var(--channel);
+      }
+
+      &:hover .contact-mark {
+        border-color: var(--mark-edge-active);
+        background: var(--mark-fill-active);
+      }
+
+      &:hover .contact-value {
+        color: var(--channel);
+      }
+
+      &:hover .contact-arrow {
+        transform: translateX(2px);
+        color: var(--channel);
+      }
+    }
+
+    /* The label moves into its own column once there is room, so the value and
+       the hint share one left edge on every row. */
+    @media (width >= 48rem) {
+      grid-template-columns: 2.75rem 7.5rem minmax(0, 1fr) 1.5rem;
+      grid-template-areas:
+        "mark label value arrow"
+        "mark .     hint  arrow";
+      align-items: baseline;
+      column-gap: 1.25rem;
+      row-gap: 0.35rem;
+    }
+  }
+
+  .contact-mark {
+    display: block grid;
+    grid-area: mark;
+    place-items: center;
+    align-self: center;
+    inline-size: 2.75rem;
+    block-size: 2.75rem;
+    border: 1px solid var(--mark-edge);
+    border-radius: var(--radius);
+    background: var(--mark-fill);
+    color: var(--channel);
+    transition:
+      background-color var(--transition),
+      border-color var(--transition);
+
+    svg {
+      inline-size: 1.25rem;
+      block-size: 1.25rem;
+      fill: currentColor;
+    }
+  }
+
+  .contact-label {
+    grid-area: label;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-meta);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .contact-value {
+    grid-area: value;
+    overflow-wrap: anywhere;
+    color: var(--text-strong);
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.2;
+    transition: color var(--transition);
+  }
+
+  .contact-hint {
+    grid-area: hint;
+    max-inline-size: 52ch;
+    margin-block-start: 0.35rem;
+    color: var(--muted);
+    font-size: var(--text-small);
+    line-height: 1.5;
+  }
+
+  .contact-arrow {
+    grid-area: arrow;
+    align-self: start;
+    margin-block-start: 0.1em;
+    color: var(--muted);
+    font-size: 1.125rem;
+    line-height: 1;
+    transition:
+      color var(--transition),
+      transform var(--transition);
   }
 }

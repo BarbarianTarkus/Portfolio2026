@@ -1,37 +1,41 @@
 /* ==========================================================================
    Ricardo Verduguez — Portfolio · Path A "Signal"
 
-   Stylesheet entry point. The rules live in one file per component under
-   static/styles/, imported below in cascade order: tokens and base first,
-   components next, print last. Add a component by creating its file and
-   adding an @import in the right layer.
+   Stylesheet entry point. Every rule lives in one file per component under
+   static/styles/, imported below in cascade order and pinned to a named
+   cascade layer. Layer order is declared once, up front: tokens, base,
+   layout, typography, components, adjustments.
 
    - No preprocessor, no build step: these files are served as written.
-   - Mobile-first. Breakpoints: 48rem (tablet), 64rem (rail), 80rem (wide).
+   - Nothing here is unlayered. An unlayered rule outranks every layer, so a
+     stray default would silently beat the component that means to override it.
+   - Mobile-first. Breakpoints use ranged queries: 48rem (tablet), 64rem (rail),
+     80rem (wide).
    - Google Fonts are linked from the document head, never imported here.
    ========================================================================== */
 
-@import "./tokens.css";
-@import "./base.css";
-@import "./layout.css";
-@import "./typography.css";
-@import "./header.css";
-@import "./hero.css";
-@import "./buttons.css";
-@import "./evidence.css";
-@import "./sections.css";
-@import "./work.css";
-@import "./experience-board.css";
-@import "./work-index.css";
-@import "./stack.css";
-@import "./page.css";
-@import "./tags.css";
-@import "./projects.css";
-@import "./gallery.css";
-@import "./lightbox.css";
-@import "./contact.css";
-@import "./prose.css";
-@import "./footer.css";
-@import "./error.css";
-@import "./motion.css";
-@import "./print.css";
+@layer tokens, base, layout, typography, components, adjustments;
+
+@import "./tokens.css" layer(tokens);
+@import "./base.css" layer(base);
+@import "./layout.css" layer(layout);
+@import "./typography.css" layer(typography);
+@import "./header.css" layer(components);
+@import "./hero.css" layer(components);
+@import "./buttons.css" layer(components);
+@import "./evidence.css" layer(components);
+@import "./sections.css" layer(components);
+@import "./work.css" layer(components);
+@import "./experience-board.css" layer(components);
+@import "./work-index.css" layer(components);
+@import "./stack.css" layer(components);
+@import "./page.css" layer(components);
+@import "./tags.css" layer(components);
+@import "./projects.css" layer(components);
+@import "./gallery.css" layer(components);
+@import "./lightbox.css" layer(components);
+@import "./contact.css" layer(components);
+@import "./prose.css" layer(components);
+@import "./footer.css" layer(components);
+@import "./error.css" layer(components);
+@import "./print.css" layer(adjustments);
