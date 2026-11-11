@@ -17,18 +17,41 @@ header {
 .site-title {
   display: inline-flex;
   align-items: center;
+  gap: 0.6rem;
   min-height: 44px;
-  color: var(--brand);
+  color: var(--accent);
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: 1.125rem;
   font-weight: 700;
   line-height: 1;
   letter-spacing: 0.01em;
   text-decoration: none;
+  transition: color var(--transition);
 }
 
-.site-title:hover {
-  color: var(--brand);
+.site-title:hover,
+.site-title:focus-visible {
+  color: var(--accent-bright);
+}
+
+.brand-mark {
+  display: block;
+  width: auto;
+  height: 1.65rem;
+  flex: none;
+  overflow: visible;
+}
+
+.brand-name {
+  display: none;
+  line-height: 1;
+  letter-spacing: 0.01em;
+}
+
+@media (min-width: 64rem) {
+  .brand-name {
+    display: inline;
+  }
 }
 
 .main-nav {

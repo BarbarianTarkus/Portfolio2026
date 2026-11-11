@@ -1,6 +1,7 @@
 /* Section heads — number, title and optional link. */
 
 .section-head {
+  position: relative;
   display: grid;
   grid-template-columns: 2.5rem 1fr;
   align-items: baseline;
@@ -38,6 +39,37 @@
 
 .section-link:hover {
   color: var(--accent);
+}
+
+.section-head::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 4rem;
+  height: 1px;
+  background: var(--accent-dim);
+}
+
+@keyframes section-rule {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section-head::after {
+      transform-origin: left center;
+      animation: section-rule linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 80%;
+    }
+  }
 }
 
 @media (min-width: 48rem) {

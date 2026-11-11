@@ -7,15 +7,20 @@ interface WorkIndexProps {
   projects: Project[];
   kindLabels: ProjectKindLabels;
   basePath: string;
+  /** Render only the first N rows (home selection). */
+  limit?: number;
 }
 
 /** Numbered project rows: the scanning layer over the project fiches. */
-export function WorkIndex({ projects, kindLabels, basePath }: WorkIndexProps) {
+export function WorkIndex(
+  { projects, kindLabels, basePath, limit }: WorkIndexProps,
+) {
   const lang = useLanguage();
+  const rows = limit === undefined ? projects : projects.slice(0, limit);
 
   return (
     <ol class="work-index">
-      {projects.map((project) => (
+      {rows.map((project) => (
         <li key={project.slug}>
           <a
             class="work-row"

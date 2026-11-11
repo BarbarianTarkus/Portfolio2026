@@ -1,19 +1,106 @@
-/* Hero — home introduction: eyebrow, name, role, lede and actions. */
+/* Hero — full-width introduction: eyebrow, name, role, lede and actions. */
 
 .hero {
+  position: relative;
+  display: block;
+}
+
+.hero-stage {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(19rem, 72vw, 24rem);
+}
+
+.hero-copy {
+  margin: 9em 0 0;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-width: 0;
+  text-align: left;
+}
+
+/* The supplied ASCII mark: a static glyph with a single yellow glint
+   crossing it. It sits centred behind the name, oversized enough to spill
+   past both ends of the type. */
+.hero-glyph {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: max-content;
+  margin: 0;
+  color: var(--accent);
+  opacity: 0.32;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.hero-ascii {
+  display: block;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: clamp(0.4rem, 2.2vw, 0.54rem);
+  font-variant-ligatures: none;
+  line-height: 0.96;
+  letter-spacing: 0;
+  white-space: pre;
+}
+
+.hero-ascii--glint {
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  background-image: linear-gradient(
+    105deg,
+    transparent 43%,
+    rgb(241 200 27 / 10%) 46%,
+    rgb(241 200 27 / 30%) 48.5%,
+    var(--accent) 49.5%,
+    #fff8d6 50%,
+    var(--accent) 50.5%,
+    rgb(241 200 27 / 30%) 51.5%,
+    rgb(241 200 27 / 10%) 54%,
+    transparent 57%
+  );
+  background-size: 240% 100%;
+  background-repeat: no-repeat;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 0.35rem rgb(241 200 27 / 18%));
+  animation: hero-ascii-glint 5.5s cubic-bezier(0.33, 0, 0.15, 1) infinite;
+  will-change: background-position;
+}
+
+@keyframes hero-ascii-glint {
+  0%,
+  9% {
+    background-position: 100% 0;
+  }
+
+  45%,
+  100% {
+    background-position: 0% 0;
+  }
 }
 
 .hero .eyebrow {
+  width: 40%;
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  color: var(--accent);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
 .hero .eyebrow::before {
+  margin-left: 2.5%;
   content: "";
   width: 1.75rem;
   height: 1px;
@@ -21,24 +108,44 @@
 }
 
 .hero-name {
-  margin-top: 0.75rem;
   color: var(--text-strong);
-  font-size: clamp(2.75rem, 7vw, 4.25rem);
-  letter-spacing: -0.022em;
+  font-size: clamp(3.25rem, 15vw, 10rem);
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+  text-align: left;
+  text-shadow: 0 0.02em 0.12em rgb(11 14 19 / 70%);
+  text-wrap: balance;
+}
+
+.hero-dot {
+  color: var(--accent);
+}
+
+.hero-detail {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: clamp(2rem, 4vw, 3rem);
+  padding-top: 1.35rem;
+  border-top: 1px solid var(--line);
 }
 
 .hero-role {
-  margin-top: 0.5rem;
-  color: var(--muted);
-  font-size: clamp(1.125rem, 2.2vw, 1.375rem);
-  line-height: 1.3;
+  margin-top: 0;
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hero-body {
+  min-width: 0;
 }
 
 .hero-intro {
-  max-width: 56ch;
-  margin-top: 1.5rem;
+  max-width: 60ch;
   color: var(--text);
-  font-size: 1.125rem;
+  font-size: 1.0625rem;
   line-height: 1.65;
 }
 
@@ -47,5 +154,70 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 1rem 1.75rem;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
+}
+
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero-ascii:not(.hero-ascii--glint) {
+    color: transparent;
+    background-image: linear-gradient(
+      170deg,
+      #a88c1f 0%,
+      var(--accent) 35%,
+      var(--accent-bright) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+
+@media (min-width: 48rem) {
+  .hero-copy {
+    margin: 15em 0 0;
+  }
+  .hero-stage {
+    min-height: 34rem;
+  }
+
+  .hero-ascii {
+    font-size: clamp(0.6rem, 2.2vw, 1rem);
+  }
+}
+
+@media (min-width: 64rem) {
+  .hero-ascii {
+    font-size: clamp(0.5rem, 1.75vw, 1.4rem);
+  }
+
+  .hero-detail {
+    grid-template-columns: minmax(12rem, 0.8fr) minmax(0, 1.4fr);
+    align-items: start;
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+
+  .hero-role {
+    font-size: clamp(1.375rem, 2vw, 1.75rem);
+  }
+
+  .hero-intro {
+    max-width: 62ch;
+    font-size: 1.125rem;
+  }
+
+  .hero-actions {
+    margin-top: 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-ascii--glint {
+    display: none;
+  }
+}
+
+@supports not
+  ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero-ascii--glint {
+    display: none;
+  }
 }

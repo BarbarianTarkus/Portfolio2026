@@ -15,9 +15,9 @@ experienceSection:
 projectsSection:
   num: "02"
   title: Projectes
-  linkLabel: Els 6 projectes
+  linkLabel: Els 8 projectes
   linkRoute: /projects
-  note: "Repositoris públics: **treball per a client, projectes de la carrera i eines pròpies**. El treball en producció és a l'experiència, a dalt."
+  note: "Repositoris públics: **treball per a client, projectes de la carrera i eines pròpies**. Aquí, una selecció; els vuit són a Projectes."
 focus:
   - title: Infraestructura i seguretat
     body: >-

@@ -10,7 +10,7 @@ import { EvidenceStrip } from "../components/home/EvidenceStrip.tsx";
 import { Hero } from "../components/home/Hero.tsx";
 import { StackGrid } from "../components/home/StackGrid.tsx";
 import { WorkIndex } from "../components/home/WorkIndex.tsx";
-import { JobList } from "../components/JobList.tsx";
+import { ExperienceBoard } from "../components/home/ExperienceBoard.tsx";
 import { PageMeta } from "../components/PageMeta.tsx";
 import { SectionHead } from "../components/SectionHead.tsx";
 import { localizedHref, useLanguage } from "../lib/i18n.tsx";
@@ -19,7 +19,8 @@ import { define } from "../utils.ts";
 /**
  * Home page. Hierarchy is deliberate: the hero states who he is, the evidence
  * strip proves it, and work history comes before the public repositories — the
- * site argues from employment, not from side projects.
+ * site argues from employment, not from side projects. The project index is a
+ * three-row selection; /projects holds the full list.
  */
 export const handler = define.handlers({
   async GET(ctx) {
@@ -97,9 +98,8 @@ export function HomePage(
         }}
       />
 
-      <JobList
+      <ExperienceBoard
         jobs={experience.jobs}
-        maxBullets={2}
         basePath={basePath}
       />
 
@@ -133,6 +133,7 @@ export function HomePage(
         projects={projects.projects}
         kindLabels={kindLabels}
         basePath={basePath}
+        limit={3}
       />
 
       <SectionHead

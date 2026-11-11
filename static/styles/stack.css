@@ -140,6 +140,24 @@
   }
 }
 
+@media (min-width: 80rem) {
+  .stack-grid {
+    display: block;
+  }
+
+  .stack-focus {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem 3rem;
+  }
+
+  /* At wide sizes the map sits under the focus copy as a full-width
+     cross-section, so the tags read across the page instead of down a
+     narrow column. */
+  .stack-grid .stack-map {
+    margin-top: 2.5rem;
+  }
+}
+
 @media (max-width: 47.99rem) {
   .stack-map {
     margin-top: 2rem;
@@ -178,4 +196,67 @@
    technologies wrap into two balanced rows instead of one long strip. */
 .homelab-stack {
   max-width: 35rem;
+}
+
+/* Scroll-driven entrance for the stack cross-section. Each row reveals as it
+   enters the viewport; a second, brighter hairline draws down the spine. This
+   is progressive enhancement: without view() support the map is simply static. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .stack-map .stack-layer {
+      animation: stack-row-in linear;
+      animation-timeline: view();
+      animation-range: entry 0% entry 75%;
+    }
+
+    .stack-map::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      top: 1rem;
+      bottom: 1rem;
+      left: 1rem;
+      width: 1px;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        var(--accent-dim) 25%,
+        var(--accent) 55%,
+        transparent
+      );
+      transform-origin: top;
+      animation: stack-scan linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+      pointer-events: none;
+    }
+  }
+}
+
+@keyframes stack-row-in {
+  from {
+    opacity: 0.15;
+    transform: translateX(-0.6rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes stack-scan {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  to {
+    transform: scaleY(1);
+    opacity: 0.85;
+  }
 }

@@ -15,9 +15,9 @@ experienceSection:
 projectsSection:
   num: "02"
   title: Projects
-  linkLabel: The 6 projects
+  linkLabel: The 8 projects
   linkRoute: /projects
-  note: "Public repositories: **client work, university projects and tools of my own**. Production work is in the experience section, above."
+  note: "Public repositories: **client work, university projects and tools of my own**. A selection here; all eight are in Projects."
 focus:
   - title: Infrastructure and security
     body: >-

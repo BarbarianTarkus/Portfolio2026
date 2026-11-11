@@ -19,7 +19,7 @@
   --accent: #f1c81b;
   --accent-bright: #ffd84d; /* hover only */
   --accent-dim: #98873b; /* section numbers, resting marks */
-  --brand: #fb9b18; /* the "R" logo and nothing else */
+  --brand: #fb9b18; /* legacy warm accent; the logo now uses --accent */
 
   /* Typography ----------------------------------------------------------- */
   --font-display: "Roboto Condensed", "Arial Narrow", sans-serif;
@@ -41,6 +41,7 @@
 
   /* Motion --------------------------------------------------------------- */
   --transition: 150ms ease-out;
+  --ease-signal: cubic-bezier(0.16, 1, 0.3, 1);
 
   font-size: 1rem;
   line-height: 1.65;

@@ -5,7 +5,7 @@ shortTitle: R
 title: Ricardo Verduguez — Desarrollador full-stack
 description: "Desarrollador full-stack con base en sistemas: aplicaciones web en producción e infraestructura propia con NAS, VPN, Gitea y SonarQube."
 role: Desarrollador full-stack con base en sistemas
-intro: "Construyo aplicaciones web en producción y mantengo la **infraestructura que las sostiene**: un homelab con NAS, VPN, servidor Git propio y servicios publicados por túnel de Cloudflare."
+intro: "Soy graduado en Ingeniería Informática, cuento con 3 años de experiencia trabajando en el sector de la consultoria como desarrollador Full Stack, desde el backend en un ERP hasta plugins para Moodle y WordPress. Paso mis ratos libres configurando mi homelab y trasteando con nuevas tecnologías."
 evidence:
   - value: 2 años y 8 meses
     label: en producción

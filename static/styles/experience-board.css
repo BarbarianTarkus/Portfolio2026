@@ -1,0 +1,121 @@
+/* Experience board — the three compact work columns on the home page. */
+
+.experience-board {
+  margin: 0.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.experience-column {
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.experience-column:last-child {
+  border-bottom: 0;
+}
+
+.experience-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.experience-period {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-meta);
+  letter-spacing: 0.02em;
+}
+
+.experience-brand {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+}
+
+.experience-brand img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.experience-role {
+  margin-top: 0.9rem;
+  color: var(--text-strong);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.experience-company {
+  margin-top: 0.2rem;
+  color: var(--muted);
+  font-size: var(--text-small);
+}
+
+.experience-point {
+  margin-top: 0.9rem;
+  color: var(--text);
+  font-size: var(--text-small);
+  line-height: 1.55;
+}
+
+.experience-point strong {
+  color: var(--text-strong);
+  font-weight: 600;
+}
+
+.experience-stack {
+  margin-top: 1rem;
+}
+
+.experience-stack.tag-list {
+  gap: 0.35rem;
+}
+
+@media (min-width: 64rem) {
+  .experience-board {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .experience-column {
+    padding: 1.5rem 1.5rem 0 0;
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+  }
+
+  .experience-column + .experience-column {
+    padding-left: 1.5rem;
+  }
+
+  .experience-column:last-child {
+    padding-right: 0;
+    border-right: 0;
+  }
+}
+
+/* On 1024–1279px the three columns are narrow enough that the period wraps
+   against the logo; tighten the board before the wide layout takes over. */
+@media (min-width: 64rem) and (max-width: 79.999rem) {
+  .experience-column {
+    padding-right: 1rem;
+  }
+
+  .experience-column + .experience-column {
+    padding-left: 1rem;
+  }
+
+  .experience-top {
+    gap: 0.65rem;
+  }
+
+  .experience-period {
+    font-size: 0.75rem;
+    letter-spacing: 0;
+  }
+}

@@ -90,7 +90,11 @@ export default define.page(function App({ Component, config, url, state }) {
         }
         <script src={basePath + "/js/enable-js.js"} />
         <script src={basePath + "/js/gallery.js"} defer />
-        <link rel="icon" href={basePath + "/favicon.png"} type="image/png" />
+        <link
+          rel="icon"
+          href={basePath + "/favicon.svg"}
+          type="image/svg+xml"
+        />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

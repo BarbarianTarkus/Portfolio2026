@@ -2,6 +2,7 @@ import { useEffect, useRef } from "preact/hooks";
 import type { RefObject } from "preact";
 import { type Signal, useSignal } from "@preact/signals";
 import { CloseIcon, MenuIcon } from "../components/Icons.tsx";
+import { BrandMark } from "../components/BrandMark.tsx";
 import type { SiteContent } from "../lib/content.ts";
 import {
   canonicalPath,
@@ -174,7 +175,8 @@ export default function Header(
           aria-label={site.author + " — " + labels.homeLink}
           aria-current={isHome ? "page" : "false"}
         >
-          {site.shortTitle}
+          <BrandMark class="brand-mark" />
+          <span class="brand-name">{site.author}</span>
         </a>
 
         <MenuToggle

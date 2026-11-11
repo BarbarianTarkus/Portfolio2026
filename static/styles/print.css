@@ -23,9 +23,11 @@
   .site-title,
   .menu-button,
   .skip-to-content-link,
+  .hero-glyph,
   .hero-actions,
   .footer-social,
   .section-link,
+  .section-head::after,
   .project-cover--video {
     display: none !important;
   }
@@ -44,11 +46,30 @@
   }
 
   .job,
+  .experience-column,
+  .experience-point,
   .project-card,
   .work-row,
   .contact-rows li,
   .contact-row {
     break-inside: avoid;
+  }
+
+  .experience-board {
+    display: block;
+  }
+
+  .experience-column {
+    padding: 0.75rem 0;
+    border-right: 0;
+  }
+
+  .experience-column + .experience-column {
+    padding-left: 0;
+  }
+
+  .experience-brand::after {
+    content: "" !important;
   }
 
   .job {
