@@ -30,6 +30,11 @@ const TAG_MONOGRAMS: Record<string, string> = {
   "Claude Code": "CC",
   "Gemini CLI": "GC",
   "Gentle Shell": "GS",
+  ".NET 10": ".NET",
+  "NativeAOT": "AOT",
+  "Direct2D": "D2D",
+  "DirectComposition": "DCP",
+  "PowerShell": "PS",
 };
 
 function GlyphContent({ tag }: { tag: string }) {

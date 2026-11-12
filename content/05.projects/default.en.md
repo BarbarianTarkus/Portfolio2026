@@ -6,17 +6,12 @@ meta:
     my own, with the problem, the decisions and screenshots for each one.
 title: Projects
 lede: >-
-  Selected projects, **not a work history**. The two most recent ones lead the page; each
-  card summarizes the project and opens its full write-up, with the problem, the decisions
-  and the screenshots.
+    Personal and academic projects.
 homelab:
   eyebrow: Homelab
   title: More than two years of infrastructure of my own
   note: >-
-    A **Synology NAS** and several machines serve media, storage, VPN and my own Git.
-    **Jellyfin** separates compute (an Orange Pi) from storage (the NAS), connected over NFS and
-    SMB. Migrations between devices are automated with **Ansible and Rsync**, and publishing
-    to the outside goes through a Cloudflare tunnel, without opening ports on the router.
+    A **Synology NAS** and several machines serve media, storage, VPN and my own dev tools. trying to avoid relying in cloud services.
   facts:
     - value: '2+'
       label: years running
@@ -31,65 +26,6 @@ ficheLabels:
   problem: The problem
   decisions: Technical decisions
 projects:
-  - slug: brazo-robotico
-    name: Robotic arm teleoperation
-    kind: tfg
-    year: '2026'
-    featured: true
-    summary: >-
-      **Bachelor's thesis**: a low-cost arm teleoperated with the hands from Meta Quest 3,
-      with Unity and OpenXR, an ESP32 → Arduino → ten servos chain and the arm 3D-printed and
-      assembled from scratch.
-    tags:
-      - Unity
-      - C#
-      - OpenXR
-      - Meta Quest
-      - Arduino
-      - ESP32
-      - WiFi
-      - Impresión 3D
-    period: '2026'
-    work: 74 h of printing · €173 in materials
-    links: []
-    video:
-      label: 'Video: hand tracking moves the arm from Meta Quest 3'
-      embed: 'https://drive.google.com/file/d/1ZRnbjAjVxOb8xDXBvJa9yVCptx7tpYNR/preview'
-    problem: >-
-      The thesis called for a complete system, not a demo: **teleoperating a low-cost arm with
-      your hands**, one that responds to the operator pinch, with no controllers or floating menus,
-      and that does not break when someone moves the arm quickly.
-    decisions:
-      - >-
-        **Unity + OpenXR on Meta Quest 3** (Quest 2 compatible), with native hand tracking and the
-        interface anchored to the wrists: you operate it without controllers.
-      - >-
-        **ESP32 → Arduino Mega 2560 → 10 servos chain**, with a custom frame protocol, a pose
-        queue and speed limiting: the printed mechanics hold up to the operator's yanks.
-      - >-
-        **The ESP32 also serves a manual control web page** over WiFi, to calibrate and move the
-        arm from a browser without the headset.
-      - >-
-        **Arm built from scratch**: 74 h of 3D printing (~1.5 kg of PLA), custom electronics and a
-        dedicated 5 V/18 A power supply, with ~€173 of material.
-      - >-
-        **Bench validation and documentation**: functional tests, a 79-page technical report, the
-        protocol and the defense script.
-    gallery:
-      - view: web
-        label: Web
-        images:
-          - src: /projects/brazo-robotico/flujo-control.webp
-            alt: >-
-              Control flow diagram: the operator's hand is captured on Meta Quest 3, which sends the
-              positions over UDP to the ESP32; the ESP32 turns them into angles and passes them over
-              serial to the Arduino Mega 2560, which moves the arm servos.
-            caption: 'Control flow: hand → Quest 3 → ESP32 → Arduino → arm'
-          - src: /projects/brazo-robotico/herramientas.webp
-            alt: >-
-              Tools: the ESP32 and the Arduino Mega with the Arduino IDE on one side and the
-              Meta Quest 3 headset with Unity on the other, converging on the 3D-printed arm.
-            caption: 'Tools: ESP32 + Arduino IDE and Quest 3 + Unity'
   - slug: phenomorph
     name: Phenomorph
     kind: propio
@@ -187,6 +123,79 @@ projects:
           - src: /projects/phenomorph/taquilla-mobile.webp
             alt: Box office ranking on mobile.
             caption: Box office on mobile
+  - slug: overlyric
+    name: Overlyric
+    kind: propio
+    year: '2026'
+    summary: >-
+      **Lyric overlay for Windows 10/11**: it reads the now-playing track from Windows' own media
+      controls and paints the synced lyrics from LRCLIB into a transparent window that stays above
+      everything and never takes focus. No per-player integration.
+    tags:
+      - C#
+      - .NET 10
+      - NativeAOT
+      - Win32
+      - Direct2D
+      - DirectComposition
+      - LRCLIB
+      - PowerShell
+    period: 24 October — 12 November 2026
+    work: 67 commits
+    links:
+      - label: Overlyric repository
+        href: 'https://github.com/BarbarianTarkus/Overlyric'
+        kind: repo
+    problem: >-
+      Lyric overlays ask for a plug-in per player, or make you choose between Spotify and the rest,
+      and the clock drifts the moment a track starts mid-song or the player freezes the position. I
+      wanted **one overlay that works with any Windows player and stays out of the game's way**:
+      legible lyrics over gameplay, no focus stealing and no CPU spent between lines.
+    decisions:
+      - >-
+        **Read Windows' media controls (SMTC/GSMTC), not the player**: any player that registers a
+        session — TIDAL, Spotify, VLC, foobar2000, the browser — works with nothing installed, and
+        one that publishes nothing is named in the tray instead of leaving a silent overlay.
+      - >-
+        **Pick the record, not LRCLIB's first hit**: release suffixes are stripped before querying,
+        duration dominates the ranking and an untimed pick is replaced by the first synced record of
+        the same length; a second, album-scoped search covers what the twenty-result cap hides.
+      - >-
+        **Do not trust the reported position**: the clock ages the published position with a
+        monotonic stopwatch, so TIDAL — which freezes its timeline — and starting a song in the
+        middle still land on the right line.
+      - >-
+        **Draw without a UI framework**: a `WS_EX_NOREDIRECTIONBITMAP` window composited with
+        DirectComposition and painted with Direct2D/DirectWrite, with cached text layouts and zero
+        allocations per frame; there is no WPF, WinUI or WinForms behind it.
+      - >-
+        **Fix the line, not just watch it**: the sheet is an editor (stamp start and end, nudge
+        ±10–250 ms, undo/redo), the correction is saved per track and per output device, a local
+        `.lrc` can be imported and a corrected sheet published to LRCLIB behind a confirmation that
+        shows the exact payload.
+      - >-
+        **Measured before claimed**: 65 MB of flat working set, 0.15 % of one core and 11 MB in a
+        single NativeAOT .NET 10 executable — and one limit said out loud: exclusive fullscreen
+        cannot be covered, so the app says so once and points at Borderless.
+    gallery:
+      - view: web
+        label: Web
+        images:
+          - src: /projects/overlyric/multi-line.webp
+            alt: >-
+              Multi-line overlay over a game: track title, three lyric lines and the progress bar.
+            caption: Multi-line over a game
+          - src: /projects/overlyric/lyric-viewer.webp
+            alt: >-
+              Full lyric sheet with every timestamp and the line being sung highlighted.
+            caption: Full lyric sheet
+          - src: /projects/overlyric/settings-lyrics.webp
+            alt: 'Lyrics settings: mode, lines shown, text sizes and the karaoke sweep.'
+            caption: Lyrics settings
+          - src: /projects/overlyric/settings-oled.webp
+            alt: >-
+              Appearance settings: OLED preset, backdrop opacity, pixel shift and palettes.
+            caption: OLED and appearance
   - slug: mixology
     name: Mixology-Luismi
     kind: cliente
@@ -256,6 +265,65 @@ projects:
           - src: /projects/mixology/mobile-contacto.webp
             alt: 'Contact page on mobile with phone, WhatsApp and opening hours.'
             caption: Contact on mobile
+  - slug: brazo-robotico
+    name: Robotic arm teleoperation
+    kind: tfg
+    year: '2026'
+    featured: true
+    summary: >-
+      **Bachelor's thesis**: a low-cost arm teleoperated with the hands from Meta Quest 3,
+      with Unity and OpenXR, an ESP32 → Arduino → ten servos chain and the arm 3D-printed and
+      assembled from scratch.
+    tags:
+      - Unity
+      - C#
+      - OpenXR
+      - Meta Quest
+      - Arduino
+      - ESP32
+      - WiFi
+      - Impresión 3D
+    period: '2026'
+    work: 74 h of printing · €173 in materials
+    links: []
+    video:
+      label: 'Video: hand tracking moves the arm from Meta Quest 3'
+      embed: 'https://drive.google.com/file/d/1ZRnbjAjVxOb8xDXBvJa9yVCptx7tpYNR/preview'
+    problem: >-
+      The thesis called for a complete system, not a demo: **teleoperating a low-cost arm with
+      your hands**, one that responds to the operator pinch, with no controllers or floating menus,
+      and that does not break when someone moves the arm quickly.
+    decisions:
+      - >-
+        **Unity + OpenXR on Meta Quest 3** (Quest 2 compatible), with native hand tracking and the
+        interface anchored to the wrists: you operate it without controllers.
+      - >-
+        **ESP32 → Arduino Mega 2560 → 10 servos chain**, with a custom frame protocol, a pose
+        queue and speed limiting: the printed mechanics hold up to the operator's yanks.
+      - >-
+        **The ESP32 also serves a manual control web page** over WiFi, to calibrate and move the
+        arm from a browser without the headset.
+      - >-
+        **Arm built from scratch**: 74 h of 3D printing (~1.5 kg of PLA), custom electronics and a
+        dedicated 5 V/18 A power supply, with ~€173 of material.
+      - >-
+        **Bench validation and documentation**: functional tests, a 79-page technical report, the
+        protocol and the defense script.
+    gallery:
+      - view: web
+        label: Web
+        images:
+          - src: /projects/brazo-robotico/flujo-control.webp
+            alt: >-
+              Control flow diagram: the operator's hand is captured on Meta Quest 3, which sends the
+              positions over UDP to the ESP32; the ESP32 turns them into angles and passes them over
+              serial to the Arduino Mega 2560, which moves the arm servos.
+            caption: 'Control flow: hand → Quest 3 → ESP32 → Arduino → arm'
+          - src: /projects/brazo-robotico/herramientas.webp
+            alt: >-
+              Tools: the ESP32 and the Arduino Mega with the Arduino IDE on one side and the
+              Meta Quest 3 headset with Unity on the other, converging on the 3D-printed arm.
+            caption: 'Tools: ESP32 + Arduino IDE and Quest 3 + Unity'
   - slug: moodle
     name: local_plugincompatibility
     kind: propio

@@ -2,8 +2,7 @@
 meta:
   title: Projectes
   description: >-
-    Projectes de Ricardo Verduguez: treball per a client, projectes acadèmics i eines
-    pròpies, amb el problema, les decisions i captures de cadascun.
+    Projectes personals i acadèmics.
 title: Projectes
 lede: >-
   Projectes seleccionats, **no historial laboral**. Els dos més recents encapçalen la pàgina; cada
@@ -13,10 +12,8 @@ homelab:
   eyebrow: Homelab
   title: Més de dos anys d'infraestructura pròpia
   note: >-
-    Un **Synology NAS** i diverses màquines serveixen multimèdia, emmagatzematge, VPN i un Git propi.
-    **Jellyfin** separa el còmput (una Orange Pi) de l'emmagatzematge (el NAS), connectats per NFS i
-    SMB. Les migracions entre dispositius s'automatitzen amb **Ansible i Rsync**, i la publicació
-    a l'exterior va per túnel de Cloudflare, sense obrir ports al router.
+    Un **Synology NAS** i diverses màquines serveixen multimèdia, emmagatzematge, VPN i les meves
+    eines de desenvolupament. Intento no dependre de serveis al núvol.
   facts:
     - value: '2+'
       label: anys en marxa
@@ -31,65 +28,6 @@ ficheLabels:
   problem: El problema
   decisions: Decisions tècniques
 projects:
-  - slug: brazo-robotico
-    name: Teleoperació d'un braç robòtic
-    kind: tfg
-    year: '2026'
-    featured: true
-    summary: >-
-      **Treball de Fi de Grau**: braç de baix cost teleoperat amb les mans des de Meta Quest 3,
-      amb Unity i OpenXR, una cadena ESP32 → Arduino → deu servos i el braç imprès en 3D i muntat
-      des de zero.
-    tags:
-      - Unity
-      - C#
-      - OpenXR
-      - Meta Quest
-      - Arduino
-      - ESP32
-      - WiFi
-      - Impresión 3D
-    period: '2026'
-    work: 74 h d'impressió · 173 € de material
-    links: []
-    video:
-      label: 'Vídeo: la mà de l''operador mou el braç des de Meta Quest 3'
-      embed: 'https://drive.google.com/file/d/1ZRnbjAjVxOb8xDXBvJa9yVCptx7tpYNR/preview'
-    problem: >-
-      El TFG demanava un sistema complet, no una demo: **teleoperar amb les mans** un braç de baix
-      cost que respon a la pinça de l'operador, sense comandaments ni menús flotants, i que no es
-      trenqui quan algú mogui el braç de pressa.
-    decisions:
-      - >-
-        **Unity + OpenXR a Meta Quest 3** (compatible amb Quest 2), amb hand tracking natiu i la
-        interfície ancorada als canells: s'opera sense comandaments.
-      - >-
-        **Cadena ESP32 → Arduino Mega 2560 → 10 servos**, amb protocol de trames propi, cua de
-        poses i limitació de velocitat: la mecànica impresa aguanta les estrebades de l'operador.
-      - >-
-        **L'ESP32 serveix a més una pàgina web de control manual** per WiFi, per calibrar i moure
-        el braç des del navegador sense el visor.
-      - >-
-        **Braç construït des de zero**: 74 h d'impressió 3D (~1,5 kg de PLA), electrònica pròpia i
-        font dedicada de 5 V/18 A, amb ~173 € de material.
-      - >-
-        **Validació en banc i documentació**: proves funcionals, memòria tècnica de 79 pàgines,
-        protocol i guió de defensa.
-    gallery:
-      - view: web
-        label: Web
-        images:
-          - src: /projects/brazo-robotico/flujo-control.webp
-            alt: >-
-              Esquema del flux de control: la mà de l'operador es captura a Meta Quest 3, que envia
-              les posicions per UDP a l'ESP32; aquest les tradueix a angles i les passa per sèrie a
-              l'Arduino Mega 2560, que mou els servos del braç.
-            caption: 'Flux de control: mà → Quest 3 → ESP32 → Arduino → braç'
-          - src: /projects/brazo-robotico/herramientas.webp
-            alt: >-
-              Eines de treball: l'ESP32 i l'Arduino Mega amb l'IDE d'Arduino d'una banda i les
-              ulleres Meta Quest 3 amb Unity de l'altra, convergint en el braç imprès en 3D.
-            caption: 'Eines: ESP32 + IDE d''Arduino i Quest 3 + Unity'
   - slug: phenomorph
     name: Phenomorph
     kind: propio
@@ -187,6 +125,84 @@ projects:
           - src: /projects/phenomorph/taquilla-mobile.webp
             alt: Rànquing de taquilla en mòbil.
             caption: Taquilla en mòbil
+  - slug: overlyric
+    name: Overlyric
+    kind: propio
+    year: '2026'
+    summary: >-
+      **Overlay de lletres per a Windows 10/11**: llegeix la pista en reproducció dels controls
+      multimèdia del sistema i pinta la lletra sincronitzada de LRCLIB en una finestra transparent
+      que queda per sobre de tot i no roba el focus. Sense integració per reproductor.
+    tags:
+      - C#
+      - .NET 10
+      - NativeAOT
+      - Win32
+      - Direct2D
+      - DirectComposition
+      - LRCLIB
+      - PowerShell
+    period: 24 octubre — 12 novembre 2026
+    work: 67 commits
+    links:
+      - label: Repositori d'Overlyric
+        href: 'https://github.com/BarbarianTarkus/Overlyric'
+        kind: repo
+    problem: >-
+      Els overlays de lletres demanen un connector per reproductor, o t'obliguen a triar entre
+      Spotify i la resta, i el rellotge es desvia tan bon punt una pista comença a mitges o el
+      reproductor congela la posició. Volia **un sol overlay que funcioni amb qualsevol reproductor
+      de Windows i no destorbi a la partida**: lletra llegible sobre el joc, sense robar el focus i
+      sense gastar CPU entre línia i línia.
+    decisions:
+      - >-
+        **Llegir els controls multimèdia de Windows (SMTC/GSMTC), no el reproductor**: qualsevol
+        reproductor que registri una sessió —TIDAL, Spotify, VLC, foobar2000, el navegador—
+        funciona sense instal·lar res, i el que no publica surt anomenat a la safata en lloc de
+        deixar un overlay mut.
+      - >-
+        **Triar l'enregistrament, no el primer resultat de LRCLIB**: els sufixos d'edició es treuen
+        abans de consultar, la durada mana al rànquing i una versió sense temps es substitueix per
+        la primera sincronitzada de la mateixa durada; una segona cerca amb l'àlbum cobreix el que
+        amaga el límit de vint resultats.
+      - >-
+        **No fiar-se de la posició que publica el reproductor**: el rellotge envellix aquesta
+        posició amb un cronòmetre monotònic, així que TIDAL —que congela la seva línia de temps— i
+        començar una cançó a mitges continuen caient a la línia correcta.
+      - >-
+        **Dibuixar sense framework d'UI**: una finestra `WS_EX_NOREDIRECTIONBITMAP` composta amb
+        DirectComposition i pintada amb Direct2D/DirectWrite, amb els textos a la memòria cau i zero
+        assignacions per fotograma; darrere no hi ha WPF, WinUI ni WinForms.
+      - >-
+        **Arreglar la línia, no només mirar-la**: el full és un editor (marcar inici i fi, ±10–250
+        ms, desfer i refer), la correcció es guarda per pista i per dispositiu de sortida, es pot
+        importar un `.lrc` local i publicar el full corregit a LRCLIB després d'una confirmació que
+        mostra l'enviament exacte.
+      - >-
+        **Mesurat abans d'afirmar-ho**: 65 MB de memòria estable, un 0,15 % d'un nucli i 11 MB en un
+        únic executable NativeAOT de .NET 10; i un límit dit a la cara: sobre pantalla completa
+        exclusiva no es pot dibuixar, així que ho avisa un cop i assenyala Borderless.
+    gallery:
+      - view: web
+        label: Web
+        images:
+          - src: /projects/overlyric/multi-line.webp
+            alt: >-
+              Overlay multilínia sobre un joc: títol de la pista, tres línies de lletra i la barra
+              de progrés.
+            caption: Multilínia sobre el joc
+          - src: /projects/overlyric/lyric-viewer.webp
+            alt: >-
+              Full de lletra complet amb totes les marques de temps i la línia actual ressaltada.
+            caption: Full de lletra complet
+          - src: /projects/overlyric/settings-lyrics.webp
+            alt: "Paràmetres de Lletres: mode, línies visibles, mides de text i escombratge karaoke."
+            caption: Paràmetres de lletres
+          - src: /projects/overlyric/settings-oled.webp
+            alt: >-
+              Paràmetres d'Aparença: preset OLED, opacitat del fons, desplaçament de píxels i
+              paletes.
+            caption: OLED i aparença
   - slug: mixology
     name: Mixology-Luismi
     kind: cliente
@@ -256,6 +272,65 @@ projects:
           - src: /projects/mixology/mobile-contacto.webp
             alt: 'Pàgina de contacte en mòbil amb telèfon, WhatsApp i horari.'
             caption: Contacte en mòbil
+  - slug: brazo-robotico
+    name: Teleoperació d'un braç robòtic
+    kind: tfg
+    year: '2026'
+    featured: true
+    summary: >-
+      **Treball de Fi de Grau**: braç de baix cost teleoperat amb les mans des de Meta Quest 3,
+      amb Unity i OpenXR, una cadena ESP32 → Arduino → deu servos i el braç imprès en 3D i muntat
+      des de zero.
+    tags:
+      - Unity
+      - C#
+      - OpenXR
+      - Meta Quest
+      - Arduino
+      - ESP32
+      - WiFi
+      - Impresión 3D
+    period: '2026'
+    work: 74 h d'impressió · 173 € de material
+    links: []
+    video:
+      label: 'Vídeo: la mà de l''operador mou el braç des de Meta Quest 3'
+      embed: 'https://drive.google.com/file/d/1ZRnbjAjVxOb8xDXBvJa9yVCptx7tpYNR/preview'
+    problem: >-
+      El TFG demanava un sistema complet, no una demo: **teleoperar amb les mans** un braç de baix
+      cost que respon a la pinça de l'operador, sense comandaments ni menús flotants, i que no es
+      trenqui quan algú mogui el braç de pressa.
+    decisions:
+      - >-
+        **Unity + OpenXR a Meta Quest 3** (compatible amb Quest 2), amb hand tracking natiu i la
+        interfície ancorada als canells: s'opera sense comandaments.
+      - >-
+        **Cadena ESP32 → Arduino Mega 2560 → 10 servos**, amb protocol de trames propi, cua de
+        poses i limitació de velocitat: la mecànica impresa aguanta les estrebades de l'operador.
+      - >-
+        **L'ESP32 serveix a més una pàgina web de control manual** per WiFi, per calibrar i moure
+        el braç des del navegador sense el visor.
+      - >-
+        **Braç construït des de zero**: 74 h d'impressió 3D (~1,5 kg de PLA), electrònica pròpia i
+        font dedicada de 5 V/18 A, amb ~173 € de material.
+      - >-
+        **Validació en banc i documentació**: proves funcionals, memòria tècnica de 79 pàgines,
+        protocol i guió de defensa.
+    gallery:
+      - view: web
+        label: Web
+        images:
+          - src: /projects/brazo-robotico/flujo-control.webp
+            alt: >-
+              Esquema del flux de control: la mà de l'operador es captura a Meta Quest 3, que envia
+              les posicions per UDP a l'ESP32; aquest les tradueix a angles i les passa per sèrie a
+              l'Arduino Mega 2560, que mou els servos del braç.
+            caption: 'Flux de control: mà → Quest 3 → ESP32 → Arduino → braç'
+          - src: /projects/brazo-robotico/herramientas.webp
+            alt: >-
+              Eines de treball: l'ESP32 i l'Arduino Mega amb l'IDE d'Arduino d'una banda i les
+              ulleres Meta Quest 3 amb Unity de l'altra, convergint en el braç imprès en 3D.
+            caption: 'Eines: ESP32 + IDE d''Arduino i Quest 3 + Unity'
   - slug: moodle
     name: local_plugincompatibility
     kind: propio
