@@ -37,8 +37,25 @@
     const slides = track.querySelectorAll("[data-gallery-slide]");
     if (slides.length < 2) return null;
 
+    // Article galleries let each capture keep its own height. The track is a
+    // flex row, so without this it would stay as tall as the tallest slide and
+    // leave dead space under a shorter one. Cards keep their fixed frames.
+    const fitHeight = panel.closest("[data-gallery-fit]") !== null;
+
     let index = 0;
     let frame = 0;
+
+    const fit = () => {
+      if (!fitHeight || !panel.classList.contains("is-active")) return;
+      const slide = slides[index];
+      if (!slide) return;
+      const image = slide.querySelector("img");
+      // A hidden or lazy pack may not have decoded yet. Measuring now would
+      // shrink the track to the caption; the load listener measures again.
+      if (image !== null && !image.complete) return;
+      const height = slide.getBoundingClientRect().height;
+      if (height > 0) track.style.blockSize = height + "px";
+    };
 
     const update = () => {
       const width = track.clientWidth;
@@ -52,6 +69,7 @@
       current.textContent = String(index + 1);
       prev.disabled = index === 0;
       next.disabled = index === slides.length - 1;
+      fit();
     };
 
     const goTo = (target) => {
@@ -62,6 +80,7 @@
       current.textContent = String(clamped + 1);
       prev.disabled = clamped === 0;
       next.disabled = clamped === slides.length - 1;
+      fit();
       track.scrollTo({ left: clamped * width, behavior: scrollBehavior() });
     };
 
@@ -101,7 +120,21 @@
 
     prev.disabled = true;
     next.disabled = slides.length < 2;
-    return { panel, track, snap };
+
+    if (fitHeight) {
+      for (const image of track.querySelectorAll("img")) {
+        if (!image.complete) {
+          image.addEventListener("load", fit, { once: true });
+        }
+      }
+      if ("ResizeObserver" in globalThis) {
+        const observer = new globalThis.ResizeObserver(fit);
+        for (const slide of slides) observer.observe(slide);
+      }
+      globalThis.requestAnimationFrame(fit);
+    }
+
+    return { panel, track, snap, fit };
   };
 
   /**
@@ -334,7 +367,11 @@
 
       const slider = sliders.get(panel);
       if (slider !== undefined) {
-        globalThis.requestAnimationFrame(() => slider.snap());
+        slider.fit();
+        globalThis.requestAnimationFrame(() => {
+          slider.snap();
+          slider.fit();
+        });
       }
 
       if (animate) animateHeight(gallery, from);
@@ -389,7 +426,10 @@
 
     globalThis.addEventListener("resize", () => {
       for (const slider of sliders.values()) {
-        if (slider.panel.classList.contains("is-active")) slider.snap();
+        if (slider.panel.classList.contains("is-active")) {
+          slider.snap();
+          slider.fit();
+        }
       }
     });
   }

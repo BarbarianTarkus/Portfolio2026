@@ -464,6 +464,18 @@
   /* Captures on the project page read as figures, not as a card slider: the
      frame grows with the image, so a 2:1 diagram is not boxed into a 16:10
      letterbox. The slider, its controls and the lightbox stay as they are. */
+  .article-gallery .gallery-track {
+    align-items: flex-start;
+    overflow-block: hidden;
+    transition: block-size 260ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .article-gallery .gallery-track {
+      transition: none;
+    }
+  }
+
   .article-gallery .gallery-media {
     aspect-ratio: auto;
     padding: 0;

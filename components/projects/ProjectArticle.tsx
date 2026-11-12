@@ -58,6 +58,26 @@ export function ProjectArticle(
     <article class="project-article" id={project.slug}>
       {back}
 
+      {packs.length > 0 && (
+        <section
+          class="article-gallery"
+          data-gallery-fit
+          aria-labelledby="article-gallery-title"
+        >
+          <h2 class="article-section-title" id="article-gallery-title">
+            {galleryTitle}
+          </h2>
+          <ProjectGallery
+            groups={packs}
+            projectSlug={project.slug}
+            projectName={project.name}
+            basePath={basePath}
+            viewLabel={galleryViewLabel}
+            eager
+          />
+        </section>
+      )}
+
       <p class="article-kind">{kindLabel}</p>
       <h1 class="page-title article-title" id={project.slug + "-title"}>
         <ProseField
@@ -149,24 +169,6 @@ export function ProjectArticle(
           </ul>
         </FicheBlock>
       </div>
-
-      {packs.length > 0 && (
-        <section
-          class="article-gallery"
-          aria-labelledby="article-gallery-title"
-        >
-          <h2 class="article-section-title" id="article-gallery-title">
-            {galleryTitle}
-          </h2>
-          <ProjectGallery
-            groups={packs}
-            projectSlug={project.slug}
-            projectName={project.name}
-            basePath={basePath}
-            viewLabel={galleryViewLabel}
-          />
-        </section>
-      )}
 
       {back}
     </article>

@@ -63,6 +63,26 @@ export function WorkProjectArticle(
     <article class="project-article work-article" id={project.slug}>
       {back}
 
+      {packs.length > 0 && (
+        <section
+          class="article-gallery"
+          data-gallery-fit
+          aria-labelledby="article-gallery-title"
+        >
+          <h2 class="article-section-title" id="article-gallery-title">
+            {labels.galleryTitle}
+          </h2>
+          <ProjectGallery
+            groups={packs}
+            projectSlug={project.slug}
+            projectName={project.name}
+            basePath={basePath}
+            viewLabel={labels.galleryViewLabel}
+            eager
+          />
+        </section>
+      )}
+
       <p class="article-kind">
         {job.company}
         {job.place !== "" && <>· {job.place}</>}
@@ -152,24 +172,6 @@ export function WorkProjectArticle(
           </ul>
         </FicheBlock>
       </div>
-
-      {packs.length > 0 && (
-        <section
-          class="article-gallery"
-          aria-labelledby="article-gallery-title"
-        >
-          <h2 class="article-section-title" id="article-gallery-title">
-            {labels.galleryTitle}
-          </h2>
-          <ProjectGallery
-            groups={packs}
-            projectSlug={project.slug}
-            projectName={project.name}
-            basePath={basePath}
-            viewLabel={labels.galleryViewLabel}
-          />
-        </section>
-      )}
 
       {back}
     </article>
