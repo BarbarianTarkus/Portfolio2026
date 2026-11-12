@@ -14,6 +14,23 @@
     list-style: none;
   }
 
+  /* Rows share one set of column tracks: the list defines them and every row
+     re-uses them through subgrid, so a value starts on the same left edge in
+     every row however long its label is. A grid per row could only size its
+     own label column, which pushed "Correo alternativo" out of line. */
+  @media (width >= 48rem) {
+    :scope {
+      display: grid;
+      grid-template-columns: 2.75rem max-content minmax(0, 1fr) 1.5rem;
+    }
+
+    li {
+      display: grid;
+      grid-column: 1 / -1;
+      grid-template-columns: subgrid;
+    }
+  }
+
   .contact-row {
     --channel: var(--muted);
     /* Tints of the channel colour. Mixing against `transparent` is exactly
@@ -26,6 +43,7 @@
     --mark-fill-active: color-mix(in oklab, var(--channel) 20%, transparent);
 
     display: block grid;
+    grid-column: 1 / -1;
     grid-template-columns: 2.75rem minmax(0, 1fr) 1.5rem;
     grid-template-areas:
       "mark label arrow"
@@ -53,6 +71,21 @@
 
     &[data-channel="linkedin"] {
       --channel: oklch(0.7148 0.1302 247.8);
+    }
+
+    /* The alternative address: same row, quieter. It keeps the mail tint so it
+       still reads as the mail channel, but the value steps down a size and the
+       tile loses its fill, leaving the primary address the obvious first
+       choice. Hover and focus below still brighten it to the full accent. */
+    &[data-variant="secondary"] {
+      --mark-fill: transparent;
+      --mark-edge: color-mix(in srgb, var(--channel) 22%, var(--line));
+
+      .contact-value {
+        color: var(--text);
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
     }
 
     &:focus-visible {
@@ -96,14 +129,15 @@
     }
 
     /* The label moves into its own column once there is room, so the value and
-       the hint share one left edge on every row. */
+       the hint share one left edge on every row. The columns come from the
+       list, not from this row, so the edge is the same in every row. */
     @media (width >= 48rem) {
-      grid-template-columns: 2.75rem 7.5rem minmax(0, 1fr) 1.5rem;
+      grid-template-columns: subgrid;
       grid-template-areas:
         "mark label value arrow"
         "mark .     hint  arrow";
       align-items: baseline;
-      column-gap: 1.25rem;
+      column-gap: 2rem;
       row-gap: 0.35rem;
     }
   }

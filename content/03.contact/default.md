@@ -7,6 +7,9 @@ lede: "Estoy abierto a **roles junior de desarrollo, sistemas o seguridad**, y a
 email:
   label: Correo
   hint: Para cualquier cosa que no encaje en un *issue* de GitHub.
+emailAlt:
+  label: Correo alternativo
+  hint: Segunda dirección, por si la principal no responde.
 github:
   label: GitHub
   hint: '**Código, experimentos y contribuciones** en abierto.'

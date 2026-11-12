@@ -46,14 +46,17 @@ github: https://github.com/BarbarianTarkus
 linkedin: https://www.linkedin.com/in/ricardverdclar/
 githubHandle: "@BarbarianTarkus"
 linkedinHandle: in/ricardverdclar
-email: ricardoverdclar@gmail.com
+email: ricardo@verduguez.com
+emailAlt: ricardoverdclar@gmail.com
 nav:
+  - title: Home
+    route: /
+  - title: About me
+    route: /about
   - title: Experience
     route: /experience
   - title: Projects
     route: /projects
-  - title: About me
-    route: /about
   - title: Contact
     route: /contact
 labels:

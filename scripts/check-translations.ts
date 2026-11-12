@@ -39,6 +39,7 @@ const INVARIANT_KEYS = new Set([
   "href",
   "url",
   "email",
+  "emailAlt",
   "id",
   "kind",
   "icon",

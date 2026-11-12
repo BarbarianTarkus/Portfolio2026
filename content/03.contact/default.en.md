@@ -7,6 +7,9 @@ lede: "I am open to **junior roles in development, systems or security**, and to
 email:
   label: Email
   hint: For anything that does not fit in a GitHub *issue*.
+emailAlt:
+  label: Alternative email
+  hint: Second address, in case the main inbox does not answer.
 github:
   label: GitHub
   hint: '**Code, experiments and contributions** in the open.'

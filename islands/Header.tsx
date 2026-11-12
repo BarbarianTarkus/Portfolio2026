@@ -111,6 +111,90 @@ function useMenuFocus(
   }, [open.value]);
 }
 
+/** One nav entry with the two-digit index it is labelled and reached by. */
+interface NavEntry {
+  title: string;
+  route: string;
+  /** 00 for the home page, then 01, 02… in the order the nav lists them. */
+  index: number;
+}
+
+/**
+ * Number the navigation: home is .00 and every other page counts up from .01.
+ * The label, the href and the keyboard shortcut all read from this list, so an
+ * entry can never show one number and answer to another.
+ */
+function navEntries(items: SiteContent["nav"]): NavEntry[] {
+  let counter = 0;
+  return items.map((item) => {
+    if (item.route === "/") return { ...item, index: 0 };
+    counter += 1;
+    return { ...item, index: counter };
+  });
+}
+
+/** A focused field keeps what the visitor types: shortcuts must not steal it. */
+function isEditableTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  return target.isContentEditable ||
+    target.closest("input, textarea, select, [contenteditable]") !== null;
+}
+
+/**
+ * Keyboard navigation: a digit opens the nav entry carrying that index and
+ * `h` goes home. Modifier chords keep their browser meaning.
+ */
+function useNavShortcuts(
+  entries: NavEntry[],
+  basePath: string,
+  lang: Language,
+): void {
+  // Only the index→route table matters to the listener; keying the effect on
+  // that string (not the array identity) keeps it from re-binding every render.
+  const table = entries.map((entry) => `${entry.index}:${entry.route}`).join(
+    "|",
+  );
+
+  useEffect(() => {
+    const routes = new Map<string, string>();
+    for (const pair of table.split("|")) {
+      const separator = pair.indexOf(":");
+      routes.set(pair.slice(0, separator), pair.slice(separator + 1));
+    }
+
+    const normalize = (path: string) => path.replace(/\/+$/, "") || "/";
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.defaultPrevented) return;
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      if (isEditableTarget(event.target)) return;
+
+      const key = event.key.toLowerCase();
+      let route: string | undefined;
+      if (key === "h") route = "/";
+      else if (/^[0-9]$/.test(key)) route = routes.get(key);
+      if (route === undefined) return;
+
+      const target = new URL(
+        localizedHref(basePath, lang, route),
+        globalThis.location.href,
+      );
+      // Re-opening the page the visitor is already on would only reload it.
+      if (
+        normalize(globalThis.location.pathname) === normalize(target.pathname)
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+      globalThis.location.assign(target.href);
+    };
+
+    globalThis.addEventListener("keydown", onKeyDown);
+    return () => globalThis.removeEventListener("keydown", onKeyDown);
+  }, [table, basePath, lang]);
+}
+
 function MenuToggle({ open, onToggle, buttonRef, labels }: MenuToggleProps) {
   return (
     <button
@@ -134,6 +218,9 @@ function MenuToggle({ open, onToggle, buttonRef, labels }: MenuToggleProps) {
  *
  * Active-link state is not computed here: Fresh annotates matching anchors with
  * aria-current, which the stylesheet uses for the active nav indicator.
+ *
+ * Navigation is numbered from 00 so the digits double as shortcuts: 0 or h
+ * opens home, 1 to 9 open the page carrying that number.
  */
 export default function Header(
   { site, basePath, path, lang }: HeaderProps,
@@ -152,12 +239,14 @@ export default function Header(
   const toggleRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const href = (target: string) => localizedHref(basePath, lang, target);
+  const entries = navEntries(site.nav);
   const strings = uiStrings(lang);
   const closeMenu = () => (open.value = false);
   const labels = site.labels;
 
   useMenuEffects(open);
   useMenuFocus(open, toggleRef, closeRef);
+  useNavShortcuts(entries, basePath, lang);
 
   return (
     <header>
@@ -191,15 +280,18 @@ export default function Header(
           aria-label={labels.mainNav}
         >
           <ul onClick={closeMenu}>
-            {site.nav.map((item, index) => (
+            {entries.map((item) => (
               <li key={item.route}>
                 <a
                   href={href(item.route)}
                   aria-current={isActive(item.route) ? "page" : undefined}
                   data-current={isActive(item.route) ? "true" : undefined}
+                  aria-keyshortcuts={item.index === 0
+                    ? "0 h"
+                    : String(item.index)}
                 >
                   <b class="nav-index">
-                    {String(index + 1).padStart(2, "0")}.{" "}
+                    {String(item.index).padStart(2, "0")}.{" "}
                   </b>
                   {item.title}
                 </a>

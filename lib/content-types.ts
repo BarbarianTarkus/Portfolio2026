@@ -90,6 +90,8 @@ export interface SiteContent {
   githubHandle: string;
   linkedinHandle: string;
   email: string;
+  /** Fallback address, listed after the primary one on the contact page. */
+  emailAlt: string;
   nav: NavItem[];
   labels: SiteLabels;
   notFound: NotFoundContent;
@@ -154,12 +156,14 @@ export interface ContactChannel {
   hint: string;
 }
 
-/** Contact page copy: lede and the three contact channels. */
+/** Contact page copy: lede and the four contact channels. */
 export interface ContactContent {
   meta: PageMeta;
   title: string;
   lede: string;
   email: ContactChannel;
+  /** Label and hint of the fallback address listed after the primary one. */
+  emailAlt: ContactChannel;
   github: ContactChannel;
   linkedin: ContactChannel;
 }

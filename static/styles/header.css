@@ -152,6 +152,32 @@
     }
   }
 
+  /* Tablet band: the five numbered links plus the language switcher fit on one
+     row only at a tighter rhythm — 768px is the first width where the desktop
+     row exists, and there the generous gaps would wrap the last link onto a
+     line of its own. */
+  @media (48rem <= width < 64rem) {
+    .header-inner {
+      column-gap: 1rem;
+    }
+
+    .main-nav {
+      column-gap: 0.75rem;
+
+      ul {
+        column-gap: 0.75rem;
+      }
+    }
+
+    .lang-switcher {
+      gap: 0.25rem;
+
+      a {
+        min-inline-size: 2.375rem;
+      }
+    }
+  }
+
   .menu-button {
     display: none;
     place-items: center;

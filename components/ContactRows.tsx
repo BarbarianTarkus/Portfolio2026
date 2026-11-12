@@ -15,6 +15,8 @@ interface ContactRowProps {
   icon: ComponentChildren;
   external?: boolean;
   me?: boolean;
+  /** Draws the row quieter: the fallback address never competes with the primary. */
+  variant?: "secondary";
 }
 
 /**
@@ -24,8 +26,17 @@ interface ContactRowProps {
  * comes from the type scale instead of from colour.
  */
 function ContactRow(
-  { row, label, value, href, channel, icon, external = false, me = false }:
-    ContactRowProps,
+  {
+    row,
+    label,
+    value,
+    href,
+    channel,
+    icon,
+    external = false,
+    me = false,
+    variant,
+  }: ContactRowProps,
 ) {
   return (
     <li>
@@ -33,6 +44,7 @@ function ContactRow(
         class="contact-row"
         href={href}
         data-channel={channel}
+        data-variant={variant}
         target={external ? "_blank" : undefined}
         rel={external
           ? (me ? "me noopener noreferrer" : "noopener noreferrer")
@@ -63,6 +75,17 @@ export function ContactRows({ site, page }: ContactRowsProps) {
           value={site.email}
           href={"mailto:" + site.email}
           channel="email"
+          icon={<MailIcon />}
+        />
+      )}
+      {site.emailAlt && (
+        <ContactRow
+          row={page.emailAlt}
+          label={page.emailAlt.label}
+          value={site.emailAlt}
+          href={"mailto:" + site.emailAlt}
+          channel="email"
+          variant="secondary"
           icon={<MailIcon />}
         />
       )}

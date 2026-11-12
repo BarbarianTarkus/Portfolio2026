@@ -7,7 +7,7 @@ import { PageMeta } from "../components/PageMeta.tsx";
 import { define } from "../utils.ts";
 
 /**
- * Contact as three rows. Each row is one link wrapping its label, value and
+ * Contact as one row per channel. Each row is one link wrapping its label, value and
  * hint; the glyph tile and the arrow are decorative, so the accessible name is
  * the row's own copy and the target is never announced twice.
  */
