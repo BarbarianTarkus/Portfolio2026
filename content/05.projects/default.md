@@ -79,6 +79,9 @@ projects:
           - src: /projects/phenomorph/home-desktop.webp
             alt: 'Portada de escritorio con la cartelera, la próxima sesión y la taquilla.'
             caption: Portada de escritorio
+          - src: /projects/phenomorph/letterboxd-desktop.webp
+            alt: Buscador del programa con el botón de Letterboxd.
+            caption: Búsqueda en Letterboxd
           - src: /projects/phenomorph/film-desktop.webp
             alt: 'Ficha de película con sinopsis, reparto y sesiones.'
             caption: Ficha de película
@@ -100,9 +103,6 @@ projects:
           - src: /projects/phenomorph/trailer-modal.webp
             alt: Reproductor de tráiler abierto en modal.
             caption: Tráiler en modal
-          - src: /projects/phenomorph/letterboxd-desktop.webp
-            alt: Buscador del programa con el botón de Letterboxd.
-            caption: Búsqueda en Letterboxd
       - view: mobile
         label: Móvil
         images:
