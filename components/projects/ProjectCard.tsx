@@ -78,7 +78,6 @@ interface ProjectCardProps {
   basePath: string;
   sourcePath: string;
   inlineEditing: boolean;
-  projectIndex: number;
   eagerCover: boolean;
 }
 
@@ -102,7 +101,6 @@ export function ProjectCard(
     basePath,
     sourcePath,
     inlineEditing,
-    projectIndex,
     eagerCover,
   }: ProjectCardProps,
 ) {
@@ -113,7 +111,7 @@ export function ProjectCard(
   const titleField = (
     <ProseField
       text={project.name}
-      path={`projects.${projectIndex}.name`}
+      path="name"
       sourcePath={sourcePath}
       editing={inlineEditing}
     />
@@ -162,7 +160,7 @@ export function ProjectCard(
           <span>
             <ProseField
               text={project.period}
-              path={`projects.${projectIndex}.period`}
+              path="period"
               sourcePath={sourcePath}
               editing={inlineEditing}
             />
@@ -171,7 +169,7 @@ export function ProjectCard(
             <span>
               <ProseField
                 text={project.work}
-                path={`projects.${projectIndex}.work`}
+                path="work"
                 sourcePath={sourcePath}
                 editing={inlineEditing}
               />
@@ -183,7 +181,7 @@ export function ProjectCard(
           <ProseField
             text={project.summary}
             basePath={basePath}
-            path={`projects.${projectIndex}.summary`}
+            path="summary"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />

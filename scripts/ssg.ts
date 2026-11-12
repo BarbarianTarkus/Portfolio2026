@@ -100,35 +100,47 @@ function routeLanguage(route: string): Language {
 }
 
 /**
- * Project slugs, read from the language variant of the projects page. A
- * translation that has not renamed a slug yet falls back to the default file,
- * which is also where the list comes from for the default language.
+ * Project slugs, discovered from the project article folders
+ * (`content/05.projects/<nn>.<slug>/`). The numeric prefix carries the display
+ * order; the frontmatter `slug` is the source of truth for the URL, so a
+ * translation may still rename it. Language variants fall back to the default
+ * file when a project has not been translated.
  */
 async function projectSlugs(language: Language): Promise<string[]> {
   const variants = language === DEFAULT_LANGUAGE
     ? ["default.md"]
     : [`default.${language}.md`, "default.md"];
+  const dir = join(CONTENT_DIR, "05.projects");
+  const folders = [...Deno.readDirSync(dir)]
+    .filter((entry) => entry.isDirectory && /^\d+\./.test(entry.name))
+    .map((entry) => entry.name)
+    .sort((a, b) =>
+      Number.parseInt(a, 10) - Number.parseInt(b, 10) ||
+      a.localeCompare(b)
+    );
 
-  for (const variant of variants) {
-    let source: string;
-    try {
-      source = await Deno.readTextFile(
-        join(CONTENT_DIR, "05.projects", variant),
+  const slugs: string[] = [];
+  for (const folder of folders) {
+    for (const variant of variants) {
+      let source: string;
+      try {
+        source = await Deno.readTextFile(join(dir, folder, variant));
+      } catch (error) {
+        if (error instanceof Deno.errors.NotFound) continue;
+        throw error;
+      }
+
+      const { data } = matter(source);
+      const slug = (data as { slug?: unknown }).slug;
+      slugs.push(
+        typeof slug === "string" && slug !== ""
+          ? slug
+          : folder.replace(/^\d+\./, ""),
       );
-    } catch (error) {
-      if (error instanceof Deno.errors.NotFound) continue;
-      throw error;
+      break;
     }
-
-    const { data } = matter(source);
-    const projects = (data as { projects?: { slug?: unknown }[] }).projects ??
-      [];
-    return projects
-      .map((project) => project.slug)
-      .filter((slug): slug is string => typeof slug === "string");
   }
-
-  return [];
+  return slugs;
 }
 
 /**

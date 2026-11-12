@@ -1,10 +1,14 @@
 /**
  * Typed view over the Dune-managed content pages in content/.
  *
- * Every page is a Dune flat-file page (`content/<nn>.<name>/default.md`) whose
+ * Every page is a Dune page folder (`content/<nn>.<name>/default.md`) whose
  * YAML frontmatter holds the structured copy the routes render. Translations
  * live next to it as `default.<lang>.md` (`default.en.md`, `default.ca.md`):
  * Dune serves them under the same canonical route, tagged with their language.
+ *
+ * Project articles follow the same convention: one folder per project
+ * (`content/05.projects/<nn>.<slug>/default*.md`), so adding a folder adds a
+ * card, its list position (numeric prefix) and its `/projects/<slug>/` page.
  *
  * This module is the only place that talks to Dune's content engine, so routes
  * and components stay independent of where the content lives.
@@ -169,6 +173,52 @@ export async function loadSite(ctx: Context<State>): Promise<SiteContent> {
   return page.frontmatter;
 }
 
+const LAST_ORDER = Number.MAX_SAFE_INTEGER;
+
+/** Last segment of a canonical route ("/projects/mixology/" → "mixology"). */
+function routeSlug(route: string): string {
+  const segments = route.replace(/\/+$/, "").split("/");
+  return segments[segments.length - 1] ?? "";
+}
+
+/**
+ * Project articles are Dune page folders under the projects section
+ * (`content/05.projects/<nn>.<slug>/`), so the list is discovered from the
+ * page index instead of a frontmatter array. The numeric folder prefix carries
+ * the display order and the frontmatter `slug` stays the source of truth for
+ * the URL. Adding a folder is all it takes to publish a project.
+ */
+async function projectEntries(
+  ctx: Context<State>,
+  indexSourcePath: string,
+): Promise<Project[]> {
+  const folder = indexSourcePath.split("/")[0];
+  const indexRoute = canonicalRoute("/projects");
+  const seen = new Map<string, PageRef>();
+  for (const ref of pageIndex(ctx)) {
+    if (ref.parentPath !== folder || ref.language !== DEFAULT_LANGUAGE) {
+      continue;
+    }
+    if (!ref.route.startsWith(indexRoute) || ref.route === indexRoute) continue;
+    if (!seen.has(ref.route)) seen.set(ref.route, ref);
+  }
+
+  const refs = [...seen.values()].sort((a, b) =>
+    (a.order > 0 ? a.order : LAST_ORDER) -
+      (b.order > 0 ? b.order : LAST_ORDER) ||
+    a.route.localeCompare(b.route)
+  );
+
+  return await Promise.all(refs.map(async (ref) => {
+    const page = await loadPage<Project>(ctx, ref.route);
+    return {
+      ...page.frontmatter,
+      slug: page.frontmatter.slug || routeSlug(ref.route),
+      sourcePath: page.sourcePath,
+    };
+  }));
+}
+
 /** Load one page document plus the site globals it renders inside. */
 export async function loadHomePage(ctx: Context<State>) {
   const site = await loadSite(ctx);
@@ -177,12 +227,13 @@ export async function loadHomePage(ctx: Context<State>) {
     loadPage<ExperienceContent>(ctx, "/experience"),
     loadPage<ProjectsContent>(ctx, "/projects"),
   ]);
+  const entries = await projectEntries(ctx, projects.sourcePath);
 
   return {
     site,
     page: page.frontmatter,
     experience: experience.frontmatter,
-    projects: projects.frontmatter,
+    projects: { ...projects.frontmatter, projects: entries },
     sourcePath: page.sourcePath,
     siteSourcePath: ctx.state.siteSourcePath ?? "",
   };
@@ -217,7 +268,12 @@ export async function loadProjectsPage(ctx: Context<State>) {
     loadSite(ctx),
     loadPage<ProjectsContent>(ctx, "/projects"),
   ]);
-  return { site, page: page.frontmatter, sourcePath: page.sourcePath };
+  const projects = await projectEntries(ctx, page.sourcePath);
+  return {
+    site,
+    page: { ...page.frontmatter, projects },
+    sourcePath: page.sourcePath,
+  };
 }
 
 /**
@@ -260,5 +316,12 @@ export async function loadProjectPage(ctx: Context<State>, slug: string) {
   const { site, page, sourcePath } = await loadProjectsPage(ctx);
   const index = page.projects.findIndex((project) => project.slug === slug);
   if (index === -1) return null;
-  return { site, page, project: page.projects[index], index, sourcePath };
+  const project = page.projects[index];
+  return {
+    site,
+    page,
+    project,
+    index,
+    sourcePath: project.sourcePath ?? sourcePath,
+  };
 }

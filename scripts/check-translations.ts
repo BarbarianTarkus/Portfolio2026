@@ -1,8 +1,9 @@
 /**
  * Guard the translated content pages against drift from the Spanish source.
  *
- * Every page in content/ can ship a translation next to its Spanish source
- * (`default.md` → `default.en.md`, `default.ca.md`). The site renders whatever
+ * Every page folder in content/ can ship a translation next to its Spanish
+ * source (`default.md` → `default.en.md`, `default.ca.md`), including the
+ * project article folders nested under 05.projects. The site renders whatever
  * the translation defines, so a typo in a key or a translated URL silently
  * breaks a page or a link. This script parses both frontmatters and reports:
  *
@@ -20,7 +21,7 @@
  * @module
  */
 
-import { join } from "@std/path";
+import { join, relative } from "@std/path";
 import { parse as parseYaml } from "@std/yaml";
 import {
   type Language,
@@ -211,26 +212,36 @@ function checkInvariants(
   }
 }
 
-function contentFolders(): string[] {
-  return [...Deno.readDirSync(CONTENT_DIR)]
-    .filter((entry) => entry.isDirectory && /^\d+\./.test(entry.name))
-    .map((entry) => entry.name)
-    .sort();
+/** Every page folder in content/, nested project articles included. */
+function contentPages(): string[] {
+  const pages: string[] = [];
+  const walk = (dir: string) => {
+    const entries = [...Deno.readDirSync(dir)];
+    if (entries.some((entry) => entry.isFile && entry.name === "default.md")) {
+      pages.push(dir);
+    }
+    for (const entry of entries) {
+      if (!entry.isDirectory || entry.name.startsWith("_")) continue;
+      walk(join(dir, entry.name));
+    }
+  };
+  walk(CONTENT_DIR);
+  return pages.sort();
 }
 
 function checkLanguage(language: Language, requireAll: boolean): Problem[] {
   const problems: Problem[] = [];
-  for (const folder of contentFolders()) {
-    const sourcePath = join(CONTENT_DIR, folder, "default.md");
-    const translatedPath = join(CONTENT_DIR, folder, `default.${language}.md`);
-    const relative = `content/${folder}/default.${language}.md`;
+  for (const dir of contentPages()) {
+    const sourcePath = join(dir, "default.md");
+    const translatedPath = join(dir, `default.${language}.md`);
+    const file = `${relative(ROOT, dir)}/default.${language}.md`;
     let translated: Frontmatter;
     try {
       translated = readFrontmatter(translatedPath);
     } catch (error) {
       if (error instanceof Deno.errors.NotFound) {
         if (requireAll) {
-          problems.push({ file: relative, message: "missing translation" });
+          problems.push({ file, message: "missing translation" });
         }
         continue;
       }
@@ -240,12 +251,12 @@ function checkLanguage(language: Language, requireAll: boolean): Problem[] {
     const source = readFrontmatter(sourcePath);
     if (translated.body !== "") {
       problems.push({
-        file: relative,
+        file,
         message: "body is not empty (all copy belongs in the frontmatter)",
       });
     }
-    compare(source.data, translated.data, "", relative, problems);
-    checkInvariants(source.data, translated.data, "", relative, problems);
+    compare(source.data, translated.data, "", file, problems);
+    checkInvariants(source.data, translated.data, "", file, problems);
   }
   return problems;
 }
@@ -268,8 +279,8 @@ for (const language of languages) {
 let failed = false;
 for (const language of languages) {
   const problems = checkLanguage(language, requireAll);
-  const files = contentFolders().filter((folder) =>
-    existsSync(join(CONTENT_DIR, folder, `default.${language}.md`))
+  const files = contentPages().filter((dir) =>
+    existsSync(join(dir, `default.${language}.md`))
   ).length;
   if (problems.length === 0) {
     console.log(

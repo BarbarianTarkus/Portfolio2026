@@ -29,7 +29,6 @@ export const handler = define.handlers({
         site={loaded.site}
         page={loaded.page}
         project={loaded.project}
-        projectIndex={loaded.index}
         sourcePath={loaded.sourcePath}
         basePath={ctx.config.basePath}
         inlineEditing={ctx.state.inlineEditing === true}
@@ -42,14 +41,13 @@ interface ProjectPageProps {
   site: SiteContent;
   page: ProjectsContent;
   project: Project;
-  projectIndex: number;
   sourcePath: string;
   basePath: string;
   inlineEditing: boolean;
 }
 
 export function ProjectPage(
-  { site, page, project, projectIndex, sourcePath, basePath, inlineEditing }:
+  { site, page, project, sourcePath, basePath, inlineEditing }:
     ProjectPageProps,
 ) {
   const metaTitle = project.name + " — " + site.author;
@@ -68,7 +66,6 @@ export function ProjectPage(
         backLabel={page.backLabel}
         basePath={basePath}
         sourcePath={sourcePath}
-        projectIndex={projectIndex}
         inlineEditing={inlineEditing}
       />
     </>

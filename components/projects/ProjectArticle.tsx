@@ -19,7 +19,6 @@ interface ProjectArticleProps {
   backLabel: string;
   basePath: string;
   sourcePath: string;
-  projectIndex: number;
   inlineEditing: boolean;
 }
 
@@ -40,7 +39,6 @@ export function ProjectArticle(
     backLabel,
     basePath,
     sourcePath,
-    projectIndex,
     inlineEditing,
   }: ProjectArticleProps,
 ) {
@@ -64,7 +62,7 @@ export function ProjectArticle(
       <h1 class="page-title article-title" id={project.slug + "-title"}>
         <ProseField
           text={project.name}
-          path={`projects.${projectIndex}.name`}
+          path="name"
           sourcePath={sourcePath}
           editing={inlineEditing}
         />
@@ -73,7 +71,7 @@ export function ProjectArticle(
         <span>
           <ProseField
             text={project.period}
-            path={`projects.${projectIndex}.period`}
+            path="period"
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
@@ -82,7 +80,7 @@ export function ProjectArticle(
           <span>
             <ProseField
               text={project.work}
-              path={`projects.${projectIndex}.work`}
+              path="work"
               sourcePath={sourcePath}
               editing={inlineEditing}
             />
@@ -94,7 +92,7 @@ export function ProjectArticle(
         <ProseField
           text={project.summary}
           basePath={basePath}
-          path={`projects.${projectIndex}.summary`}
+          path="summary"
           sourcePath={sourcePath}
           editing={inlineEditing}
         />
@@ -128,7 +126,7 @@ export function ProjectArticle(
             <ProseField
               text={project.problem}
               basePath={basePath}
-              path={`projects.${projectIndex}.problem`}
+              path="problem"
               sourcePath={sourcePath}
               editing={inlineEditing}
             />
@@ -142,7 +140,7 @@ export function ProjectArticle(
                 <ProseField
                   text={decision}
                   basePath={basePath}
-                  path={`projects.${projectIndex}.decisions.${index}`}
+                  path={`decisions.${index}`}
                   sourcePath={sourcePath}
                   editing={inlineEditing}
                 />

@@ -76,9 +76,8 @@ export function ProjectsPage(
             galleryViewLabel={page.galleryViewLabel}
             visitLabel={page.visitLabel}
             basePath={basePath}
-            sourcePath={sourcePath}
+            sourcePath={project.sourcePath ?? sourcePath}
             inlineEditing={inlineEditing}
-            projectIndex={index}
             eagerCover={index < 2}
             key={project.slug}
           />

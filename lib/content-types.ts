@@ -285,7 +285,7 @@ export interface ExperienceContent {
 }
 
 /* -------------------------------------------------------------------------- */
-/* content/05.projects/default.md                                            */
+/* content/05.projects/                                                      */
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -378,6 +378,12 @@ export interface ProjectVideo {
 /** One project card and the content of its collapsed detail block. */
 export interface Project {
   slug: string;
+  /**
+   * File the article was loaded from (`content/05.projects/<nn>.<slug>/default*.md`).
+   * Injected by lib/content.ts from Dune's page index, never authored in
+   * frontmatter.
+   */
+  sourcePath?: string;
   name: string;
   kind: ProjectKind;
   year: string;
@@ -429,5 +435,10 @@ export interface ProjectsContent {
    * one, or its repository otherwise.
    */
   visitLabel: string;
+  /**
+   * The project list, discovered from the project article folders under
+   * `content/05.projects/` (one folder per project). It is never authored in
+   * the page frontmatter: adding a folder adds a card and its article.
+   */
   projects: Project[];
 }

@@ -212,9 +212,11 @@ The numeric prefix controls order and is stripped from the route:
   under 3iPunt). Those articles reuse the project-page layout but are
   deliberately not `/projects` entries: `/projects` holds coursework and
   personal builds.
-- `content/05.projects/default.md` — Projects page (`/projects`): one fiche per
-  project, with `problem`, `decisions` and optional verified `broke`/`next`
-  lines.
+- `content/05.projects/` — Projects section. `default.md` holds the `/projects`
+  page copy, and each `<nn>.<slug>/` folder is one project article
+  (`/projects/<slug>/`) with its gallery, `problem` and `decisions`. The folder
+  prefix sets the card order; the folder itself is all it takes to publish a
+  project.
 - `content/06.site/default.md` — site globals shared by every page: identity,
   navigation, social links, footer labels, 404 copy and UI strings.
 
