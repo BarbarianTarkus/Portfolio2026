@@ -7,47 +7,41 @@
     display: block flow;
   }
 
+  /* Both children share one grid cell: the mark sets the stage height and the
+     copy sits on the last line, so no reserved vertical space is left unused. */
   .hero-stage {
     position: relative;
-    display: block flex;
-    align-items: center;
-    justify-content: center;
-    min-block-size: clamp(19rem, 72vi, 24rem);
-
-    @media (width >= 48rem) {
-      min-block-size: 34rem;
-    }
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .hero-copy {
-    margin-block: 9em 0;
-    margin-inline: 0;
+    grid-area: 1 / 1;
+    align-self: end;
+    margin: 0;
     position: relative;
     z-index: 1;
     inline-size: 100%;
     min-inline-size: 0;
     text-align: start;
-
-    @media (width >= 48rem) {
-      margin-block: 15em 0;
-      margin-inline: 0;
-    }
   }
 
   /* The supplied ASCII mark: a static glyph with a single yellow glint
-     crossing it. It sits centred behind the name, oversized enough to spill
-     past both ends of the type. */
+     crossing it. It anchors the stage's top-right corner, oversized enough to
+     spill past the stage's end edge while the name runs over its lower left. */
   .hero-glyph {
-    position: absolute;
-    inset-block-start: 60%;
-    inset-inline-start: 70%;
+    position: relative;
+    grid-area: 1 / 1;
+    align-self: start;
+    justify-self: start;
     z-index: 0;
     inline-size: max-content;
-    margin: 0;
+    margin-block: 0;
+    margin-inline: 70% 0;
     color: var(--accent);
     opacity: 0.6;
     pointer-events: none;
-    transform: translate(-50%, -50%);
+    translate: -50% 0;
   }
 
   .hero-ascii {

@@ -2,10 +2,12 @@
  * Brand glyphs used by the technology tags on the project fiches.
  *
  * The SVG paths are vendored from Simple Icons 16.37.0 (CC0 1.0); the C#,
- * DynamoDB and Azure Functions marks were dropped from later releases and
- * come from 12.0.0. The static export makes no third-party image requests.
- * The names and logos remain trademarks of their respective owners; they
- * identify the stacks each project actually uses.
+ * PowerShell, DynamoDB and Azure Functions marks were dropped from later
+ * releases and come from 12.0.0. The NativeAOT, Direct2D, DirectComposition
+ * and LRCLIB marks have no Simple Icons entry and come from Fluent UI System
+ * Icons (MIT, Copyright (c) Microsoft Corporation). The static export makes no
+ * third-party image requests. The names and logos remain trademarks of their
+ * respective owners; they identify the stacks each project actually uses.
  *
  * @module
  */
@@ -255,6 +257,42 @@ const ICONS = {
     path:
       "M1.194 7.543v8.913c0 1.103.588 2.122 1.544 2.674l7.718 4.456a3.086 3.086 0 0 0 3.088 0l7.718-4.456a3.087 3.087 0 0 0 1.544-2.674V7.543a3.084 3.084 0 0 0-1.544-2.673L13.544.414a3.086 3.086 0 0 0-3.088 0L2.738 4.87a3.085 3.085 0 0 0-1.544 2.673Zm5.403 2.914v3.087a.77.77 0 0 0 .772.772.773.773 0 0 0 .772-.772.773.773 0 0 1 1.317-.546.775.775 0 0 1 .226.546 2.314 2.314 0 1 1-4.631 0v-3.087c0-.615.244-1.203.679-1.637a2.312 2.312 0 0 1 3.274 0c.434.434.678 1.023.678 1.637a.769.769 0 0 1-.226.545.767.767 0 0 1-1.091 0 .77.77 0 0 1-.226-.545.77.77 0 0 0-.772-.772.771.771 0 0 0-.772.772Zm12.35 3.087a.77.77 0 0 1-.772.772h-.772v.772a.773.773 0 0 1-1.544 0v-.772h-1.544v.772a.773.773 0 0 1-1.317.546.775.775 0 0 1-.226-.546v-.772H12a.771.771 0 1 1 0-1.544h.772v-1.543H12a.77.77 0 1 1 0-1.544h.772v-.772a.773.773 0 0 1 1.317-.546.775.775 0 0 1 .226.546v.772h1.544v-.772a.773.773 0 0 1 1.544 0v.772h.772a.772.772 0 0 1 0 1.544h-.772v1.543h.772a.776.776 0 0 1 .772.772Zm-3.088-2.315h-1.544v1.543h1.544v-1.543Z",
   },
+  dotnet: {
+    name: ".NET",
+    color: "#9B7BEB",
+    path:
+      "M24 8.77h-2.468v7.565h-1.425V8.77h-2.462V7.53H24zm-6.852 7.565h-4.821V7.53h4.63v1.24h-3.205v2.494h2.953v1.234h-2.953v2.604h3.396zm-6.708 0H8.882L4.78 9.863a2.896 2.896 0 0 1-.258-.51h-.036c.032.189.048.592.048 1.21v5.772H3.157V7.53h1.659l3.965 6.32c.167.261.275.442.323.54h.024c-.04-.233-.06-.629-.06-1.185V7.529h1.372zm-8.703-.693a.868.829 0 0 1-.869.829.868.829 0 0 1-.868-.83.868.829 0 0 1 .868-.828.868.829 0 0 1 .869.829Z",
+  },
+  powershell: {
+    name: "PowerShell",
+    color: "#5391FE",
+    path:
+      "M23.181 2.974c.568 0 .923.463.792 1.035l-3.659 15.982c-.13.572-.697 1.035-1.265 1.035H.819c-.568 0-.923-.463-.792-1.035L3.686 4.009c.13-.572.697-1.035 1.265-1.035zm-8.375 9.346c.251-.394.227-.905-.09-1.243L9.122 5.125c-.38-.404-1.037-.407-1.466-.003-.429.402-.468 1.056-.088 1.46l4.662 4.96v.11l-7.42 5.374c-.45.327-.533.977-.187 1.453.346.476.991.597 1.44.27l8.229-5.91c.28-.196.438-.365.514-.52zm-2.796 4.399a.928.928 0 00-.934.923c0 .51.418.923.934.923h4.433a.928.928 0 00.934-.923.928.928 0 00-.934-.923z",
+  },
+  nativeaot: {
+    name: "NativeAOT",
+    color: "#B18CFF",
+    path:
+      "M7.43 2.83C7.6 2.33 8.07 2 8.6 2h6.46c.85 0 1.45.84 1.18 1.65L14.8 8h3.96c1.1 0 1.67 1.33.9 2.12L8.59 21.54c-1.06 1.08-2.88.1-2.55-1.38l1.27-5.66-1.56-.01c-1.21 0-2.05-1.2-1.65-2.34z",
+  },
+  direct2d: {
+    name: "Direct2D",
+    color: "#5CC8FF",
+    path:
+      "M5.25 2A3.25 3.25 0 0 0 2 5.25v8c0 1.8 1.46 3.25 3.25 3.25H7.5v2.25c0 1.8 1.46 3.25 3.25 3.25h8c1.8 0 3.25-1.46 3.25-3.25v-8c0-1.8-1.46-3.25-3.25-3.25H16.5V5.25c0-1.8-1.46-3.25-3.25-3.25z",
+  },
+  directcomposition: {
+    name: "DirectComposition",
+    color: "#35C3C1",
+    path:
+      "m13.39 3.42 6.36 4.25a1 1 0 0 1 0 1.66l-6.36 4.25a2.5 2.5 0 0 1-2.78 0L4.25 9.33a1 1 0 0 1 0-1.66l6.36-4.25a2.5 2.5 0 0 1 2.78 0m6.64 8.77a2 2 0 0 1-.58.6l-6.05 4.08a2.5 2.5 0 0 1-2.8 0L4.55 12.8a2 2 0 0 1-.78-2.29l6.84 4.56c.79.52 1.8.56 2.62.1l.16-.1 6.84-4.56a2 2 0 0 1-.2 1.7m0 3.25a2 2 0 0 1-.58.6l-6.05 4.08a2.5 2.5 0 0 1-2.8 0l-6.05-4.08a2 2 0 0 1-.78-2.29l6.84 4.56c.79.52 1.8.56 2.62.1l.16-.1 6.84-4.56a2 2 0 0 1-.2 1.7",
+  },
+  lrclib: {
+    name: "LRCLIB",
+    color: "#F4C95D",
+    path:
+      "M20 2.75a.75.75 0 0 0-.97-.72l-10 3a.75.75 0 0 0-.53.72v9.88a3.5 3.5 0 1 0 1.5 2.62v-7.94l8.5-2.55v5.87a3.5 3.5 0 1 0 1.5 2.62z",
+  },
   rust: {
     name: "Rust",
     color: "#DEA584",
@@ -388,6 +426,13 @@ const TAG_ICONS: Record<string, keyof typeof ICONS> = {
   "Bash": "bash",
   "ReScript": "rescript",
   "C#": "csharp",
+  ".NET 10": "dotnet",
+  "PowerShell": "powershell",
+  "NativeAOT": "nativeaot",
+  "Win32": "windows",
+  "Direct2D": "direct2d",
+  "DirectComposition": "directcomposition",
+  "LRCLIB": "lrclib",
   "Rust": "rust",
   "CSS": "css",
   "WordPress": "wordpress",
