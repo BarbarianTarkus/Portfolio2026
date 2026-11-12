@@ -101,6 +101,11 @@ export function HomePage(
       <ExperienceBoard
         jobs={experience.jobs}
         basePath={basePath}
+        experienceHref={localizedHref(
+          basePath,
+          lang,
+          page.experienceSection.linkRoute,
+        )}
       />
 
       <SectionHead

@@ -206,8 +206,9 @@ export interface JobEntry {
   role: string;
   company: string;
   /**
-   * URL segment of the company, used by `/experience/<company>/<project>/`.
-   * Only jobs with linked projects need one.
+   * URL segment of the company. It anchors the job inside `/experience`
+   * (`#<slug>`), prefixes its work project articles
+   * (`/experience/<slug>/<project>/`) and lets the home board jump to the row.
    */
   slug?: string;
   /** Official site of the company; the brand mark links here. */

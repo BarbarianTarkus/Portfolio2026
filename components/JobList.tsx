@@ -56,7 +56,11 @@ export function JobList(
   return (
     <ol class="job-list">
       {jobs.map((job, index) => (
-        <li class="job" key={job.company + "-" + job.period}>
+        <li
+          class="job"
+          id={job.slug}
+          key={job.company + "-" + job.period}
+        >
           <div class="job-aside">
             <p class="job-period">
               {field(job.period, "jobs." + index + ".period")}

@@ -137,6 +137,7 @@ jobs:
             href: https://tresipunt.com/es/integracion-moodle-wordpress-smatx/
   - role: PHP backend developer
     company: 4DMOVIN Business / Namastech
+    slug: 4dmovin
     url: https://4dmovin.com/
     logo: /companies/4dmovin.webp
     logoWide: true
@@ -161,6 +162,7 @@ jobs:
         **Social media management and automation dashboard** (posts and feeds).
   - role: IT support (intern)
     company: EPSEVG — Universitat Politècnica de Catalunya
+    slug: upc
     url: https://www.upc.edu/es
     logo: /companies/upc.svg
     summary: >-

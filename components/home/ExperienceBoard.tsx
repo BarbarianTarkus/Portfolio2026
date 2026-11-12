@@ -1,18 +1,27 @@
 import type { JobEntry } from "../../lib/content.ts";
 import { Markdown } from "../../lib/markdown.tsx";
+import { plainText } from "../../lib/plain-text.ts";
 import { TechStack } from "../TechTags.tsx";
 
 interface ExperienceBoardProps {
   jobs: JobEntry[];
   basePath: string;
+  /** Language-aware /experience URL; each column appends its job anchor. */
+  experienceHref: string;
 }
 
 /**
  * Compact three-column work board for the home page: period, role, one
  * representative bullet and the job's first four technologies. The full
  * timeline with every bullet and linked work project stays on /experience.
+ *
+ * Every column jumps to its own row on /experience: the role heading is the
+ * real anchor and a stretched overlay makes the whole column clickable, while
+ * the brand mark keeps its own external link on top.
  */
-export function ExperienceBoard({ jobs, basePath }: ExperienceBoardProps) {
+export function ExperienceBoard(
+  { jobs, basePath, experienceHref }: ExperienceBoardProps,
+) {
   return (
     <ol class="experience-board">
       {jobs.map((job) => {
@@ -23,6 +32,9 @@ export function ExperienceBoard({ jobs, basePath }: ExperienceBoardProps) {
         const brandClass = wide
           ? "experience-brand is-wide"
           : "experience-brand";
+        const href = job.slug === undefined
+          ? undefined
+          : experienceHref + "#" + job.slug;
         const logo = job.logo === undefined ? undefined : (
           <img
             src={basePath + job.logo}
@@ -57,7 +69,20 @@ export function ExperienceBoard({ jobs, basePath }: ExperienceBoardProps) {
             </div>
 
             <h3 class="experience-role">
-              <Markdown text={job.role} basePath={basePath} links={false} />
+              {href === undefined
+                ? <Markdown text={job.role} basePath={basePath} links={false} />
+                : (
+                  <a class="experience-link" href={href}>
+                    <Markdown
+                      text={job.role}
+                      basePath={basePath}
+                      links={false}
+                    />
+                    <span class="sr-only">
+                      {" — " + plainText(job.company)}
+                    </span>
+                  </a>
+                )}
             </h3>
             <p class="experience-company">
               <Markdown text={job.company} basePath={basePath} links={false} />
