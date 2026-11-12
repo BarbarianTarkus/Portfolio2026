@@ -206,10 +206,13 @@ The numeric prefix controls order and is stripped from the route:
   focus blocks, stack chips, project note.
 - `content/02.about/default.md` — About page (`/about`).
 - `content/03.contact/default.md` — Contact page (`/contact`).
-- `content/04.experience/default.md` — Experience page (`/experience`),
-  including each job's optional `projects`: products built there that get their
-  own article at `/experience/<company>/<project>/` (FRESK, FUNDAE and SMATX
-  under 3iPunt). Those articles reuse the project-page layout but are
+- `content/04.experience/default.md` — Experience page (`/experience`): meta,
+  titles, jobs, education and shared labels. Each job's projects are separate
+  article folders under `content/04.experience/<nn>.<company>/<nn>.<slug>/`
+  (FRESK, FUNDAE and SMATX under `01.3ipunt`), published at
+  `/experience/<company>/<project>/`. The company folder name is the job's URL
+  slug; the article's `slug` sets its URL and the folder prefix its position.
+  Those articles reuse the project-page layout, gallery included, but are
   deliberately not `/projects` entries: `/projects` holds coursework and
   personal builds.
 - `content/05.projects/` — Projects section. `default.md` holds the `/projects`

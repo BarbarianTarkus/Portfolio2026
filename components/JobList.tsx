@@ -139,7 +139,6 @@ export function JobList(
                   company={job.slug}
                   basePath={assetPrefix}
                   sourcePath={edit?.sourcePath}
-                  jobIndex={index}
                   editing={edit?.editing}
                 />
               </>

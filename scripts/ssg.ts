@@ -144,44 +144,57 @@ async function projectSlugs(language: Language): Promise<string[]> {
 }
 
 /**
- * `<company>/<project>` pairs of the job projects, read from the language
- * variant of the experience page — the same file the route loads at request
- * time. Projects may rename a slug per language, so the list is per language.
+ * `<company>/<project>` pairs of the job projects, discovered from the nested
+ * article folders (`content/04.experience/<nn>.<company>/<nn>.<slug>/`). The
+ * company folder name carries the job slug, the project frontmatter `slug` the
+ * article URL; the numeric prefixes carry the display order. Language variants
+ * fall back to the default file when an article has not been translated.
  */
 async function workProjectPaths(language: Language): Promise<string[]> {
   const variants = language === DEFAULT_LANGUAGE
     ? ["default.md"]
     : [`default.${language}.md`, "default.md"];
+  const root = join(CONTENT_DIR, "04.experience");
+  const byOrder = (a: Deno.DirEntry, b: Deno.DirEntry) =>
+    Number.parseInt(a.name, 10) - Number.parseInt(b.name, 10) ||
+    a.name.localeCompare(b.name);
+  const jobFolders = [...Deno.readDirSync(root)]
+    .filter((entry) => entry.isDirectory && /^\d+\./.test(entry.name))
+    .sort(byOrder);
 
-  for (const variant of variants) {
-    let source: string;
-    try {
-      source = await Deno.readTextFile(
-        join(CONTENT_DIR, "04.experience", variant),
-      );
-    } catch (error) {
-      if (error instanceof Deno.errors.NotFound) continue;
-      throw error;
+  const pairs: string[] = [];
+  for (const jobFolder of jobFolders) {
+    const company = jobFolder.name.replace(/^\d+\./, "");
+    const jobDir = join(root, jobFolder.name);
+    const projectFolders = [...Deno.readDirSync(jobDir)]
+      .filter((entry) => entry.isDirectory && /^\d+\./.test(entry.name))
+      .sort(byOrder);
+
+    for (const projectFolder of projectFolders) {
+      for (const variant of variants) {
+        let source: string;
+        try {
+          source = await Deno.readTextFile(
+            join(jobDir, projectFolder.name, variant),
+          );
+        } catch (error) {
+          if (error instanceof Deno.errors.NotFound) continue;
+          throw error;
+        }
+
+        const { data } = matter(source);
+        const slug = (data as { slug?: unknown }).slug;
+        pairs.push(
+          company + "/" +
+            (typeof slug === "string" && slug !== ""
+              ? slug
+              : projectFolder.name.replace(/^\d+\./, "")),
+        );
+        break;
+      }
     }
-
-    const { data } = matter(source);
-    const jobs = (data as {
-      jobs?: {
-        slug?: unknown;
-        projects?: { slug?: unknown }[];
-      }[];
-    }).jobs ?? [];
-
-    return jobs.flatMap((job) => {
-      if (typeof job.slug !== "string") return [];
-      return (job.projects ?? [])
-        .map((project) => project.slug)
-        .filter((slug): slug is string => typeof slug === "string")
-        .map((slug) => `${job.slug}/${slug}`);
-    });
   }
-
-  return [];
+  return pairs;
 }
 
 /**

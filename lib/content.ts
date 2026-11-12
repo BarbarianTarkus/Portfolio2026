@@ -219,6 +219,59 @@ async function projectEntries(
   }));
 }
 
+/**
+ * Work project articles are nested page folders under the experience section
+ * (`content/04.experience/<nn>.<company>/<nn>.<slug>/`), so each job's project
+ * list is discovered from the page index instead of a frontmatter array. The
+ * company segment of the route is the job slug that owns the article; the
+ * project's frontmatter `slug` stays the source of truth for its URL. Adding a
+ * folder is all it takes to publish a work project.
+ */
+async function workProjectEntries(
+  ctx: Context<State>,
+  indexSourcePath: string,
+): Promise<Map<string, WorkProject[]>> {
+  const folder = indexSourcePath.split("/")[0];
+  const prefix = folder + "/";
+  const seen = new Map<string, PageRef>();
+  for (const ref of pageIndex(ctx)) {
+    if (ref.language !== DEFAULT_LANGUAGE) continue;
+    if (ref.parentPath === null || !ref.parentPath.startsWith(prefix)) continue;
+    const segments = canonicalRoute(ref.route).split("/").filter(Boolean);
+    // /experience/<company>/<project>/ — exactly one nesting level.
+    if (segments.length !== 3 || segments[0] !== "experience") continue;
+    if (!seen.has(ref.route)) seen.set(ref.route, ref);
+  }
+
+  const byCompany = new Map<string, PageRef[]>();
+  for (const ref of seen.values()) {
+    const company = canonicalRoute(ref.route).split("/").filter(Boolean)[1];
+    const refs = byCompany.get(company) ?? [];
+    refs.push(ref);
+    byCompany.set(company, refs);
+  }
+
+  const projectsByCompany = new Map<string, WorkProject[]>();
+  for (const [company, refs] of byCompany) {
+    refs.sort((a, b) =>
+      (a.order > 0 ? a.order : LAST_ORDER) -
+        (b.order > 0 ? b.order : LAST_ORDER) ||
+      a.route.localeCompare(b.route)
+    );
+    const projects = await Promise.all(refs.map(async (ref) => {
+      const page = await loadPage<WorkProject>(ctx, ref.route);
+      return {
+        ...page.frontmatter,
+        slug: page.frontmatter.slug || routeSlug(ref.route),
+        sourcePath: page.sourcePath,
+      };
+    }));
+    projectsByCompany.set(company, projects);
+  }
+
+  return projectsByCompany;
+}
+
 /** Load one page document plus the site globals it renders inside. */
 export async function loadHomePage(ctx: Context<State>) {
   const site = await loadSite(ctx);
@@ -260,7 +313,18 @@ export async function loadExperiencePage(ctx: Context<State>) {
     loadSite(ctx),
     loadPage<ExperienceContent>(ctx, "/experience"),
   ]);
-  return { site, page: page.frontmatter, sourcePath: page.sourcePath };
+  const projectsByCompany = await workProjectEntries(ctx, page.sourcePath);
+  const jobs = page.frontmatter.jobs.map((job) => {
+    const projects = job.slug === undefined
+      ? undefined
+      : projectsByCompany.get(job.slug);
+    return projects === undefined ? job : { ...job, projects };
+  });
+  return {
+    site,
+    page: { ...page.frontmatter, jobs },
+    sourcePath: page.sourcePath,
+  };
 }
 
 export async function loadProjectsPage(ctx: Context<State>) {
@@ -287,23 +351,25 @@ export async function loadWorkProjectPage(
   company: string,
   slug: string,
 ) {
-  const { site, page, sourcePath } = await loadExperiencePage(ctx);
+  const { site, page, sourcePath: jobSourcePath } = await loadExperiencePage(
+    ctx,
+  );
   const jobIndex = page.jobs.findIndex((job) => job.slug === company);
   if (jobIndex === -1) return null;
 
   const job = page.jobs[jobIndex];
   const projects = job.projects ?? [];
-  const projectIndex = projects.findIndex((project) => project.slug === slug);
-  if (projectIndex === -1) return null;
+  const project = projects.find((entry) => entry.slug === slug);
+  if (project === undefined) return null;
 
   return {
     site,
     page,
     job,
     jobIndex,
-    project: projects[projectIndex],
-    projectIndex,
-    sourcePath,
+    project,
+    sourcePath: project.sourcePath ?? jobSourcePath,
+    jobSourcePath,
   };
 }
 

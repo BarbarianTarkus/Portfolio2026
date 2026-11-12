@@ -38,8 +38,8 @@ export const handler = define.handlers({
         job={loaded.job}
         project={loaded.project}
         jobIndex={loaded.jobIndex}
-        projectIndex={loaded.projectIndex}
         sourcePath={loaded.sourcePath}
+        jobSourcePath={loaded.jobSourcePath}
         basePath={ctx.config.basePath}
         inlineEditing={ctx.state.inlineEditing === true}
       />,
@@ -53,8 +53,8 @@ interface WorkProjectPageProps {
   job: JobEntry;
   project: WorkProject;
   jobIndex: number;
-  projectIndex: number;
   sourcePath: string;
+  jobSourcePath: string;
   basePath: string;
   inlineEditing: boolean;
 }
@@ -66,8 +66,8 @@ export function WorkProjectPage(
     job,
     project,
     jobIndex,
-    projectIndex,
     sourcePath,
+    jobSourcePath,
     basePath,
     inlineEditing,
   }: WorkProjectPageProps,
@@ -86,10 +86,10 @@ export function WorkProjectPage(
         project={project}
         job={job}
         jobIndex={jobIndex}
-        projectIndex={projectIndex}
         labels={page.workProjectLabels}
         basePath={basePath}
         sourcePath={sourcePath}
+        jobSourcePath={jobSourcePath}
         inlineEditing={inlineEditing}
       />
     </>

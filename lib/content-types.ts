@@ -183,6 +183,12 @@ export interface ContactContent {
 export interface WorkProject {
   /** URL segment of the article; unique within the company. */
   slug: string;
+  /**
+   * File the article was loaded from
+   * (`content/04.experience/<nn>.<company>/<nn>.<slug>/default*.md`). Injected by
+   * lib/content.ts from Dune's page index, never authored in frontmatter.
+   */
+  sourcePath?: string;
   name: string;
   /** One-sentence pitch: the article lede. */
   summary: string;
@@ -199,6 +205,11 @@ export interface WorkProject {
   tags: string[];
   /** Public page of the product: the article's call to action. */
   links?: ProjectLink[];
+  /**
+   * Screenshot packs in source order. Work projects use the same gallery
+   * vocabulary as `/projects` articles; the first image is the article hero.
+   */
+  gallery?: ProjectGalleryGroup[];
 }
 
 /** One job entry of the experience timeline. */
@@ -264,6 +275,10 @@ export interface WorkProjectLabels {
   participation: string;
   /** Call to action of the article: opens the product's public page. */
   visit: string;
+  /** Heading over the article's capture gallery. */
+  galleryTitle: string;
+  /** Accessible name of the Web/Mobile gallery selector. */
+  galleryViewLabel: string;
   /** Back link at the top and bottom of the article. */
   back: string;
 }

@@ -7,16 +7,19 @@ import { localizedHref, useLanguage } from "../../lib/i18n.tsx";
 import { ProseField } from "../../lib/markdown.tsx";
 import { FicheBlock } from "../FicheBlock.tsx";
 import { TechStack } from "../TechTags.tsx";
+import { ProjectGallery } from "../projects/ProjectGallery.tsx";
 
 interface WorkProjectArticleProps {
   project: WorkProject;
   /** Job that delivered the project: the kicker and meta come from it. */
   job: JobEntry;
   jobIndex: number;
-  projectIndex: number;
   labels: WorkProjectLabels;
   basePath: string;
+  /** Article file (`.../<nn>.<slug>/default*.md`). */
   sourcePath: string;
+  /** Experience page file, owner of the job's role and period. */
+  jobSourcePath: string;
   inlineEditing: boolean;
 }
 
@@ -35,15 +38,17 @@ export function WorkProjectArticle(
     project,
     job,
     jobIndex,
-    projectIndex,
     labels,
     basePath,
     sourcePath,
+    jobSourcePath,
     inlineEditing,
   }: WorkProjectArticleProps,
 ) {
   const lang = useLanguage();
-  const path = `jobs.${jobIndex}.projects.${projectIndex}`;
+  const packs = (project.gallery ?? []).filter((pack) =>
+    pack.images.length > 0
+  );
   const productLink = project.links?.[0];
   const back = (
     <a
@@ -65,7 +70,7 @@ export function WorkProjectArticle(
       <h1 class="page-title article-title" id={project.slug + "-title"}>
         <ProseField
           text={project.name}
-          path={path + ".name"}
+          path="name"
           sourcePath={sourcePath}
           editing={inlineEditing}
         />
@@ -75,7 +80,7 @@ export function WorkProjectArticle(
           <ProseField
             text={job.role}
             path={`jobs.${jobIndex}.role`}
-            sourcePath={sourcePath}
+            sourcePath={jobSourcePath}
             editing={inlineEditing}
           />
         </span>
@@ -83,7 +88,7 @@ export function WorkProjectArticle(
           <ProseField
             text={job.period}
             path={`jobs.${jobIndex}.period`}
-            sourcePath={sourcePath}
+            sourcePath={jobSourcePath}
             editing={inlineEditing}
           />
         </span>
@@ -93,7 +98,7 @@ export function WorkProjectArticle(
         <ProseField
           text={project.summary}
           basePath={basePath}
-          path={path + ".summary"}
+          path="summary"
           sourcePath={sourcePath}
           editing={inlineEditing}
         />
@@ -124,7 +129,7 @@ export function WorkProjectArticle(
             <ProseField
               text={project.description}
               basePath={basePath}
-              path={path + ".description"}
+              path="description"
               sourcePath={sourcePath}
               editing={inlineEditing}
             />
@@ -138,7 +143,7 @@ export function WorkProjectArticle(
                 <ProseField
                   text={item}
                   basePath={basePath}
-                  path={path + ".participation." + index}
+                  path={"participation." + index}
                   sourcePath={sourcePath}
                   editing={inlineEditing}
                 />
@@ -147,6 +152,24 @@ export function WorkProjectArticle(
           </ul>
         </FicheBlock>
       </div>
+
+      {packs.length > 0 && (
+        <section
+          class="article-gallery"
+          aria-labelledby="article-gallery-title"
+        >
+          <h2 class="article-section-title" id="article-gallery-title">
+            {labels.galleryTitle}
+          </h2>
+          <ProjectGallery
+            groups={packs}
+            projectSlug={project.slug}
+            projectName={project.name}
+            basePath={basePath}
+            viewLabel={labels.galleryViewLabel}
+          />
+        </section>
+      )}
 
       {back}
     </article>

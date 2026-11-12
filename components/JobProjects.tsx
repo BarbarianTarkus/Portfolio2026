@@ -7,10 +7,8 @@ interface JobProjectsProps {
   /** URL segment of the company that produced them ("3ipunt"). */
   company: string;
   basePath: string;
-  /** Inline-edit wiring; omit for a read-only list. */
+  /** Inline-edit fallback; each project opens its own article file. */
   sourcePath?: string;
-  /** Index of the job, so inline edits address "jobs.<n>.projects.<m>.…". */
-  jobIndex: number;
   editing?: boolean;
 }
 
@@ -26,7 +24,6 @@ export function JobProjects(
     company,
     basePath,
     sourcePath = "",
-    jobIndex,
     editing = false,
   }: JobProjectsProps,
 ) {
@@ -34,7 +31,7 @@ export function JobProjects(
 
   return (
     <ol class="job-projects">
-      {projects.map((project, index) => (
+      {projects.map((project) => (
         <li class="job-project" key={project.slug}>
           <a
             class="job-project-link"
@@ -47,8 +44,8 @@ export function JobProjects(
             <span class="job-project-name">
               <ProseField
                 text={project.name}
-                path={`jobs.${jobIndex}.projects.${index}.name`}
-                sourcePath={sourcePath}
+                path="name"
+                sourcePath={project.sourcePath ?? sourcePath}
                 editing={editing}
               />
             </span>

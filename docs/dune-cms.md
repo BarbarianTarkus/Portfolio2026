@@ -68,15 +68,16 @@ frontmatter holds all structured copy. The Markdown body is empty for every page
 in this site — the routes only read `frontmatter`, which Dune's content API
 returns as typed data.
 
-| Page                               | Route               | Frontmatter holds                                                                                                                         |
-| ---------------------------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| `content/01.home/default.md`       | `/`                 | hero eyebrow and CTAs, section headings and links, focus blocks, stack chips, project note                                                |
-| `content/02.about/default.md`      | `/about`            | meta, title, lede, biography paragraphs, stack section, closing links                                                                     |
-| `content/03.contact/default.md`    | `/contact`          | meta, title, lede, row labels and hints                                                                                                   |
-| `content/04.experience/default.md` | `/experience`       | meta, title, lede, jobs (role/company/period/place/stack/bullets and the optional `slug` + `projects` articles), education, closing prose |
-| `content/05.projects/default.md`   | `/projects`         | meta, title, lede, homelab hero, kind labels, fiche labels and shared project labels                                                      |
-| `content/05.projects/<nn>.<slug>/` | `/projects/<slug>/` | one project article per folder: name, kind, summary, links, gallery, problem and decisions                                                |
-| `content/06.site/default.md`       | `/site` (internal)  | identity, navigation, evidence strip, homelab stack, social links, footer labels, 404 copy and UI strings                                 |
+| Page                                                | Route                             | Frontmatter holds                                                                                                                        |
+| --------------------------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `content/01.home/default.md`                        | `/`                               | hero eyebrow and CTAs, section headings and links, focus blocks, stack chips, project note                                               |
+| `content/02.about/default.md`                       | `/about`                          | meta, title, lede, biography paragraphs, stack section, closing links                                                                    |
+| `content/03.contact/default.md`                     | `/contact`                        | meta, title, lede, row labels and hints                                                                                                  |
+| `content/04.experience/default.md`                  | `/experience`                     | meta, title, lede, jobs (role/company/period/place/stack/bullets and the optional `slug`), work project labels, education, closing prose |
+| `content/04.experience/<nn>.<company>/<nn>.<slug>/` | `/experience/<company>/<project>` | one work project article per folder: name, summary, description, participation, tags, links and gallery                                  |
+| `content/05.projects/default.md`                    | `/projects`                       | meta, title, lede, homelab hero, kind labels, fiche labels and shared project labels                                                     |
+| `content/05.projects/<nn>.<slug>/`                  | `/projects/<slug>/`               | one project article per folder: name, kind, summary, links, gallery, problem and decisions                                               |
+| `content/06.site/default.md`                        | `/site` (internal)                | identity, navigation, evidence strip, homelab stack, social links, footer labels, 404 copy and UI strings                                |
 
 Notes on editing the files by hand:
 
@@ -89,10 +90,13 @@ Notes on editing the files by hand:
   `template`); Dune injects them with defaults. Page-specific fields such as
   `kind`, `work`, `broke` and `next` are described by
   [`lib/content-types.ts`](../lib/content-types.ts).
-- A job's projects live in that job's frontmatter, and their slugs are URL
-  segments: `/experience/<job slug>/<project slug>/`. `deno task ssg` reads them
-  from the page to emit one static page each, so renaming a slug moves the
-  article — update any link to it in the same commit.
+- A job's projects are their own article folders, nested one level under the
+  experience section:
+  `content/04.experience/<nn>.<company>/<nn>.<slug>/default.md`. The company
+  folder name is the job's URL slug, the article's `slug` sets the project URL
+  and the numeric prefixes set the job and project order; `lib/content.ts`
+  discovers the folders and `deno task ssg` emits one static page each. Renaming
+  a slug moves the article — update any link to it in the same commit.
 - Each project is its own page folder,
   `content/05.projects/<nn>.<slug>/default.md`. The numeric prefix sets the card
   order and the file's `slug` sets the URL; `lib/content.ts` discovers the
