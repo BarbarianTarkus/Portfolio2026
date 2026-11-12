@@ -54,7 +54,7 @@
 
   .experience-top {
     display: block flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
     gap: 1rem;

@@ -17,7 +17,7 @@ projectsSection:
   title: Proyectos
   linkLabel: Los 8 proyectos
   linkRoute: /projects
-  note: "Repositorios públicos: **trabajo para cliente, proyectos de la carrera y herramientas propias**. Aquí, una selección; los ocho están en Proyectos."
+  note: "Repositorios públicos: **Proyectos de la carrera y herramientas propias**. Aquí, una selección; los ocho están en Proyectos."
 focus:
   - title: Infraestructura y seguridad
     body: >-

@@ -5,10 +5,10 @@ shortTitle: R
 title: Ricardo Verduguez — Desarrollador full-stack
 description: "Desarrollador full-stack con base en sistemas: aplicaciones web en producción e infraestructura propia con NAS, VPN, Gitea y SonarQube."
 role: Desarrollador full-stack con base en sistemas
-intro: "Soy graduado en Ingeniería Informática, cuento con 3 años de experiencia trabajando en el sector de la consultoria como desarrollador Full Stack, desde el backend en un ERP hasta plugins para Moodle y WordPress. Paso mis ratos libres configurando mi homelab y trasteando con nuevas tecnologías."
+intro: "Graduado en Ingeniería Informática, compaginando con mis estudios he estado trabajando en el sector de la consultoría como desarrollador Full Stack, desde el backend en un ERP hasta plugins para Moodle y WordPress. También he trabajado en el departamento como becario en Soporte en TI en la UPC. Paso mis ratos libres configurando mi homelab y trasteando con nuevas tecnologías."
 evidence:
-  - value: 2 años y 8 meses
-    label: en producción
+  - value: ~ 3 años
+    label: Experiencia como desarrollador
   - value: Ingeniería Informática
     label: UPC · 2026
   - value: Barcelona

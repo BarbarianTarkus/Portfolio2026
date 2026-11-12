@@ -37,8 +37,7 @@ jobs:
       - Jira
     bullets:
       - >-
-        **Full-stack development** of web applications in production with PHP,
-        JavaScript, Moodle and jQuery.
+        **Full-stack development** of plugins in Moodle/WordPress.
       - '**Version control** and branch-based work in Git and Bitbucket.'
       - '**Issue tracking, tasks and planning** in Jira.'
       - >-

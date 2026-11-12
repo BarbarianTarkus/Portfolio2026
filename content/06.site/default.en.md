@@ -5,7 +5,7 @@ shortTitle: R
 title: Ricardo Verduguez — Full-stack developer
 description: "Full-stack developer with a systems grounding: web applications in production and infrastructure of my own with NAS, VPN, Gitea and SonarQube."
 role: Full-stack developer with a systems grounding
-intro: "I am a Computer Engineering graduate with 3 years of experience working in the consulting sector as a Full Stack developer, from backend in an ERP to plugins for Moodle and WordPress. I spend my free time configuring my homelab and tinkering with new technologies."
+intro: "A Computer Engineering graduate, alongside my studies I have been working in the consulting sector as a Full Stack developer, from backend in an ERP to plugins for Moodle and WordPress. I have also worked in the department as an intern in IT Support at UPC. I spend my free time configuring my homelab and tinkering with new technologies."
 evidence:
   - value: 2 years and 8 months
     label: in production
