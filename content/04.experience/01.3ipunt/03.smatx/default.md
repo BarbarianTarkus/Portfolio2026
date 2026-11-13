@@ -18,8 +18,8 @@ participation:
     **Desarrollo del plugin en los dos extremos** de la integración: el
     lado de Moodle y el de WordPress.
   - >-
-    **Trabajo con las bases de datos de ambos sistemas** para llevar los
-    datos de un lado al otro.
+    **Conexión de los datos de ambos sistemas** para que la compra y el
+    curso estén sincronizados.
   - >-
     **Matriculación y sincronización** de cursos tras la compra.
 tags:

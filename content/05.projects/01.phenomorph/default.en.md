@@ -4,9 +4,8 @@ name: Phenomorph
 kind: propio
 year: '2026'
 summary: >-
-  **Unofficial Phenomena Experience program**: showtimes, available seats, cycles and purchase
-  links in a single SSR app built with Deno and Fresh. The repository is still private; the app
-  is live.
+  **Unofficial Phenomena Experience guide**: showtimes, available seats, cycles and purchase
+  links in a single app. The app is live.
 tags:
   - Deno
   - Fresh 2
@@ -16,7 +15,6 @@ tags:
   - Python
   - DeepSeek Harness
 period: 27 October — 1 November 2026
-work: 45 commits
 links:
   - label: Phenomorph repository
     href: 'https://github.com/BarbarianTarkus/phenomorph'
@@ -26,24 +24,23 @@ links:
     kind: demo
     icon: /projects/phenomorph/favicon.png
 problem: >-
-  The cinema showtimes live scattered across the website, ticket sales and the calendar:
-  knowing what you can see today, how many seats are left and when a screening fits means
-  jumping between tabs. I wanted to **solve it on a single screen**, without relying on an API
-  the cinema does not offer.
+  Cinema showtimes live scattered across the website, ticket sales and the calendar. To know what
+  you can see today, how many seats are left and when a screening fits, you have to jump between
+  tabs. I wanted to **bring it all onto one screen**, without relying on an API the cinema does
+  not offer.
 decisions:
   - >-
-    **Fresh 2 with SSR** and small islands (about 25 KB of JS/CSS) instead of a SPA: the first
-    screen already ships the showtimes and only the search and the filters hydrate.
+    **One screen for the whole programme**: the app loads the data on the server, so the first
+    view is ready and only search and filters run in the browser.
   - >-
-    **A Python scraper** using only the standard library generates the JSON and a SQLite
-    database that the app reads with node:sqlite; the dataset is rebuilt on every machine and
-    never versioned, so it does not go stale in the repository.
+    **Up-to-date data without manual work**: a small script collects the cinema's showtimes and
+    turns them into a database ready to query.
   - >-
-    **Seat and format data** is normalized in the scraper (35 mm, 70 mm, 4K, Dolby Atmos...),
-    so the filters and the detail pages do not work from a free-text note.
+    **Filters that understand the data**: seats and formats (35 mm, 70 mm, 4K, Dolby Atmos…) are
+    organised when collected, so you can search and compare without free text.
   - >-
-    **A design of my own for the venue**: warm palette, self-hosted typefaces and a 35 mm film
-    strip for the cycles, instead of a generic showtimes template.
+    **A design of its own for the venue**: warm colours, custom typefaces and a 35 mm film strip
+    for the cycles, instead of a generic template.
 gallery:
   - view: web
     label: Web

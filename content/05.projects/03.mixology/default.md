@@ -1,11 +1,11 @@
 ---
 slug: mixology
 name: Mixology-Luismi
-kind: cliente
+kind: encargo
 year: '2026'
 summary: >-
-  **Landing page para un servicio de coctelería**: sitio estático con Astro y un CMS headless para
-  que el cliente edite sin tocar código.
+  **Landing page para un servicio de coctelería**: un sitio estático fácil de actualizar, para que
+  el servicio pueda cambiar textos y fotos sin tocar código.
 tags:
   - Astro
   - TinaCMS
@@ -13,7 +13,6 @@ tags:
   - GitHub Actions
   - OpenCode
 period: enero — octubre 2026
-work: 69 commits
 links:
   - label: BarbarianTarkus/Mixology-Luismi
     href: 'https://github.com/BarbarianTarkus/Mixology-Luismi'
@@ -23,20 +22,19 @@ links:
     kind: demo
     icon: /projects/mixology/favicon.png
 problem: >-
-  Un amigo empezaba con un servicio de coctelería y necesitaba **presencia web con presupuesto
-  casi nulo**: dominio barato, hosting gratuito y capacidad de cambiar textos y fotos sin
-  llamarme.
+  Un amigo empezaba con un servicio de coctelería y necesitaba **una web con un presupuesto casi
+  nulo**: dominio barato, alojamiento gratuito y la posibilidad de cambiar textos y fotos sin
+  depender de mí.
 decisions:
   - >-
-    **Astro en modo estático** servido desde Cloudflare: coste de hosting cero y ningún servidor que
-    mantener, que era la condición del encargo.
+    **Un sitio estático en Cloudflare**: sin servidor que mantener y con un coste de alojamiento
+    prácticamente nulo, que era la condición del encargo.
   - >-
-    Comparé Strapi, Decap y TinaCMS; **me quedé con TinaCMS** porque ofrece edición visual real y no
-    obliga a autohospedar nada, algo que el cliente no podría mantener.
+    **Un editor visual para el día a día**: comparé varias opciones y elegí TinaCMS porque permite
+    editar textos y fotos sin tocar código y sin montar infraestructura.
   - >-
-    **Generé la primera versión visual con ayuda de IA** para iterar rápido y después fijé
-    tipografía, colores y espaciado a mano: dejar el sistema en manos del generador producía
-    inconsistencias.
+    **Diseño revisado a mano**: partí de una primera versión generada con IA para avanzar rápido,
+    pero fijé tipografía, colores y espaciado manualmente para que todo fuera coherente.
 gallery:
   - view: web
     label: Web

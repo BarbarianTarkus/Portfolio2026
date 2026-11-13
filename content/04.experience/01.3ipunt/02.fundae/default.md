@@ -14,8 +14,8 @@ description: >-
   declarado con lo que ocurre de verdad en el curso.
 participation:
   - >-
-    **Desarrollo del backend del plugin**: generación de los informes
-    estructurados y de las evidencias que pide FUNDAE.
+    **Desarrollo del conector**: generación de los informes y de las
+    evidencias que pide FUNDAE.
   - >-
     **Tratamiento de los datos del curso** para que lo declarado y lo
     ocurrido en la plataforma coincidan.

@@ -18,8 +18,8 @@ participation:
     **Development of the plugin on both ends** of the integration: the
     Moodle side and the WordPress side.
   - >-
-    **Work with the databases of both systems** to carry data from one
-    side to the other.
+    **Connecting the data from both systems** so the purchase and the
+    course stay in sync.
   - '**Enrolment and course synchronisation** after purchase.'
 tags:
   - Moodle

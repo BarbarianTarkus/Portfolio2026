@@ -7,6 +7,7 @@ import type {
 } from "../lib/content.ts";
 import { loadHomePage } from "../lib/content.ts";
 import { EvidenceStrip } from "../components/home/EvidenceStrip.tsx";
+import { EducationSummary } from "../components/EducationSummary.tsx";
 import { Hero } from "../components/home/Hero.tsx";
 import { StackGrid } from "../components/home/StackGrid.tsx";
 import { WorkIndex } from "../components/home/WorkIndex.tsx";
@@ -24,8 +25,15 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page, experience, projects, sourcePath, siteSourcePath } =
-      await loadHomePage(ctx);
+    const {
+      site,
+      page,
+      experience,
+      projects,
+      sourcePath,
+      siteSourcePath,
+      experienceSourcePath,
+    } = await loadHomePage(ctx);
     return ctx.render(
       <HomePage
         site={site}
@@ -35,6 +43,7 @@ export const handler = define.handlers({
         basePath={ctx.config.basePath}
         sourcePath={sourcePath}
         siteSourcePath={siteSourcePath}
+        experienceSourcePath={experienceSourcePath}
         inlineEditing={ctx.state.inlineEditing === true}
       />,
     );
@@ -49,6 +58,7 @@ interface HomePageProps {
   basePath: string;
   sourcePath: string;
   siteSourcePath: string;
+  experienceSourcePath: string;
   inlineEditing: boolean;
 }
 
@@ -61,6 +71,7 @@ export function HomePage(
     basePath,
     sourcePath,
     siteSourcePath,
+    experienceSourcePath,
     inlineEditing,
   }: HomePageProps,
 ) {
@@ -106,6 +117,33 @@ export function HomePage(
           lang,
           page.experienceSection.linkRoute,
         )}
+      />
+
+      <SectionHead
+        num={page.educationSection.num}
+        title={
+          <ProseField
+            text={page.educationSection.title}
+            path="educationSection.title"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
+        }
+        link={{
+          href: localizedHref(
+            basePath,
+            lang,
+            page.educationSection.linkRoute,
+          ),
+          label: page.educationSection.linkLabel,
+        }}
+      />
+
+      <EducationSummary
+        education={experience.education}
+        basePath={basePath}
+        sourcePath={experienceSourcePath}
+        editing={inlineEditing}
       />
 
       <SectionHead

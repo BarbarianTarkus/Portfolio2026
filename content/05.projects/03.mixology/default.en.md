@@ -1,11 +1,11 @@
 ---
 slug: mixology
 name: Mixology-Luismi
-kind: cliente
+kind: encargo
 year: '2026'
 summary: >-
-  **Landing page for a cocktail service**: a static site built with Astro and a headless CMS so
-  the client can edit without touching code.
+  **Landing page for a cocktail service**: a static site that is easy to update, so the service can
+  change text and photos without touching code.
 tags:
   - Astro
   - TinaCMS
@@ -13,7 +13,6 @@ tags:
   - GitHub Actions
   - OpenCode
 period: January — October 2026
-work: 69 commits
 links:
   - label: BarbarianTarkus/Mixology-Luismi
     href: 'https://github.com/BarbarianTarkus/Mixology-Luismi'
@@ -23,20 +22,18 @@ links:
     kind: demo
     icon: /projects/mixology/favicon.png
 problem: >-
-  A friend was starting a cocktail service and needed **a web presence on an almost zero
-  budget**: a cheap domain, free hosting and the ability to change texts and photos without
-  calling me.
+  A friend was starting a cocktail service and needed **a website on an almost zero budget**: a
+  cheap domain, free hosting and the ability to change text and photos without depending on me.
 decisions:
   - >-
-    **Astro in static mode** served from Cloudflare: zero hosting cost and no server to
-    maintain, which was the condition of the job.
+    **A static site on Cloudflare**: no server to maintain and almost zero hosting cost, which was
+    the condition of the commission.
   - >-
-    I compared Strapi, Decap and TinaCMS; **I went with TinaCMS** because it offers real visual
-    editing and does not force self-hosting anything, which the client could not maintain.
+    **A visual editor for day-to-day changes**: I compared several options and chose TinaCMS
+    because it lets you edit text and photos without touching code or setting up infrastructure.
   - >-
-    **I generated the first visual version with AI help** to iterate quickly and then set
-    typography, colors and spacing by hand: leaving the system to the generator produced
-    inconsistencies.
+    **Design reviewed by hand**: I started from an AI-generated first version to move fast, but
+    set the type, colours and spacing by hand so everything was consistent.
 gallery:
   - view: web
     label: Web

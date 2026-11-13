@@ -2,11 +2,11 @@
 meta:
   title: Proyectos
   description: >-
-    Proyectos de Ricardo Verduguez: trabajo para cliente, proyectos académicos y herramientas
-    propias, con el problema, las decisiones y capturas de cada uno.
+    Proyectos de Ricardo Verduguez: encargos, proyectos académicos y herramientas
+    propias, con el reto, cómo lo resolví y capturas de cada uno.
 title: Proyectos
 lede: >-
-  Proyectos personales y académicos.
+  Proyectos personales, encargos y proyectos académicos.
 homelab:
   eyebrow: Homelab
   title: Más de dos años de infraestructura propia
@@ -22,10 +22,11 @@ kindLabels:
   cliente: Cliente
   académico: Académico
   propio: Propio
+  encargo: Encargo
   tfg: Trabajo de Fin de Grado
 ficheLabels:
-  problem: El problema
-  decisions: Decisiones técnicas
+  problem: El reto
+  decisions: Cómo lo resolví
 detailsLabel: Ver el proyecto completo
 galleryTitle: Capturas
 backLabel: Proyectos

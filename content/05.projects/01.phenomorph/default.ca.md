@@ -4,9 +4,8 @@ name: Phenomorph
 kind: propio
 year: '2026'
 summary: >-
-  **Programa no oficial de Phenomena Experience**: cartellera, butaques lliures, cicles i enllaços de
-  compra en una sola app SSR amb Deno i Fresh. El repositori continua privat; l'app està
-  publicada.
+  **Guia no oficial de Phenomena Experience**: cartellera, butaques lliures, cicles i enllaços de
+  compra en una sola app. L'app està publicada.
 tags:
   - Deno
   - Fresh 2
@@ -16,7 +15,6 @@ tags:
   - Python
   - DeepSeek Harness
 period: 27 octubre — 1 novembre 2026
-work: 45 commits
 links:
   - label: Repositori de Phenomorph
     href: 'https://github.com/BarbarianTarkus/phenomorph'
@@ -26,24 +24,23 @@ links:
     kind: demo
     icon: /projects/phenomorph/favicon.png
 problem: >-
-  La cartellera del cinema viu repartida entre la web, la compra d'entrades i el calendari:
-  saber què es pot veure avui, quantes butaques queden i quan encaixa una sessió obliga a saltar
-  entre pestanyes. Volia **resoldre-ho en una sola pantalla**, sense dependre d'una API que el cinema
+  La cartellera del cinema viu repartida entre la web, la compra d'entrades i el calendari. Per
+  saber què es pot veure avui, quantes butaques queden i quan encaixa una sessió cal saltar entre
+  pestanyes. Volia **reunir-ho tot en una sola pantalla**, sense dependre d'una API que el cinema
   no ofereix.
 decisions:
   - >-
-    **Fresh 2 amb SSR** i illes petites (uns 25 KB de JS/CSS) en lloc d'una SPA: la primera
-    pantalla ja porta la cartellera i només s'hidrata la cerca i els filtres.
+    **Una sola pantalla per a tota la cartellera**: l'app carrega la informació al servidor, així
+    que la primera vista ja està a punt i només la cerca i els filtres s'activen al navegador.
   - >-
-    **Un scraper en Python** de la biblioteca estàndard genera el JSON i una SQLite que l'app llegeix
-    amb node:sqlite; el dataset es reconstrueix a cada màquina i mai es versiona, així que no
-    envelleix al repositori.
+    **Dades actualitzades sense feina manual**: un petit programa recull la cartellera de la web
+    del cinema i la converteix en una base de dades a punt per consultar.
   - >-
-    **Les dades de butaques i formats** es normalitzen al scraper (35 mm, 70 mm, 4K, Dolby
-    Atmos...), perquè els filtres i les fitxes no treballin amb una nota de text lliure.
+    **Filtres que entenen la informació**: les butaques i els formats (35 mm, 70 mm, 4K, Dolby
+    Atmos…) s'ordenen en recollir-los, per poder buscar i comparar sense text lliure.
   - >-
-    **Disseny propi de la sala**: paleta càlida, tipografies autoallotjades i una tira de 35 mm per
-    als cicles, en lloc d'una plantilla de cartellera genèrica.
+    **Un disseny propi de la sala**: colors càlids, tipografies pròpies i una tira de 35 mm per als
+    cicles, en lloc d'una plantilla genèrica.
 gallery:
   - view: web
     label: Web

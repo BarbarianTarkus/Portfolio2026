@@ -14,14 +14,14 @@ description: >-
   and Workplace versions.
 participation:
   - >-
-    **Development of the suite's theme**, mainly on the front end:
-    layout and styling of the platform's visual elements.
+    **Development of the suite's theme**, mainly on the visual side:
+    layout and styling of the platform's elements.
   - >-
-    **Rewrite of the theme layout**, moving from positioning with
-    `calc()` to flex, grid and `grid-columns`, far easier to maintain.
+    **Reorganisation of the theme structure** so it was easier to
+    maintain and adapt to changes.
   - >-
-    **Adaptation to new Moodle versions**, reviewing what core changes
-    broke in the theme.
+    **Adaptation to new Moodle versions**, reviewing which platform changes
+    affected the theme.
 tags:
   - Moodle
   - PHP

@@ -41,6 +41,7 @@ import type {
 export type {
   AboutContent,
   ContactContent,
+  EducationEntry,
   EvidenceItem,
   ExperienceContent,
   HomeContent,
@@ -289,15 +290,23 @@ export async function loadHomePage(ctx: Context<State>) {
     projects: { ...projects.frontmatter, projects: entries },
     sourcePath: page.sourcePath,
     siteSourcePath: ctx.state.siteSourcePath ?? "",
+    experienceSourcePath: experience.sourcePath,
   };
 }
 
 export async function loadAboutPage(ctx: Context<State>) {
-  const [site, page] = await Promise.all([
+  const [site, page, experience] = await Promise.all([
     loadSite(ctx),
     loadPage<AboutContent>(ctx, "/about"),
+    loadPage<ExperienceContent>(ctx, "/experience"),
   ]);
-  return { site, page: page.frontmatter, sourcePath: page.sourcePath };
+  return {
+    site,
+    page: page.frontmatter,
+    education: experience.frontmatter.education,
+    sourcePath: page.sourcePath,
+    educationSourcePath: experience.sourcePath,
+  };
 }
 
 export async function loadContactPage(ctx: Context<State>) {

@@ -19,8 +19,6 @@
   /* The column padding is the board's rhythm, so it grows with the viewport and
      lands on the wide-layout value exactly where the columns become a row. */
   .experience-column {
-    /* Relative so the role link's overlay can cover the whole column. */
-    position: relative;
     padding-block: clamp(1.4rem, 1.33rem + 0.28vi, 1.5rem);
     padding-inline: 0;
     border-block-end: 1px solid var(--line);
@@ -79,9 +77,6 @@
   }
 
   .experience-brand {
-    /* Above the stretched link, so the brand mark keeps its external link. */
-    position: relative;
-    z-index: 1;
     display: block grid;
     flex: none;
     place-items: center;
@@ -120,9 +115,8 @@
     letter-spacing: -0.01em;
   }
 
-  /* Every column links to its row on /experience. The role heading is the real
-     anchor and the overlay stretches its hit area over the whole column; the
-     brand mark sits above it and keeps its own external link. */
+  /* Only the role title links to its row on /experience: the rest of the
+     column stays plain text and the brand mark keeps its own external link. */
   .experience-link {
     color: inherit;
     text-decoration: underline transparent;
@@ -132,27 +126,15 @@
       color var(--transition),
       text-decoration-color var(--transition);
 
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-    }
-
     &:hover,
     &:focus-visible {
       color: var(--accent);
       text-decoration-color: var(--accent);
     }
 
-    /* The card-sized hit area is the overlay, so the ring outlines it instead
-       of hugging the heading text. */
     &:focus-visible {
-      outline: none;
-
-      &::after {
-        outline: 2px solid var(--accent);
-        outline-offset: 3px;
-      }
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
     }
   }
 

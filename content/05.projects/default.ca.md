@@ -2,11 +2,11 @@
 meta:
   title: Projectes
   description: >-
-    Projectes personals i acadèmics.
+    Projectes personals, encàrrecs i projectes acadèmics.
 title: Projectes
 lede: >-
   Projectes seleccionats, **no historial laboral**. Els dos més recents encapçalen la pàgina; cada
-  targeta resumeix el projecte i obre la seva fitxa completa, amb el problema, les decisions i les
+  targeta resumeix el projecte i obre la seva fitxa completa, amb el repte, com el vaig resoldre i les
   captures.
 homelab:
   eyebrow: Homelab
@@ -23,10 +23,11 @@ kindLabels:
   cliente: Client
   académico: Acadèmic
   propio: Propi
+  encargo: Encàrrec
   tfg: Treball de Fi de Grau
 ficheLabels:
-  problem: El problema
-  decisions: Decisions tècniques
+  problem: El repte
+  decisions: Com ho vaig resoldre
 detailsLabel: Veure el projecte complet
 galleryTitle: Captures
 backLabel: Projectes

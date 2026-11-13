@@ -14,8 +14,8 @@ description: >-
   actually happens in the course.
 participation:
   - >-
-    **Back-end development of the plugin**: generating the structured
-    reports and the evidence FUNDAE asks for.
+    **Plugin development**: generating the reports and the evidence
+    FUNDAE asks for.
   - >-
     **Handling of course data** so that what is declared and what
     happens on the platform match.

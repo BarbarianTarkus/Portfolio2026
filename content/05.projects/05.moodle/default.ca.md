@@ -4,42 +4,33 @@ name: local_plugincompatibility
 kind: propio
 year: '2026'
 summary: >-
-  **Plugin local de Moodle** que creua els plugins instal·lats amb el catàleg oficial i respon,
-  per a la versió a la qual vols actualitzar, quins continuen sent compatibles, quins no i
-  quins ni tan sols estan publicats a moodle.org.
+  **Plugin per a Moodle** que comprova quins connectors instal·lats continuaran funcionant quan
+  actualitzes el campus, quins no i quins ni tan sols estan publicats al catàleg oficial.
 tags:
   - PHP
   - Moodle
 period: febrer — març 2026
-work: 19 commits a develop
 links:
   - label: moodle-local_plugincompatibility (develop)
     href: 'https://github.com/BarbarianTarkus/moodle-local_plugincompatibility/tree/develop'
     kind: repo
 problem: >-
-  Moodle no avisa si els plugins de tercers continuaran funcionant en pujar de versió: la
-  resposta està repartida per les fitxes de moodle.org, així que preparar una actualització
-  obliga a comprovar plugin per plugin quins tenen una release per a la versió de destinació.
-  Volia aquesta resposta **en una sola taula, dins del mateix lloc** i per a qualsevol versió
-  futura.
+  Moodle no avisa si els connectors de tercers continuaran funcionant quan actualitzes. La
+  informació està repartida per les fitxes de moodle.org, així que preparar una actualització
+  obliga a revisar-los un per un. Volia veure-ho tot **en una sola taula, dins del mateix Moodle**.
 decisions:
   - >-
-    **Vaig partir del plugin de 2020 de Raúl Martínez**, que llançava una petició HTML a moodle.org i una
-    regex per cada plugin instal·lat, i el vaig reescriure sobre l'API oficial del pluglist
-    (`download.moodle.org/api/1.3/pluglist.php`): la compatibilitat es deriva de
-    `supportedmoodles` i la resposta es cacheja una hora, guardant el JSON en brut (~15 MB)
-    per no serialitzar l'arbre sencer.
+    **Una única taula dins de Moodle**: reuneix els plugins instal·lats i mostra quins són
+    compatibles amb la versió a la qual es vol actualitzar.
   - >-
-    **Vaig reescriure l'informe com una classe pròpia** que estén `flexible_table`, amb dependències,
-    versió instal·lada, compatibilitat i última release, ordenació per columnes, filtres per
-    text i estat, i exportació a CSV/Excel amb `core\dataformat`.
+    **Dades del catàleg oficial**: la compatibilitat es consulta a la informació pública de
+    moodle.org i es desa temporalment per no repetir consultes.
   - >-
-    **El vaig integrar a l'administració de Moodle 4.1+** (registre a `settings.php`, capacitat
-    `moodle/site:config`), amb cadenes en anglès i espanyol i provider de privacitat: el plugin
-    no guarda dades personals, només consumeix dades públiques de moodle.org.
+    **Un informe útil, no només una llista**: permet ordenar, filtrar per text o estat i exportar
+    el resultat a CSV o Excel.
   - >-
-    **Vaig normalitzar les versions a `major.minor`** (5.1, no 5.1.0) i vaig corregir el crash
-    d'instal·lació per `normalize_version()` sense carregar, que trencava la instal·lació.
+    **Integrat a l'administració**: respecta els permisos de Moodle, no guarda dades personals i
+    està traduït a l'anglès i a l'espanyol.
 gallery:
   - view: web
     label: Web

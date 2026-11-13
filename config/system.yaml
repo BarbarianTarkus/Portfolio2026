@@ -7,8 +7,9 @@ content:
 debug: false
 
 # Multilingual content: page variants live next to the default file, distinguished
-# by a language suffix (content/02.about/default.en.md). The default language
-# keeps unprefixed URLs (/about); the rest are served under /<lang>/ (/en/about).
+# by a language suffix (content/02.about/default.en.md). `default.md` is the
+# Spanish content source; the language served at unprefixed URLs is configured
+# in lib/languages.ts (DEFAULT_LANGUAGE).
 languages:
   supported: [es, en, ca]
   default: es

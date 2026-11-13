@@ -5,9 +5,8 @@ kind: tfg
 year: '2026'
 featured: true
 summary: >-
-  **Trabajo de Fin de Grado**: brazo de bajo coste teleoperado con las manos desde Meta Quest 3,
-  con Unity y OpenXR, una cadena ESP32 → Arduino → diez servos y el brazo impreso en 3D y montado
-  desde cero.
+  **Trabajo de Fin de Grado**: brazo robótico de bajo coste teleoperado con las manos desde un
+  visor Meta Quest 3, impreso en 3D y montado desde cero.
 tags:
   - Unity
   - C#
@@ -16,7 +15,7 @@ tags:
   - Arduino
   - ESP32
   - WiFi
-  - Impresión 3D
+  - 3D printing
 period: '2026'
 work: 74 h de impresión · 173 € de material
 links: []
@@ -24,25 +23,23 @@ video:
   label: 'Vídeo: la mano del operador mueve el brazo desde Meta Quest 3'
   embed: 'https://drive.google.com/file/d/1ZRnbjAjVxOb8xDXBvJa9yVCptx7tpYNR/preview'
 problem: >-
-  El TFG pedía un sistema completo, no una demo: **teleoperar con las manos** un brazo de bajo
-  coste que responde a la pinza del operador, sin mandos ni menús flotantes, y que no se rompe
-  cuando alguien mueve el brazo deprisa.
+  El TFG pedía un sistema completo, no una demo: **mover un brazo robótico de bajo coste con las
+  manos**, sin mandos, y que resistiera un uso real sin romperse.
 decisions:
   - >-
-    **Unity + OpenXR en Meta Quest 3** (compatible con Quest 2), con hand tracking nativo y la
-    interfaz anclada a las muñecas: se opera sin mandos.
+    **Control con las manos**: el visor detecta la posición y la pinza de las manos, y el brazo
+    responde sin necesidad de mandos.
   - >-
-    **Cadena ESP32 → Arduino Mega 2560 → 10 servos**, con protocolo de tramas propio, cola de
-    poses y limitación de velocidad: la mecánica impresa aguanta los tirones del operador.
+    **Un brazo de bajo coste**: diseñado e impreso en 3D desde cero, con electrónica propia y
+    materiales por unos 170 €.
   - >-
-    **El ESP32 sirve además una página web de control manual** por WiFi, para calibrar y mover
-    el brazo desde el navegador sin el visor.
+    **Movimiento seguro**: la velocidad se limita y las órdenes se ordenan para que la mecánica
+    impresa aguante los movimientos bruscos.
   - >-
-    **Brazo construido desde cero**: 74 h de impresión 3D (~1,5 kg de PLA), electrónica propia y
-    fuente dedicada de 5 V/18 A, con ~173 € de material.
+    **Control manual desde el navegador**: una página web permite calibrar y mover el brazo sin el
+    visor.
   - >-
-    **Validación en banco y documentación**: pruebas funcionales, memoria técnica de 79 páginas,
-    protocolo y guion de defensa.
+    **Documentado y probado**: pruebas funcionales, memoria técnica y guion de defensa.
 gallery:
   - view: web
     label: Web

@@ -4,31 +4,29 @@ name: PetSalut
 kind: académico
 year: '2024'
 summary: >-
-  **Management web application** for veterinary clinics, developed as a team for the UPC
-  project.
+  **Management web application** for veterinary clinics, built as a team within a UPC project.
 tags:
   - C++
   - PostgreSQL
   - GitHub Actions
   - Azure Functions
 period: March — June 2024
-work: 12 merged PRs
 links:
   - label: AMEP-UPC/PetSalut
     href: 'https://github.com/AMEP-UPC/PetSalut'
     kind: repo
 problem: >-
-  The team had to deliver a system with three actors (clinics, owners and pets) and do it with
-  **a real workflow** — branches, pull requests and CI —, not with a ZIP at the end of the
-  semester.
+  The team had to deliver a system with three types of user — clinics, owners and pets — and do it
+  with **a real workflow**: branches, pull requests and continuous integration, not a ZIP at the
+  end of the semester.
 decisions:
   - >-
-    **Every feature came in through a pull request** reviewed by someone else on the team:
-    12 merged PRs, with no direct commits to the main branch.
+    **Work through pull requests**: every feature was reviewed by someone else on the team before
+    reaching the main branch.
   - >-
-    **Continuous integration ran on GitHub Actions** and deployed to Azure Functions, so that
-    delivery did not depend on someone compiling on their laptop.
+    **Automatic integration and deployment**: GitHub Actions built and deployed to Azure Functions,
+    so delivery did not depend on a laptop.
   - >-
-    **We fixed the database schema first**, then the user stories; every schema change forced
-    us to rewrite the stories before continuing with the interface.
+    **Data model first**: we fixed the schema and user stories before building the interface, so
+    changes would not break the rest.
 ---

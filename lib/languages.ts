@@ -3,9 +3,10 @@
  *
  * The site keeps a single canonical route per page ("/about", "/projects/x")
  * while Dune serves one content variant per language (default.md,
- * default.en.md, default.ca.md). Spanish (the Dune default language) lives at
- * the canonical URL; the other languages are served under a "/<lang>" prefix
- * (see config/system.yaml → content.languages).
+ * default.en.md, default.ca.md). `default.md` is the content source, but it is
+ * not necessarily the default URL language: `DEFAULT_LANGUAGE` decides which
+ * language gets unprefixed URLs and the rest are served under a "/<lang>"
+ * prefix (see config/system.yaml → content.languages).
  *
  * This module is plain TypeScript (no Preact) so build scripts can import the
  * language list without pulling the component runtime in. The context provider
@@ -16,9 +17,34 @@
 
 export const LANGUAGES = ["es", "en", "ca"] as const;
 export type Language = (typeof LANGUAGES)[number];
-export const DEFAULT_LANGUAGE: Language = "es";
+
+/**
+ * Language of the base content files (`default.md`).
+ *
+ * Dune resolves `default.md` as this language (config/system.yaml →
+ * languages.default). Do not change it unless you also rename the content
+ * files: `default.md` currently holds the Spanish source.
+ */
+export const SOURCE_LANGUAGE: Language = "es";
+
+/**
+ * Language served at unprefixed URLs.
+ *
+ * This is the single knob to turn when the site should default to another
+ * language: set it to "ca", "es" or "en". URLs, hreflang, the language
+ * switcher and the static export all follow from it.
+ */
+export const DEFAULT_LANGUAGE: Language = "ca";
+
 /** Languages that get a URL prefix (the default language keeps clean URLs). */
-export const LOCALIZED_LANGUAGES: readonly Language[] = ["en", "ca"];
+export const LOCALIZED_LANGUAGES: readonly Language[] = LANGUAGES.filter(
+  (language) => language !== DEFAULT_LANGUAGE,
+);
+
+/** Languages that ship a translation next to the source files. */
+export const TRANSLATED_LANGUAGES: readonly Language[] = LANGUAGES.filter(
+  (language) => language !== SOURCE_LANGUAGE,
+);
 
 export interface LanguageMeta {
   /** Value for `<html lang>` and `hreflang`. */

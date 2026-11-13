@@ -14,8 +14,8 @@ description: >-
   amb el que passa de veritat al curs.
 participation:
   - >-
-    **Desenvolupament del backend del connector**: generació dels
-    informes estructurats i de les evidències que demana FUNDAE.
+    **Desenvolupament del connector**: generació dels informes i de les
+    evidències que demana FUNDAE.
   - >-
     **Tractament de les dades del curs** perquè el que es declara i el
     que passa a la plataforma coincideixin.

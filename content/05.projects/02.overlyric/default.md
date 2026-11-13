@@ -4,9 +4,8 @@ name: Overlyric
 kind: propio
 year: '2026'
 summary: >-
-  **Overlay de letras para Windows 10/11**: lee la pista en reproducción de los controles
-  multimedia del sistema y pinta la letra sincronizada de LRCLIB en una ventana transparente que
-  queda por encima de todo y no roba el foco. Sin integración por reproductor.
+  **Letra sincronizada para cualquier reproductor de Windows**: una ventana transparente que
+  muestra la canción que suena y no te roba el foco. Sin conectores por reproductor.
 tags:
   - C#
   - .NET 10
@@ -17,49 +16,40 @@ tags:
   - LRCLIB
   - PowerShell
 period: 24 octubre — 12 noviembre 2026
-work: 67 commits
 links:
   - label: Repositorio de Overlyric
     href: 'https://github.com/BarbarianTarkus/Overlyric'
     kind: repo
 problem: >-
-  Los overlays de letras piden un plugin por reproductor, o te obligan a elegir entre Spotify y
-  el resto, y el reloj se desvía en cuanto una pista empieza a medias o el reproductor congela la
-  posición. Quería **un solo overlay que funcione con cualquier reproductor de Windows y no
-  estorbe en la partida**: letra legible encima del juego, sin robar el foco y sin gastar CPU
-  entre línea y línea.
+  Los overlays de letras suelen pedir un plugin por reproductor o te obligan a elegir entre
+  Spotify y el resto. Además, la letra se desincroniza cuando una canción empieza por la mitad o
+  el reproductor se queda parado. Quería **una ventana que funcionara con cualquier reproductor
+  de Windows sin molestar mientras juego**.
 decisions:
   - >-
-    **Leer los controles multimedia de Windows (SMTC/GSMTC), no al reproductor**: cualquier
-    reproductor que registre una sesión —TIDAL, Spotify, VLC, foobar2000, el navegador—
-    funciona sin instalar nada, y el que no publica sale nombrado en la bandeja en vez de dejar
-    un overlay mudo.
+    **Funciona con cualquier reproductor**: lee lo que Windows está reproduciendo, sin instalar
+    nada dentro de Spotify, VLC o el navegador.
   - >-
-    **Elegir la grabación, no el primer resultado de LRCLIB**: los sufijos de edición se quitan
-    antes de consultar, la duración manda en el ranking y una versión sin tiempos se sustituye
-    por la primera sincronizada de la misma duración; una segunda búsqueda con el álbum cubre lo
-    que esconde el límite de veinte resultados.
+    **Busca la versión correcta de la letra**: tiene en cuenta la duración y la edición de la
+    canción para no mostrar una letra que no corresponde.
   - >-
-    **No fiarse de la posición que publica el reproductor**: el reloj envejece esa posición con
-    un cronómetro monotónico, así que TIDAL —que congela su línea de tiempo— y empezar una
-    canción por la mitad siguen cayendo en la línea correcta.
+    **Mantiene el ritmo aunque el reproductor falle**: si la posición se queda parada o la canción
+    empieza por la mitad, la letra sigue en la línea correcta.
   - >-
-    **Dibujar sin framework de UI**: una ventana `WS_EX_NOREDIRECTIONBITMAP` compuesta con
-    DirectComposition y pintada con Direct2D/DirectWrite, con los textos cacheados y cero
-    asignaciones por fotograma; detrás no hay WPF, WinUI ni WinForms.
+    **Ligera y discreta**: se dibuja sin las librerías habituales de interfaz y consume muy pocos
+    recursos, para no afectar al juego.
   - >-
-    **Arreglar la línea, no solo mirarla**: la hoja es un editor (marcar inicio y fin, ±10–250
-    ms, deshacer y rehacer), la corrección se guarda por pista y por dispositivo de salida, se
-    puede importar un `.lrc` local y publicar la hoja corregida en LRCLIB tras una confirmación
-    que muestra el envío exacto.
-  - >-
-    **Medido antes de afirmarlo**: 65 MB de memoria estable, un 0,15 % de un núcleo y 11 MB en un
-    único ejecutable NativeAOT de .NET 10; y un límite dicho a la cara: sobre pantalla completa
-    exclusiva no se puede dibujar, así que lo avisa una vez y señala Borderless.
+    **También permite corregir la letra**: se pueden ajustar los tiempos, guardar los cambios por
+    canción y publicar la versión corregida.
 gallery:
   - view: web
     label: Web
     images:
+      - src: /projects/overlyric/demo.gif
+        alt: >-
+          Animación de demostración: «No plugin for any player». Overlyric lee lo que Windows está
+          reproduciendo y muestra la letra sobre TIDAL, Spotify o el navegador.
+        caption: Demostración
       - src: /projects/overlyric/multi-line.webp
         alt: >-
           Overlay multilínea sobre un juego: título de la pista, tres líneas de letra y la barra

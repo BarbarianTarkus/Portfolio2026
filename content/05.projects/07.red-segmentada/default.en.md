@@ -4,9 +4,8 @@ name: Segmented network on Linux
 kind: académico
 year: '2025'
 summary: >-
-  **Distributed network lab** across four zones — backbone, DMZ, clients and servers — with two
-  Linux routers as the boundary: persistent routing, nftables security, real DNS and DHCP, and
-  end-to-end monitoring.
+  **Network lab** across four zones with Linux routers: routing, security, DNS, DHCP and monitoring
+  working as a single system.
 tags:
   - Linux
   - nftables
@@ -15,32 +14,30 @@ tags:
   - Nagios
   - SSH
 period: academic year 2024–25
-work: 6 lab assignments in one system
 links: []
 diagram:
   label: View the full diagram
   href: /projects/red-segmentada/topologia.html
 problem: >-
-  The course delivered six separate assignments; the scenario I built had to be **one network
-  system and not six mock-ups**: routes that survive a reboot, each zone reachable only from
-  where its policy allows, and a monitoring node that sees the three internal networks at once.
+  The course delivered six separate assignments, but I wanted to build **one network system**:
+  routes that survive a reboot, each zone reachable only when its policy allows it, and a
+  monitoring node that sees all the internal networks.
 decisions:
   - >-
-    **Four zones and two routers** instead of a flat network: backbone/Internet, DMZ, clients
-    and servers, with a Linux router at each boundary acting as a filter.
+    **Four zones and two routers**: I separated backbone, DMZ, clients and servers, with a Linux
+    router at each boundary.
   - >-
-    **Persistent static routing** in the system configuration, not with `ip route` by
-    hand: the routes survive a reboot and the scenario is rebuilt from scratch.
+    **Persistent configuration**: routes and rules are stored in the system, so they survive a
+    reboot and the scenario can be rebuilt.
   - >-
-    **nftables for the whole perimeter**: filtering between zones, NAT and activity logging in
-    one ruleset per router, without mixing iptables with loose rules.
+    **Security by zone**: traffic between networks is filtered with clear rules, without mixing
+    old configurations.
   - >-
-    **Real DNS and DHCP**: master/slave BIND9 with forward and reverse zones and recursion
-    control; DHCP with address reservations and DDNS integrated through TSIG keys.
+    **Real network services**: DNS with a primary and a backup server, DHCP with reservations and
+    monitoring to check status from a single point.
   - >-
-    **Nagios Core + NRPE with custom plugins** (`check_eth`, `check_mem`), verified
-    from the console before being published on the dashboard, and SSH tunnels to reach the
-    three internal networks without opening ports.
+    **Access without opening ports**: encrypted remote access reaches the internal networks in a
+    controlled way.
 gallery:
   - view: web
     label: Web
@@ -54,7 +51,7 @@ gallery:
       - src: /projects/red-segmentada/nagios.webp
         alt: >-
           Nagios Core dashboard with the service status of dns1, dns2, localhost, the web
-          server, routeraccés, routerintern and the two mail servers.
+          server, the access router, the internal router and the two mail servers.
         caption: 'Nagios Core: service status'
       - src: /projects/red-segmentada/segmentos.webp
         alt: >-

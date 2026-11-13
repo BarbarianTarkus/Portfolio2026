@@ -1,6 +1,11 @@
 import { ProseField } from "../lib/markdown.tsx";
-import type { AboutContent, SiteContent } from "../lib/content.ts";
+import type {
+  AboutContent,
+  ExperienceContent,
+  SiteContent,
+} from "../lib/content.ts";
 import { loadAboutPage } from "../lib/content.ts";
+import { EducationSummary } from "../components/EducationSummary.tsx";
 import { PageHeader } from "../components/PageHeader.tsx";
 import { PageMeta } from "../components/PageMeta.tsx";
 import { SectionHead } from "../components/SectionHead.tsx";
@@ -15,13 +20,16 @@ import { define } from "../utils.ts";
  */
 export const handler = define.handlers({
   async GET(ctx) {
-    const { site, page, sourcePath } = await loadAboutPage(ctx);
+    const { site, page, education, sourcePath, educationSourcePath } =
+      await loadAboutPage(ctx);
     return ctx.render(
       <AboutPage
         site={site}
         page={page}
+        education={education}
         basePath={ctx.config.basePath}
         sourcePath={sourcePath}
+        educationSourcePath={educationSourcePath}
         inlineEditing={ctx.state.inlineEditing === true}
       />,
     );
@@ -31,13 +39,23 @@ export const handler = define.handlers({
 interface AboutPageProps {
   site: SiteContent;
   page: AboutContent;
+  education: ExperienceContent["education"];
   basePath: string;
   sourcePath: string;
+  educationSourcePath: string;
   inlineEditing: boolean;
 }
 
 export function AboutPage(
-  { site, page, basePath, sourcePath, inlineEditing }: AboutPageProps,
+  {
+    site,
+    page,
+    education,
+    basePath,
+    sourcePath,
+    educationSourcePath,
+    inlineEditing,
+  }: AboutPageProps,
 ) {
   const metaTitle = page.meta.title + " — " + site.author;
 
@@ -71,6 +89,25 @@ export function AboutPage(
           </p>
         ))}
       </div>
+
+      <SectionHead
+        num={page.educationSection.num}
+        title={
+          <ProseField
+            text={page.educationSection.title}
+            path="educationSection.title"
+            sourcePath={sourcePath}
+            editing={inlineEditing}
+          />
+        }
+      />
+
+      <EducationSummary
+        education={education}
+        basePath={basePath}
+        sourcePath={educationSourcePath}
+        editing={inlineEditing}
+      />
 
       <SectionHead
         num={page.stackSection.num}

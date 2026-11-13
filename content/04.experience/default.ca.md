@@ -7,8 +7,8 @@ meta:
     Informàtica.
 title: Experiència
 lede: >-
-  Desenvolupament Full-Stack en entorns de producció, sobretot en Moodle(PHP, Javascript) y WordPress(PHP).
-  Support TIC en la universitat. Que és on he après el que sé.
+  Desenvolupament full-stack en entorns de producció, sobretot en Moodle i WordPress amb PHP i
+  JavaScript. Suport TIC a la universitat, que és on he après el que sé.
 linkedinLabel: LinkedIn
 jobsSection:
   num: '01'
@@ -36,12 +36,12 @@ jobs:
       - Jira
     bullets:
       - >-
-        **Desenvolupament full-stack** en principi plugin de Moodle/Wordpress.
-      - '**Control de versions** i treball amb branques a Git i Bitbucket.'
+        **Desenvolupament full-stack**, inicialment en plugins de Moodle i WordPress.
+      - '**Control de versions** amb Git i Bitbucket.'
       - '**Seguiment d''incidències, tasques i planificació** en Jira.'
       - >-
-        **Col·laboració amb l'equip tècnic** en un entorn de consultoria i
-        desenvolupament a mida.
+        **Treball en equip** amb desenvolupadors i perfils no tècnics en
+        projectes de consultoria.
     projectsLabel: Productes en què he treballat
   - role: Desenvolupador backend PHP
     company: 4DMOVIN Business / Namastech
@@ -50,9 +50,8 @@ jobs:
     logo: /companies/4dmovin.webp
     logoWide: true
     summary: >-
-      Programari de gestió immobiliària: digitalitza l'operativa d'una
-      immobiliària sense necessitat de ser un expert en tecnologia. També
-      desenvolupa mòduls per a hotels i restaurants i programari a mida.
+      Programari de gestió immobiliària que digitalitza l'operativa del dia a
+      dia. També desenvolupa mòduls per a hotels i restaurants i programari a mida.
     period: juny 2022 — setembre 2022
     place: Castelldefels
     stack:
@@ -64,12 +63,11 @@ jobs:
     bullets:
       - '**Desenvolupament sobre un ERP** en PHP i Angular.'
       - >-
-        **Automatització de correus i sincronització de calendaris** integrant
-        Google APIs i Microsoft Graph API, millorant la compatibilitat amb IMAP,
-        POP i SMTP.
+        **Automatització de correus i sincronització de calendaris** amb les eines
+        de Google i Microsoft, i connexió amb servidors de correu estàndard.
       - >-
-        **Pantalla de gestió i automatització de xarxes socials** (posts i
-        feeds).
+        **Pantalla de gestió i automatització de xarxes socials** (publicacions i
+        contingut).
   - role: Suport TIC (becari)
     company: EPSEVG — Universitat Politècnica de Catalunya
     slug: upc
@@ -77,8 +75,7 @@ jobs:
     logo: /companies/upc.svg
     summary: >-
       Universitat pública de recerca i educació superior en arquitectura,
-      enginyeria, ciències i tecnologia, i una de les millors d'Europa als
-      rànquings internacionals.
+      enginyeria, ciències i tecnologia.
     period: novembre 2020 — gener 2022
     place: Barcelona
     stack:
@@ -89,15 +86,14 @@ jobs:
       - Raspberry Pi
     bullets:
       - >-
-        **Helpdesk per al personal de la UPC**: incidències informàtiques de
-        primer nivell.
+        **Suport a usuaris de la UPC**: incidències informàtiques de primer nivell.
       - >-
         **Administració de sistemes Linux i Windows**: comptes, permisos i
         resolució d'incidències.
-      - '**Gestió d''imatges de sistemes operatius** amb OpenGnsys.'
+      - '**Desplegament i gestió d''imatges dels ordinadors** amb OpenGnsys.'
       - >-
-        **Posada en marxa del Digital Signage de la universitat**: sistema
-        operatiu Linux i maquinari Raspberry.
+        **Posada en marxa del Digital Signage de la universitat**: pantalles
+        informatives amb Linux i Raspberry Pi.
 workProjectLabels:
   description: Què és
   participation: Què hi vaig fer
@@ -112,6 +108,8 @@ education:
   period: 2017 — 2026
   role: Grau en Enginyeria Informàtica
   company: 'Universitat Politècnica de Catalunya (UPC) · EPSEVG, Vilanova i la Geltrú'
+  url: https://www.upc.edu/es
+  logo: /companies/upc.svg
   summary: >-
     Estudis a l'EPSEVG, compaginats des del 2020 amb el suport TIC del campus
     i, més endavant, amb la feina a 3iPunt.
@@ -124,10 +122,10 @@ education:
   bulletsLabel: Aprenentatge que destaco
   bullets:
     - >-
-      **Front-end amb Django**: aplicació full-stack en equip, amb
-      metodologies àgils (Scrum).
+      **Aplicació web amb Django**: projecte full-stack en equip, amb
+      metodologia àgil (Scrum).
     - '**Bases de dades**: administració de MySQL, PostgreSQL i MongoDB.'
-    - '**Estructures de dades**.'
+    - '**Estructures de dades**: disseny i complexitat d''algorismes.'
   stack:
     - C++
     - Java
@@ -145,7 +143,7 @@ outroSection:
   num: '03'
   title: El que hi ha darrere
 outro: >-
-  El detall tècnic del que he construït —problema, decisions i el que es va
-  trencar— és a [la pàgina de projectes](/projects). L'homelab que mantinc
-  en paral·lel és a [sobre mi](/about#homelab).
+  El detall del que he construït —el repte i com el vaig resoldre— és a
+  [la pàgina de projectes](/projects). L'homelab que mantinc en paral·lel és a
+  [sobre mi](/about#homelab).
 ---

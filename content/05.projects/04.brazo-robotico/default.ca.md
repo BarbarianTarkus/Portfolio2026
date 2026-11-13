@@ -5,9 +5,8 @@ kind: tfg
 year: '2026'
 featured: true
 summary: >-
-  **Treball de Fi de Grau**: braç de baix cost teleoperat amb les mans des de Meta Quest 3,
-  amb Unity i OpenXR, una cadena ESP32 → Arduino → deu servos i el braç imprès en 3D i muntat
-  des de zero.
+  **Treball de Fi de Grau**: braç robòtic de baix cost teleoperat amb les mans des d'un visor
+  Meta Quest 3, imprès en 3D i muntat des de zero.
 tags:
   - Unity
   - C#
@@ -16,7 +15,7 @@ tags:
   - Arduino
   - ESP32
   - WiFi
-  - Impresión 3D
+  - 3D printing
 period: '2026'
 work: 74 h d'impressió · 173 € de material
 links: []
@@ -24,25 +23,23 @@ video:
   label: 'Vídeo: la mà de l''operador mou el braç des de Meta Quest 3'
   embed: 'https://drive.google.com/file/d/1ZRnbjAjVxOb8xDXBvJa9yVCptx7tpYNR/preview'
 problem: >-
-  El TFG demanava un sistema complet, no una demo: **teleoperar amb les mans** un braç de baix
-  cost que respon a la pinça de l'operador, sense comandaments ni menús flotants, i que no es
-  trenqui quan algú mogui el braç de pressa.
+  El TFG demanava un sistema complet, no una demo: **moure un braç robòtic de baix cost amb les
+  mans**, sense comandaments, i que resistís un ús real sense trencar-se.
 decisions:
   - >-
-    **Unity + OpenXR a Meta Quest 3** (compatible amb Quest 2), amb hand tracking natiu i la
-    interfície ancorada als canells: s'opera sense comandaments.
+    **Control amb les mans**: el visor detecta la posició i la pinça de les mans, i el braç respon
+    sense necessitat de comandaments.
   - >-
-    **Cadena ESP32 → Arduino Mega 2560 → 10 servos**, amb protocol de trames propi, cua de
-    poses i limitació de velocitat: la mecànica impresa aguanta les estrebades de l'operador.
+    **Un braç de baix cost**: dissenyat i imprès en 3D des de zero, amb electrònica pròpia i
+    materials per uns 170 €.
   - >-
-    **L'ESP32 serveix a més una pàgina web de control manual** per WiFi, per calibrar i moure
-    el braç des del navegador sense el visor.
+    **Moviment segur**: la velocitat es limita i les ordres s'ordenen perquè la mecànica impresa
+    aguanti els moviments bruscos.
   - >-
-    **Braç construït des de zero**: 74 h d'impressió 3D (~1,5 kg de PLA), electrònica pròpia i
-    font dedicada de 5 V/18 A, amb ~173 € de material.
+    **Control manual des del navegador**: una pàgina web permet calibrar i moure el braç sense el
+    visor.
   - >-
-    **Validació en banc i documentació**: proves funcionals, memòria tècnica de 79 pàgines,
-    protocol i guió de defensa.
+    **Documentat i provat**: proves funcionals, memòria tècnica i guió de defensa.
 gallery:
   - view: web
     label: Web

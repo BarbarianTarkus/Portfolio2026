@@ -4,9 +4,8 @@ name: Phenomorph
 kind: propio
 year: '2026'
 summary: >-
-  **Programa no oficial de Phenomena Experience**: cartelera, butacas libres, ciclos y enlaces de
-  compra en una sola app SSR con Deno y Fresh. El repositorio sigue privado; la app está
-  publicada.
+  **Guía no oficial de Phenomena Experience**: cartelera, butacas libres, ciclos y enlaces de
+  compra en una sola app. La app está publicada.
 tags:
   - Deno
   - Fresh 2
@@ -16,7 +15,6 @@ tags:
   - Python
   - DeepSeek Harness
 period: 27 octubre — 1 noviembre 2026
-work: 45 commits
 links:
   - label: Repositorio de Phenomorph
     href: 'https://github.com/BarbarianTarkus/phenomorph'
@@ -26,24 +24,23 @@ links:
     kind: demo
     icon: /projects/phenomorph/favicon.png
 problem: >-
-  La cartelera del cine vive repartida entre la web, la compra de entradas y el calendario:
-  saber qué se puede ver hoy, cuántas butacas quedan y cuándo encaja una sesión obliga a saltar
-  entre pestañas. Quería **resolverlo en una sola pantalla**, sin depender de una API que el cine
-  no ofrece.
+  La cartelera del cine vive repartida entre la web, la compra de entradas y el calendario. Para
+  saber qué se puede ver hoy, cuántas butacas quedan y cuándo encaja una sesión hay que saltar
+  entre pestañas. Quería **reunirlo todo en una sola pantalla**, sin depender de una API que el
+  cine no ofrece.
 decisions:
   - >-
-    **Fresh 2 con SSR** e islas pequeñas (unos 25 KB de JS/CSS) en vez de una SPA: la primera
-    pantalla ya trae la cartelera y solo se hidrata la búsqueda y los filtros.
+    **Una sola pantalla para toda la cartelera**: la app carga la información en el servidor, así
+    que la primera vista ya está lista y solo la búsqueda y los filtros se activan en el navegador.
   - >-
-    **Un scraper en Python** de la biblioteca estándar genera el JSON y una SQLite que la app lee
-    con node:sqlite; el dataset se reconstruye en cada máquina y nunca se versiona, así que no
-    envejece en el repositorio.
+    **Datos actualizados sin trabajo manual**: un pequeño programa recoge la cartelera de la web
+    del cine y la convierte en una base de datos lista para consultar.
   - >-
-    **Los datos de butacas y formatos** se normalizan en el scraper (35 mm, 70 mm, 4K, Dolby
-    Atmos...), para que los filtros y las fichas no trabajen con una nota de texto libre.
+    **Filtros que entienden la información**: las butacas y los formatos (35 mm, 70 mm, 4K, Dolby
+    Atmos…) se ordenan al recogerlos, para poder buscar y comparar sin texto libre.
   - >-
-    **Diseño propio de la sala**: paleta cálida, tipografías autoalojadas y una tira de 35 mm para
-    los ciclos, en lugar de una plantilla de cartelera genérica.
+    **Un diseño propio de la sala**: colores cálidos, tipografías propias y una tira de 35 mm para
+    los ciclos, en lugar de una plantilla genérica.
 gallery:
   - view: web
     label: Web

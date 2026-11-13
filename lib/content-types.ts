@@ -126,6 +126,7 @@ export interface HomeContent {
   primaryAction: ActionLink;
   secondaryAction: ActionLink;
   experienceSection: LinkedSectionHeading;
+  educationSection: LinkedSectionHeading;
   projectsSection: ProjectsSectionHeading;
   focus: FocusItem[];
   stackSection: StackSectionHeading;
@@ -141,6 +142,7 @@ export interface AboutContent {
   title: string;
   lede: string;
   paragraphs: string[];
+  educationSection: SectionHeading;
   stackSection: SectionHeading;
   followSection: SectionHeading;
   follow: string;
@@ -248,6 +250,12 @@ export interface EducationEntry {
   period: string;
   role: string;
   company: string;
+  /** Official site of the university; the brand mark links here. */
+  url?: string;
+  /** Square brand mark under static/, e.g. /companies/upc.svg. */
+  logo?: string;
+  /** The mark is a horizontal wordmark rather than a square icon. */
+  logoWide?: boolean;
   /**
    * Inline Markdown paragraph under the degree: what the coursework covered.
    * Optional so an entry can stay a bare period/role/company line.
@@ -310,13 +318,20 @@ export interface ExperienceContent {
  * "académico" spelling (the legacy JSON mixed "academico" with an accented
  * label key, which rendered an empty category label for academic projects).
  */
-export type ProjectKind = "cliente" | "académico" | "propio" | "tfg";
+export type ProjectKind =
+  | "cliente"
+  | "académico"
+  | "propio"
+  | "encargo"
+  | "tfg";
 
 /** Human-readable label per project category. */
 export interface ProjectKindLabels {
   cliente: string;
   "académico": string;
   propio: string;
+  /** A commissioned project for someone else, without a formal client relationship. */
+  encargo: string;
   /** The degree's final project; rendered as its own kicker. */
   tfg: string;
 }

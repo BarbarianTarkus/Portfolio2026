@@ -18,8 +18,8 @@ participation:
     **Desenvolupament del connector als dos extrems** de la integració:
     el costat de Moodle i el de WordPress.
   - >-
-    **Treball amb les bases de dades dels dos sistemes** per portar les
-    dades d'un costat a l'altre.
+    **Connexió de les dades dels dos sistemes** perquè la compra i el
+    curs estiguin sincronitzats.
   - >-
     **Matriculació i sincronització** de cursos després de la compra.
 tags:

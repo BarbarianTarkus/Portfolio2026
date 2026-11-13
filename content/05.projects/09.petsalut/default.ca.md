@@ -4,31 +4,30 @@ name: PetSalut
 kind: académico
 year: '2024'
 summary: >-
-  **Aplicació web de gestió** per a clíniques veterinàries, desenvolupada en equip dins del
-  projecte de la UPC.
+  **Aplicació web de gestió** per a clíniques veterinàries, feta en equip dins d'un projecte de
+  la UPC.
 tags:
   - C++
   - PostgreSQL
   - GitHub Actions
   - Azure Functions
 period: març — juny 2024
-work: 12 PRs fusionats
 links:
   - label: AMEP-UPC/PetSalut
     href: 'https://github.com/AMEP-UPC/PetSalut'
     kind: repo
 problem: >-
-  L'equip havia d'entregar un sistema amb tres actors (clíniques, propietaris i mascotes) i
-  fer-ho amb **un flux de treball real** —branques, pull requests i CI—, no amb un ZIP al final del
-  quadrimestre.
+  L'equip havia d'entregar un sistema amb tres tipus d'usuari —clíniques, propietaris i mascotes— i
+  fer-ho amb **un flux de treball real**: branques, pull requests i integració contínua, no un ZIP
+  al final del quadrimestre.
 decisions:
   - >-
-    **Cada funcionalitat entrava per pull request** revisada per una altra persona de l'equip: 12 PRs
-    fusionats, sense commits directes a la branca principal.
+    **Treball per pull requests**: cada funcionalitat la revisava una altra persona de l'equip
+    abans d'entrar a la branca principal.
   - >-
-    **La integració contínua corria a GitHub Actions** i desplegava a Azure Functions, perquè
-    l'entrega no depengués que algú compilés al seu portàtil.
+    **Integració i desplegament automàtics**: GitHub Actions compilava i desplegava a Azure
+    Functions, així l'entrega no depenia d'un portàtil.
   - >-
-    **Vam fixar primer l'esquema de base de dades** i les històries d'usuari; cada canvi
-    d'esquema obligava a reescriure les històries abans de continuar amb la interfície.
+    **Primer el model de dades**: vam fixar l'esquema i les històries d'usuari abans de construir
+    la interfície, perquè els canvis no trenquessin la resta.
 ---

@@ -4,30 +4,29 @@ name: rebost-api
 kind: propio
 year: '2025'
 summary: >-
-  **API for a grocery shopping app**, built with Deno KV and Oak as an excuse to try
-  serverless storage without administering a database.
+  **API for a grocery shopping app**, built with Deno as an excuse to try serverless storage
+  without administering a database.
 tags:
   - Deno
   - TypeScript
   - Deno KV
   - Oak
 period: April 2025
-work: 8 commits
 links:
   - label: BarbarianTarkus/rebost-api
     href: 'https://github.com/BarbarianTarkus/rebost-api'
     kind: repo
 problem: >-
-  I wanted an API for a grocery app **without standing up a database server**, and to check
-  whether Deno KV was good for anything beyond a documentation example.
+  I wanted a simple API for a grocery app **without administering a database server**, and to
+  check whether Deno's serverless storage was good for a real project.
 decisions:
   - >-
-    **Oak as the router**: it is the framework the Deno ecosystem already used and it does not
-    force Express or a heavy framework into the stack.
+    **No database to administer**: I used Deno's built-in storage to avoid servers, backups and
+    maintenance.
   - >-
-    **Deno KV instead of PostgreSQL**: zero provisioning and zero backups to maintain, in
-    exchange for tying the project to the runtime APIs.
+    **A small, direct API**: the tool I chose was already part of the Deno ecosystem and avoided
+    unnecessary layers.
   - >-
-    **Deployment with `deployctl`** to Deno Deploy and a debug task for VS Code, to work
-    locally with the same code that runs in production.
+    **Simple deployment**: the API is published with Deno's tools and can be tested locally with
+    the same code that runs in production.
 ---

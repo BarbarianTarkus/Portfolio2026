@@ -5,9 +5,8 @@ kind: tfg
 year: '2026'
 featured: true
 summary: >-
-  **Bachelor's thesis**: a low-cost arm teleoperated with the hands from Meta Quest 3,
-  with Unity and OpenXR, an ESP32 → Arduino → ten servos chain and the arm 3D-printed and
-  assembled from scratch.
+  **Bachelor's thesis**: a low-cost robotic arm teleoperated with the hands from a Meta Quest 3
+  headset, 3D-printed and assembled from scratch.
 tags:
   - Unity
   - C#
@@ -16,7 +15,7 @@ tags:
   - Arduino
   - ESP32
   - WiFi
-  - Impresión 3D
+  - 3D printing
 period: '2026'
 work: 74 h of printing · €173 in materials
 links: []
@@ -24,25 +23,23 @@ video:
   label: 'Video: hand tracking moves the arm from Meta Quest 3'
   embed: 'https://drive.google.com/file/d/1ZRnbjAjVxOb8xDXBvJa9yVCptx7tpYNR/preview'
 problem: >-
-  The thesis called for a complete system, not a demo: **teleoperating a low-cost arm with
-  your hands**, one that responds to the operator pinch, with no controllers or floating menus,
-  and that does not break when someone moves the arm quickly.
+  The thesis called for a complete system, not a demo: **moving a low-cost robotic arm with your
+  hands**, without controllers, and withstanding real use without breaking.
 decisions:
   - >-
-    **Unity + OpenXR on Meta Quest 3** (Quest 2 compatible), with native hand tracking and the
-    interface anchored to the wrists: you operate it without controllers.
+    **Hand control**: the headset tracks hand position and pinch, and the arm responds without
+    controllers.
   - >-
-    **ESP32 → Arduino Mega 2560 → 10 servos chain**, with a custom frame protocol, a pose
-    queue and speed limiting: the printed mechanics hold up to the operator's yanks.
+    **A low-cost arm**: designed and 3D-printed from scratch, with custom electronics and about
+    €170 in materials.
   - >-
-    **The ESP32 also serves a manual control web page** over WiFi, to calibrate and move the
-    arm from a browser without the headset.
+    **Safe movement**: speed is limited and commands are queued so the printed mechanics withstand
+    sudden movements.
   - >-
-    **Arm built from scratch**: 74 h of 3D printing (~1.5 kg of PLA), custom electronics and a
-    dedicated 5 V/18 A power supply, with ~€173 of material.
+    **Manual control from the browser**: a web page lets you calibrate and move the arm without
+    the headset.
   - >-
-    **Bench validation and documentation**: functional tests, a 79-page technical report, the
-    protocol and the defense script.
+    **Tested and documented**: functional tests, a technical report and a defence script.
 gallery:
   - view: web
     label: Web

@@ -97,6 +97,7 @@ export function ExperiencePage(
 
       <SectionHead
         num={page.educationSection.num}
+        id="education"
         title={
           <ProseField
             text={page.educationSection.title}

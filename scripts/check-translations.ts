@@ -25,8 +25,7 @@ import { join, relative } from "@std/path";
 import { parse as parseYaml } from "@std/yaml";
 import {
   type Language,
-  LANGUAGES,
-  LOCALIZED_LANGUAGES,
+  TRANSLATED_LANGUAGES,
 } from "../lib/languages.ts";
 
 const ROOT = join(import.meta.dirname!, "..");
@@ -263,13 +262,13 @@ function checkLanguage(language: Language, requireAll: boolean): Problem[] {
 
 const args = Deno.args.filter((arg) => !arg.startsWith("--"));
 const requireAll = Deno.args.includes("--require-all");
-const languages = (args.length > 0 ? args : LOCALIZED_LANGUAGES) as Language[];
+const languages = (args.length > 0 ? args : TRANSLATED_LANGUAGES) as Language[];
 
 for (const language of languages) {
-  if (!LANGUAGES.includes(language) || language === "es") {
+  if (!TRANSLATED_LANGUAGES.includes(language)) {
     console.error(
       `Unknown translated language "${language}". Expected one of: ${
-        LOCALIZED_LANGUAGES.join(", ")
+        TRANSLATED_LANGUAGES.join(", ")
       }.`,
     );
     Deno.exit(1);

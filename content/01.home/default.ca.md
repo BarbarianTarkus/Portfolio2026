@@ -12,23 +12,28 @@ experienceSection:
   title: Experiència laboral
   linkLabel: Veure el detall
   linkRoute: /experience
-projectsSection:
+educationSection:
   num: "02"
+  title: Formació
+  linkLabel: Veure el detall
+  linkRoute: /experience#education
+projectsSection:
+  num: "03"
   title: Projectes
-  linkLabel: Els 8 projectes
+  linkLabel: Tots els projectes
   linkRoute: /projects
-  note: "Repositoris públics: **Treball, projectes de la carrera i eines pròpies**. Aquí, una selecció; els vuit són a Projectes."
+  note: "Repositoris públics: **Treball, encàrrecs, projectes acadèmics i eines pròpies**. Aquí, una selecció; tots són a Projectes."
 focus:
   - title: Infraestructura i seguretat
     body: >-
-      **NAS, WireGuard i OpenVPN, Gitea, SonarQube** i serveis publicats per
+      **NAS, WireGuard, OpenVPN, Gitea i SonarQube** i serveis publicats per
       túnel de Cloudflare, sense obrir ports al router.
   - title: Desenvolupament full-stack
     body: >-
       **PHP, JavaScript i Moodle** en producció; **Svelte, Astro, Python, Rust
-      i Deno** en projectes propis i de client.
+      i Deno** en projectes propis i encàrrecs.
 stackSection:
-  num: "03"
+  num: "04"
   title: Stack i enfocament
   linkLabel: L'homelab
   linkRoute: /projects#homelab

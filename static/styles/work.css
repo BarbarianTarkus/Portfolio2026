@@ -24,6 +24,61 @@
     }
   }
 
+  /* Education summary: degree first, period and university mark on the right. */
+  .education-row {
+    display: block flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    padding-block: clamp(1.75rem, 1.5rem + 1.05vi, 2rem);
+    border-block-end: 1px solid var(--line);
+
+    &:last-child {
+      border-block-end: 0;
+    }
+
+    @media (width >= 48rem) {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+  }
+
+  .education-main {
+    min-inline-size: 0;
+  }
+
+  .education-link {
+    color: inherit;
+    text-decoration: underline transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+    transition:
+      color var(--transition),
+      text-decoration-color var(--transition);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+    }
+  }
+
+  .education-meta {
+    display: block flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    @media (width >= 48rem) {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.85rem;
+      text-align: end;
+    }
+  }
+
   .job-period {
     color: var(--muted);
     font-family: var(--font-mono);

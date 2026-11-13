@@ -4,7 +4,7 @@ name: rebost-api
 kind: propio
 year: '2025'
 summary: >-
-  **API para una aplicación de la compra**, construida con Deno KV y Oak como excusa para probar
+  **API para una aplicación de la compra** hecha con Deno, como excusa para probar el
   almacenamiento serverless sin administrar una base de datos.
 tags:
   - Deno
@@ -12,22 +12,21 @@ tags:
   - Deno KV
   - Oak
 period: abril 2025
-work: 8 commits
 links:
   - label: BarbarianTarkus/rebost-api
     href: 'https://github.com/BarbarianTarkus/rebost-api'
     kind: repo
 problem: >-
-  Quería una API para una app de la compra **sin montar un servidor de base de datos**, y comprobar
-  si Deno KV servía para algo más que un ejemplo de la documentación.
+  Quería una API sencilla para una app de la compra **sin administrar un servidor de base de
+  datos**, y comprobar si el almacenamiento serverless de Deno servía para un proyecto real.
 decisions:
   - >-
-    **Oak como router**: es el framework que ya usaba el ecosistema de Deno y no obliga a arrastrar
-    Express ni un framework pesado.
+    **Sin base de datos que administrar**: usé el almacenamiento integrado de Deno para evitar
+    servidores, copias de seguridad y mantenimiento.
   - >-
-    **Deno KV en lugar de PostgreSQL**: cero provisión y cero copias de seguridad que mantener, a
-    cambio de atar el proyecto a las APIs del runtime.
+    **Una API pequeña y directa**: la herramienta elegida ya formaba parte del ecosistema de Deno
+    y evitaba añadir capas innecesarias.
   - >-
-    **Despliegue con `deployctl`** a Deno Deploy y una tarea de depuración para VS Code, para
-    trabajar en local con el mismo código que corre en producción.
+    **Despliegue sencillo**: la API se publica con las herramientas de Deno y se puede probar en
+    local con el mismo código que corre en producción.
 ---

@@ -3,9 +3,9 @@ author: Ricardo Verduguez
 fullName: Ricardo Verduguez Claros
 shortTitle: R
 title: Ricardo Verduguez — Desenvolupador full-stack
-description: "Desenvolupador full-stack amb base en sistemes: aplicacions web en producció i infraestructura pròpia amb NAS, VPN, Gitea i SonarQube."
-role: Desenvolupador full-stack amb base en sistemes
-intro: "Graduat en Enginyeria Informàtica, compaginant amb els meus estudis he estat treballant en el sector de la consultoria com a desenvolupador Full Stack, des del backend en un ERP fins a plugins per a Moodle i WordPress. També he treballat al departament com a becari en Suport en TI a la UPC. Passo les meves estones lliures configurant la meva homelab i trastejant amb noves tecnologies."
+description: "Desenvolupador full-stack amb experiència en sistemes: aplicacions web en producció i infraestructura pròpia amb NAS, VPN, Gitea i SonarQube."
+role: Desenvolupador full-stack amb experiència en sistemes
+intro: "Soc graduat en Enginyeria Informàtica i he treballat com a desenvolupador full-stack en el sector de la consultoria compaginant-ho amb els estudis, des del backend d'un ERP fins a plugins per a Moodle i WordPress, i també com a becari de suport TIC a la UPC."
 evidence:
   - value: 2 anys i 8 mesos
     label: en producció
@@ -72,7 +72,7 @@ labels:
   homeLink: inici
 notFound:
   metaTitle: Pàgina no trobada
-  metaDescription: La pàgina que busques no existeix al portafolis de Ricardo Verduguez.
+  metaDescription: La pàgina que busques no existeix al portafoli de Ricardo Verduguez.
   code: "404"
   heading: Aquesta pàgina no existeix.
   lede: L'enllaç pot estar trencat o la pàgina pot haver-se mogut. Torna a l'inici i comença de nou.

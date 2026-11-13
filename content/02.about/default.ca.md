@@ -5,14 +5,17 @@ meta:
 title: Sobre mi
 lede: Soc **desenvolupador full-stack** i acabo de finalitzar Enginyeria Informàtica a la UPC, compaginant-la amb la feina.
 paragraphs:
-  - "Vaig començar al **helpdesk** de la universitat, on vaig aprendre com pateix la gent quan un sistema falla: suport a usuaris, gestió d'incidències i comptes d'Active Directory. Després vaig passar a desenvolupament: **dos anys i vuit mesos** construint aplicacions web en producció amb PHP, JavaScript i Moodle."
-  - "En paral·lel mantinc el meu propi **homelab**: un NAS, diverses màquines, VPN amb WireGuard i OpenVPN, servidor Git amb Gitea, anàlisi estàtica amb SonarQube i serveis publicats a l'exterior per túnel de Cloudflare. **No és un laboratori de tutorial**: fa més de dos anys que funciona i ha tingut les seves avaries, que és on més he après."
+  - "Vaig començar al **servei de suport** de la universitat, on vaig aprendre com pateix la gent quan un sistema falla: suport a usuaris, gestió d'incidències i comptes d'Active Directory. Després vaig passar a desenvolupament: **dos anys i vuit mesos** construint aplicacions web en producció amb PHP, JavaScript i Moodle."
+  - "En paral·lel mantinc el meu propi **homelab**: un NAS, diverses màquines, VPN amb WireGuard i OpenVPN, servidor Git amb Gitea, anàlisi estàtica amb SonarQube i serveis publicats a l'exterior per túnel de Cloudflare. **No és un entorn de proves**: fa més de dos anys que funciona i ha tingut les seves avaries, que és on més he après."
   - "Busco un lloc on les dues coses comptin: desenvolupament en un equip de sistemes o de seguretat, o infraestructura on entendre què hi corre a sobre sigui un avantatge. M'interessa especialment la **seguretat aplicada** —vulnerabilitats, qualitat de codi, exposició de serveis— perquè és on conflueixen les dues meitats."
-stackSection:
+educationSection:
   num: "01"
+  title: Formació
+stackSection:
+  num: "02"
   title: Stack
 followSection:
-  num: "02"
+  num: "03"
   title: On seguir-me
 follow: L'historial laboral complet és a [experiència](/experience); el detall tècnic del que he construït, a [projectes](/projects).
 ---

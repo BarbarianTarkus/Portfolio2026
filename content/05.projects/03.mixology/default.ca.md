@@ -1,11 +1,11 @@
 ---
 slug: mixology
 name: Mixology-Luismi
-kind: cliente
+kind: encargo
 year: '2026'
 summary: >-
-  **Pàgina de presentació per a un servei de cocteleria**: lloc estàtic amb Astro i un CMS headless perquè
-  el client editi sense tocar codi.
+  **Pàgina de presentació per a un servei de cocteleria**: un lloc estàtic fàcil d'actualitzar,
+  perquè el servei pugui canviar textos i fotos sense tocar codi.
 tags:
   - Astro
   - TinaCMS
@@ -13,7 +13,6 @@ tags:
   - GitHub Actions
   - OpenCode
 period: gener — octubre 2026
-work: 69 commits
 links:
   - label: BarbarianTarkus/Mixology-Luismi
     href: 'https://github.com/BarbarianTarkus/Mixology-Luismi'
@@ -23,20 +22,19 @@ links:
     kind: demo
     icon: /projects/mixology/favicon.png
 problem: >-
-  Un amic començava amb un servei de cocteleria i necessitava **presència web amb un pressupost
-  gairebé nul**: domini barat, hosting gratuït i capacitat de canviar textos i fotos sense
-  trucar-me.
+  Un amic començava amb un servei de cocteleria i necessitava **una web amb un pressupost gairebé
+  nul**: domini barat, allotjament gratuït i la possibilitat de canviar textos i fotos sense
+  dependre de mi.
 decisions:
   - >-
-    **Astro en mode estàtic** servit des de Cloudflare: cost d'hosting zero i cap servidor a
-    mantenir, que era la condició de l'encàrrec.
+    **Un lloc estàtic a Cloudflare**: sense servidor a mantenir i amb un cost d'allotjament
+    pràcticament nul, que era la condició de l'encàrrec.
   - >-
-    Vaig comparar Strapi, Decap i TinaCMS; **em vaig quedar amb TinaCMS** perquè ofereix edició
-    visual real i no obliga a autoallotjar res, cosa que el client no podria mantenir.
+    **Un editor visual per al dia a dia**: vaig comparar diverses opcions i vaig triar TinaCMS
+    perquè permet editar textos i fotos sense tocar codi i sense muntar infraestructura.
   - >-
-    **Vaig generar la primera versió visual amb ajuda d'IA** per iterar ràpid i després vaig fixar
-    tipografia, colors i espaiat a mà: deixar el sistema en mans del generador produïa
-    inconsistències.
+    **Disseny revisat a mà**: vaig partir d'una primera versió generada amb IA per avançar ràpid,
+    però vaig fixar tipografia, colors i espaiat manualment perquè tot fos coherent.
 gallery:
   - view: web
     label: Web

@@ -4,15 +4,14 @@ name: Password-Manager
 kind: académico
 year: 2022–25
 summary: >-
-  **Password manager** for the database administration course: PostgreSQL tuned by hand,
-  PostgREST as the API and Svelte on the front end.
+  **Password manager** for the database administration course: PostgreSQL, an API generated from
+  the database itself and a web interface.
 tags:
   - PostgreSQL
   - PostgREST
   - Svelte
   - Docker
 period: 2022 — 2025
-work: 23 commits
 links:
   - label: BarbarianTarkus/Password-Manager
     href: 'https://github.com/BarbarianTarkus/Password-Manager'
@@ -22,12 +21,12 @@ problem: >-
   permissions and the queries on data that grows, not a toy CRUD.
 decisions:
   - >-
-    **I used PostgREST instead of writing my own backend**: the API comes from the schema and
-    the database policies, so permissions are defined in one place.
+    **The API comes from the database**: I used PostgREST instead of building a separate API, so
+    permissions are defined in one place.
   - >-
-    **I tuned `postgresql.conf` by hand** — shared memory, effective cache, connection
-    count — instead of keeping the defaults, which are meant for a laptop and not for a server.
+    **Configuration tuned for a server**: I reviewed PostgreSQL's settings instead of keeping the
+    defaults.
   - >-
-    **Docker** so that PostgreSQL, PostgREST and pgAdmin come up the same on any machine,
-    including the grader's machine.
+    **A reproducible environment**: Docker brings up the database, the API and the interface the
+    same way on any machine.
 ---

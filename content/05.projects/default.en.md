@@ -2,16 +2,16 @@
 meta:
   title: Projects
   description: >-
-    Projects by Ricardo Verduguez: client work, academic projects and tools of
-    my own, with the problem, the decisions and screenshots for each one.
+    Projects by Ricardo Verduguez: commissions, academic projects and tools of
+    my own, with the challenge, how I solved it and screenshots for each one.
 title: Projects
 lede: >-
-    Personal and academic projects.
+    Personal projects, commissions and academic projects.
 homelab:
   eyebrow: Homelab
   title: More than two years of infrastructure of my own
   note: >-
-    A **Synology NAS** and several machines serve media, storage, VPN and my own dev tools. trying to avoid relying in cloud services.
+    A **Synology NAS** and several machines serve media, storage, VPN and my own dev tools, trying not to rely on cloud services.
   facts:
     - value: '2+'
       label: years running
@@ -21,10 +21,11 @@ kindLabels:
   cliente: Client
   académico: Academic
   propio: Personal
+  encargo: Commission
   tfg: Bachelor's thesis
 ficheLabels:
-  problem: The problem
-  decisions: Technical decisions
+  problem: The challenge
+  decisions: How I solved it
 detailsLabel: View the full project
 galleryTitle: Screenshots
 backLabel: Projects

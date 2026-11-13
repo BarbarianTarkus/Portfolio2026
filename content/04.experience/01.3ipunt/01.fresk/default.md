@@ -16,14 +16,14 @@ description: >-
   Workplace.
 participation:
   - >-
-    **Desarrollo del tema de la suite**, sobre todo en el frontend:
-    maquetación y estilos de los elementos visuales de la plataforma.
+    **Desarrollo del tema de la suite**, sobre todo en la parte visual:
+    maquetación y estilos de los elementos de la plataforma.
   - >-
-    **Reescritura del layout del tema**, pasando de posicionar con
-    `calc()` a flex, grid y `grid-columns`, mucho más mantenible.
+    **Reorganización de la estructura del tema** para que fuera más fácil
+    de mantener y de adaptar a cambios.
   - >-
-    **Adaptación a nuevas versiones de Moodle**, revisando lo que
-    rompían los cambios del core en el tema.
+    **Adaptación a nuevas versiones de Moodle**, revisando qué cambios de la
+    plataforma afectaban al tema.
 tags:
   - Moodle
   - PHP
