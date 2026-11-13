@@ -22,6 +22,7 @@ import { DEFAULT_LANGUAGE, type Language } from "./i18n.tsx";
 import type {
   AboutContent,
   ContactContent,
+  EducationEntry,
   EvidenceItem,
   ExperienceContent,
   HomeContent,

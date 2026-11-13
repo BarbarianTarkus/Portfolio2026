@@ -23,10 +23,7 @@
 
 import { join, relative } from "@std/path";
 import { parse as parseYaml } from "@std/yaml";
-import {
-  type Language,
-  TRANSLATED_LANGUAGES,
-} from "../lib/languages.ts";
+import { type Language, TRANSLATED_LANGUAGES } from "../lib/languages.ts";
 
 const ROOT = join(import.meta.dirname!, "..");
 const CONTENT_DIR = join(ROOT, "content");
