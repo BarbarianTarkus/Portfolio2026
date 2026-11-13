@@ -214,35 +214,6 @@
   }
 }
 
-/* Projects without screenshots get a typographic panel, not a broken image. */
-@scope (.project-cover--empty) {
-  :scope {
-    display: block grid;
-    place-items: center;
-    overflow: hidden;
-  }
-
-  :scope::before {
-    position: absolute;
-    content: attr(data-initial);
-    color: var(--surface-2);
-    font-family: var(--font-display);
-    font-size: clamp(7rem, 14vi, 12rem);
-    font-weight: 700;
-    line-height: 0.8;
-    transform: translate(-0.1em, -0.08em);
-  }
-
-  :scope span {
-    position: relative;
-    color: var(--line-strong);
-    font-family: var(--font-mono);
-    font-size: var(--text-meta);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-}
-
 /* The actions sit right under the media, before the card identifies the
    project: the preview and its repository are the first decision on the card. */
 @scope (.project-links) {

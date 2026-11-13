@@ -4,7 +4,7 @@ name: Xarxa segmentada a Linux
 kind: académico
 year: '2025'
 summary: >-
-  **Laboratori de xarxa** en quatre zones amb routers Linux: encaminament, seguretat, DNS, DHCP i
+  **Laboratori de xarxa** en quatre zones amb routers Linux: encaminament, filtratge, DNS, DHCP i
   monitoratge funcionant com un sol sistema.
 tags:
   - Linux
@@ -30,7 +30,7 @@ decisions:
     **Configuració persistent**: les rutes i les regles es guarden al sistema, així que sobreviuen
     al reinici i l'escenari es pot reconstruir.
   - >-
-    **Seguretat per zones**: el trànsit entre xarxes es filtra amb regles clares, sense barrejar
+    **Filtratge entre zones**: el trànsit entre xarxes es controla amb regles clares, sense barrejar
     configuracions antigues.
   - >-
     **Serveis de xarxa reals**: DNS amb servidor principal i de reserva, DHCP amb reserves i

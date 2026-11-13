@@ -3,7 +3,7 @@ meta:
   title: Contact
   description: "Contact details for Ricardo Verduguez: email, GitHub and LinkedIn."
 title: Contact
-lede: "I am open to **roles in development, systems or security**. <br><br> Communication Channels:"
+lede: ""
 email:
   label: Email
   hint: For anything that does not fit in a GitHub *issue*.

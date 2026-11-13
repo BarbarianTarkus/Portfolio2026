@@ -17,8 +17,8 @@ interface ProjectMediaProps {
 /**
  * The card's first-impact area: the screenshot slider itself, not a static
  * thumbnail. The Web/Mobile selector sits on top of the images, and the detail
- * block below contains text only. Projects without screenshots get a
- * typographic panel instead of an empty box, so the grid keeps its rhythm.
+ * block below contains text only. Projects without screenshots simply omit the
+ * media block, so no empty frame is rendered.
  */
 function ProjectMedia(
   { project, basePath, viewLabel, eager }: ProjectMediaProps,
@@ -43,15 +43,7 @@ function ProjectMedia(
   }
 
   if (packs.length === 0) {
-    return (
-      <div
-        class="project-cover project-cover--empty"
-        data-initial={project.name.slice(0, 1)}
-        aria-hidden="true"
-      >
-        <span>{project.name}</span>
-      </div>
-    );
+    return null;
   }
 
   return (

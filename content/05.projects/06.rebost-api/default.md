@@ -28,5 +28,5 @@ decisions:
     y evitaba añadir capas innecesarias.
   - >-
     **Despliegue sencillo**: la API se publica con las herramientas de Deno y se puede probar en
-    local con el mismo código que corre en producción.
+    local con el mismo código que se ejecuta en producción.
 ---

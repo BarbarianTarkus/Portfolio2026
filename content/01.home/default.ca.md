@@ -24,10 +24,10 @@ projectsSection:
   linkRoute: /projects
   note: "Repositoris públics: **Treball, encàrrecs, projectes acadèmics i eines pròpies**. Aquí, una selecció; tots són a Projectes."
 focus:
-  - title: Infraestructura i seguretat
+  - title: Infraestructura i serveis
     body: >-
-      **NAS, WireGuard, OpenVPN, Gitea i SonarQube** i serveis publicats per
-      túnel de Cloudflare, sense obrir ports al router.
+      **NAS, WireGuard, OpenVPN, Gitea i SonarQube**, amb serveis publicats per
+      túnel de Cloudflare.
   - title: Desenvolupament full-stack
     body: >-
       **PHP, JavaScript i Moodle** en producció; **Svelte, Astro, Python, Rust

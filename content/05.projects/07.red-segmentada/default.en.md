@@ -4,7 +4,7 @@ name: Segmented network on Linux
 kind: académico
 year: '2025'
 summary: >-
-  **Network lab** across four zones with Linux routers: routing, security, DNS, DHCP and monitoring
+  **Network lab** across four zones with Linux routers: routing, filtering, DNS, DHCP and monitoring
   working as a single system.
 tags:
   - Linux
@@ -30,8 +30,8 @@ decisions:
     **Persistent configuration**: routes and rules are stored in the system, so they survive a
     reboot and the scenario can be rebuilt.
   - >-
-    **Security by zone**: traffic between networks is filtered with clear rules, without mixing
-    old configurations.
+    **Filtering between zones**: traffic between networks is controlled with clear rules, without
+    mixing old configurations.
   - >-
     **Real network services**: DNS with a primary and a backup server, DHCP with reservations and
     monitoring to check status from a single point.

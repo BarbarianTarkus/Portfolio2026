@@ -28,5 +28,5 @@ decisions:
     evitava afegir capes innecessàries.
   - >-
     **Desplegament senzill**: l'API es publica amb les eines de Deno i es pot provar en local amb
-    el mateix codi que corre en producció.
+    el mateix codi que s'executa en producció.
 ---

@@ -24,10 +24,10 @@ projectsSection:
   linkRoute: /projects
   note: "Public repositories: **work, commissions, university projects and tools of my own**. A selection here; all of them are in Projects."
 focus:
-  - title: Infrastructure and security
+  - title: Infrastructure and services
     body: >-
-      **NAS, WireGuard, OpenVPN, Gitea and SonarQube** and services published
-      through a Cloudflare tunnel, without opening ports on the router.
+      **NAS, WireGuard, OpenVPN, Gitea and SonarQube**, with services published
+      through a Cloudflare tunnel.
   - title: Full-stack development
     body: >-
       **PHP, JavaScript and Moodle** in production; **Svelte, Astro, Python,

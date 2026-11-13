@@ -4,7 +4,7 @@ name: Red segmentada en Linux
 kind: académico
 year: '2025'
 summary: >-
-  **Laboratorio de red** en cuatro zonas con routers Linux: enrutamiento, seguridad, DNS, DHCP y
+  **Laboratorio de red** en cuatro zonas con routers Linux: enrutamiento, filtrado, DNS, DHCP y
   monitorización funcionando como un solo sistema.
 tags:
   - Linux
@@ -30,7 +30,7 @@ decisions:
     **Configuración persistente**: las rutas y las reglas se guardan en el sistema, así que
     sobreviven al reinicio y el escenario se puede reconstruir.
   - >-
-    **Seguridad por zonas**: el tráfico entre redes se filtra con reglas claras, sin mezclar
+    **Filtrado entre zonas**: el tráfico entre redes se controla con reglas claras, sin mezclar
     configuraciones antiguas.
   - >-
     **Servicios de red reales**: DNS con servidor principal y de reserva, DHCP con reservas y

@@ -45,7 +45,7 @@ export function ContactPage(
 
       <PageHeader
         title={page.title}
-        lede={
+        lede={page.lede === "" ? undefined : (
           <ProseField
             text={page.lede}
             basePath={basePath}
@@ -53,7 +53,7 @@ export function ContactPage(
             sourcePath={sourcePath}
             editing={inlineEditing}
           />
-        }
+        )}
       />
 
       <ContactRows site={site} page={page} />
