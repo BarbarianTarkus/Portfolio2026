@@ -8,8 +8,7 @@ meta:
 title: Experience
 lede: >-
   Full-stack development in production environments, mainly on Moodle and
-  WordPress, with PHP and JavaScript. IT support at the university. That's where
-  I learned what I know.
+  WordPress, with PHP and JavaScript. IT support at the university.
 linkedinLabel: LinkedIn
 jobsSection:
   num: '01'

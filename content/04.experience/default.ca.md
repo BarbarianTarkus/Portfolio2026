@@ -8,7 +8,7 @@ meta:
 title: Experiència
 lede: >-
   Desenvolupament full-stack en entorns de producció, sobretot en Moodle i WordPress amb PHP i
-  JavaScript. Suport TIC a la universitat, que és on he après el que sé.
+  JavaScript. Suport TIC a la universitat.
 linkedinLabel: LinkedIn
 jobsSection:
   num: '01'

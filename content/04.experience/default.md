@@ -8,7 +8,7 @@ meta:
 title: Experiencia
 lede: >-
   Desarrollo Full-Stack en entornos de producción, principalmente sobre Moodle y WordPress, con PHP y JavaScript.
-  Soporte TIC en la universidad. Es donde he aprendido lo que sé.
+  Soporte TIC en la universidad.
 linkedinLabel: LinkedIn
 jobsSection:
   num: '01'
